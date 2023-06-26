@@ -1,0 +1,93 @@
+:root {
+  --page-bg: linear-gradient(to bottom, #e6e9f0, #eef1f5);
+  --box-bg: linear-gradient(to left, #d558c8, #24d292);
+  --border: #45425a;
+  --text: #eef1f5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: "Ubuntu", Sans-serif, Helvetica, Arial, sans-serif;
+  display: grid;
+  place-items: center;
+}
+
+a {
+  color: var(--text);
+}
+
+.big-box {
+  position: relative;
+  width: 90%;
+  height: 90%;
+  overflow: hidden;
+  background: var(--box-bg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 2rem;
+  border: 0.25rem solid var(--border);
+}
+
+svg {
+  position: absolute;
+  max-height: clamp(40vh, 60vw, 48rem);
+  overflow: visible;
+  fill: url(#linear);
+  /* display: none; */
+}
+
+#bubble1 {
+  right: clamp(-500px, 1400px - 100vw, -100px);
+  top: 0;
+}
+
+#bubble2 {
+  left: clamp(20px, 2000px - 100vw, 40%);
+  bottom: clamp(-800px, 70% - 100vh, -5rem);
+  min-height: 45rem;
+  max-height: 70rem;
+}
+#bubble3 {
+  left: clamp(10%, -1000px + 100vw, 80%);
+  top: clamp(20%, 30vw, 50%);
+  height: 15rem;
+}
+
+.prompt-container {
+  width: 40%;
+  padding: 2rem;
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.prompt-container .code {
+  font-size: 10rem;
+}
+
+.prompt-container .title {
+  font-size: 0.6rem;
+}
+
+@media (max-width: 767px) {
+  .prompt-container {
+    width: 100%;
+  }
+  .prompt-container .code {
+    font-size: 8rem;
+  }
+}
