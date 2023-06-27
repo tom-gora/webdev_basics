@@ -23,6 +23,12 @@ body {
 
 a {
   color: var(--text);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--border);
 }
 
 .big-box {
@@ -43,7 +49,7 @@ svg {
   max-height: clamp(40vh, 60vw, 48rem);
   overflow: visible;
   fill: url(#linear);
-  /* display: none; */
+  pointer-events: none;
 }
 
 #bubble1 {
