@@ -5,8 +5,8 @@ Kind of a diary. Small size project collection inspired by icodethis.com. Some p
 #### Showcase
 
 Some animated cards:
-![card_01](./assets/carsd_01.apng)
-![card_02](./assets/carsd_02.apng)
+![card_01](./assets/card_01.apng)
+![card_02](./assets/card_02.apng)
 
 
 
