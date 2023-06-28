@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Button collection</title>
-    <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
-    <script type="text/javascript" src="js/app.js"></script>
 
-    <!-- font imports  -->
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link
-      href="https://fonts.bunny.net/css?family=bungee-spice:400"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.bunny.net/css?family=bungee-spice:400|poppins:300,400,500,600,700,800"
-      rel="stylesheet"
-    />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Button collection</title>
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+  <script type="text/javascript" src="js/app.js"></script>
 
-  <body>
-    <div class="light-container">
-      <h1>My light theme compatible button experiments go here</h1>
-      <button id="button-one-light"><span>Click me</span></button>
-      <button id="button-two-light">
+  <!-- font imports  -->
+  <link rel="preconnect" href="https://fonts.bunny.net" />
+  <link href="https://fonts.bunny.net/css?family=bungee-spice:400" rel="stylesheet" />
+  <link href="https://fonts.bunny.net/css?family=bungee-spice:400|poppins:300,400,500,600,700,800" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="light-container">
+    <h1>My light theme compatible button experiments go here</h1>
+    <button id="button-one-light"><span>Click me</span></button>
+    <button id="button-two-light">
+      <span>Click me</span>
+      <svg class="glow-effect">
+        <rect class="glow-blur" pathLenght="100"></rect>
+        <rect class="glow-line" pathLenght="100"></rect>
+      </svg>
+    </button>
+    <button id="button-three-light">
+      <span>Click me</span>
+      <svg class="glow-effect">
+        <rect class="glow-blur" pathLenght="100"></rect>
+        <rect class="glow-line" pathLenght="100"></rect>
+      </svg>
+    </button>
+  </div>
+  <div class="dark-container">
+    <h1>My dark theme compatible button experiments go here</h1>
+    <button id="button-one-dark"><span>Click me</span></button>
+    <button id="button-two-dark"><span>Click me</span></button>
+
+    <div id="hacky-wrapper">
+      <div id="pointer-to-border"></div>
+
+      <div id="button-three-dark-hover-area">
+        <div id="pointer-to-border"></div>
+      </div>
+      <button id="button-three-dark">
         <span>Click me</span>
-        <svg class="glow-effect">
-          <rect class="glow-blur" pathLenght="100"></rect>
-          <rect class="glow-line" pathLenght="100"></rect>
-        </svg>
-      </button>
-      <button id="button-three-light">
-        <span>Click me</span>
-        <svg class="glow-effect">
-          <rect class="glow-blur" pathLenght="100"></rect>
-          <rect class="glow-line" pathLenght="100"></rect>
-        </svg>
       </button>
     </div>
-    <div class="dark-container">
-      <h1>My dark theme compatible button experiments go here</h1>
-      <button id="button-one-dark"><span>Click me</span></button>
-      <button id="button-two-dark"><span>Click me</span></button>
-      <button id="button-three-dark"><span>Click me</span></button>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>

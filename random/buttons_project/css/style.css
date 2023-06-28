@@ -238,7 +238,6 @@ button {
   y: 50px;
   fill: transparent;
   stroke: #00ffff;
-  rx: 0.5rem;
   stroke-width: 5px;
   stroke-dasharray: 182px 225px;
   transition: stroke-dashoffset 1000ms;
@@ -310,4 +309,55 @@ button {
 #button-three-light:hover span {
   /* transform: translateY(-4px); */
   color: #fdfbfb;
+}
+
+/* dark button no3 */
+
+#button-three-dark {
+  position: absolute;
+  border: none;
+  color: #aa4465;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: none;
+}
+
+#hacky-wrapper {
+  position: relative;
+  margin-top: -4rem;
+  height: 14rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#button-three-dark-hover-area {
+  position: relative;
+  width: 40rem;
+  height: 14rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#hacky-wrapper #pointer-to-border {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background: #aa4465;
+  border: solid 1px #aa4465;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  scale: 0;
+  transform-origin: initial;
+}
+
+#button-three-dark-hover-area:hover {
+  cursor: auto;
 }
