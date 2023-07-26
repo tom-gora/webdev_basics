@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glassmorphic timer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.bunny.net" />
+  <link href="https://fonts.bunny.net/css?family=roboto:400" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="credits">
+    <small>* Background by SVGBackgrounds.com</small>
+  </div>
+  <div class="main-container">
+    <audio src="assets/alert.mp3" class="alert"></audio>
+    <!-- src:
+      https://cdn.freesound.org/previews/647/647215_5828667-lq.mp3
+    -->
+    <header class="nav">
+      <div class="nav-ui nav-alarm">
+        <ion-icon name="alarm-outline"></ion-icon> <span>Alarm</span>
+      </div>
+      <div class="nav-ui nav-timer active">
+        <ion-icon name="timer-outline"></ion-icon>
+        <span>Timer</span>
+      </div>
+      <div class="nav-ui nav-stopwatch"><ion-icon name="stopwatch-outline"></ion-icon><span>Stopwatch</div>
+    </header>
+    <section class="app-main">
+      <div class="app-main-ui main-alarm">
+        <div class="controls-ui controls-alarm"></div>
+      </div>
+      <div class="app-main-ui main-timer">
+        <form action="#" class="timer-input">
+          <div class="form-group timer-group" tabindex="-1">
+            <label for="timer-hours">Hours
+              <input readonly type="text" id="timer-hours" dir="rtl" maxlength="2" pattern="\d*" value="00"
+                data-state="unmodified">
+            </label>
+            <label for="timer-minutes">Minutes
+              <input readonly type="text" id="timer-minutes" dir="rtl" maxlength="2" pattern="\d*" value="00"
+                data-state="unmodified">
+            </label>
+            <label for="timer-seconds">Seconds
+              <input readonly type="text" id="timer-seconds" dir="rtl" maxlength="2" pattern="\d*" value="00"
+                data-state="unmodified">
+            </label>
+          </div>
+          <div class="num-pad">
+            <button class="numpad-button">1</button>
+            <button class="numpad-button">2</button>
+            <button class="numpad-button">3</button>
+            <button class="numpad-button">4</button>
+            <button class="numpad-button">5</button>
+            <button class="numpad-button">6</button>
+            <button class="numpad-button">7</button>
+            <button class="numpad-button">8</button>
+            <button class="numpad-button">9</button>
+            <button class="numpad-button double-zero">00</button>
+            <button class="numpad-button">0</button>
+            <button class="numpad-button numpad-back"><ion-icon name="backspace-outline"></ion-icon></button>
+          </div>
+        </form>
+        <div class="controls-ui controls-timer">
+          <button class="controls-timer-start">
+            <ion-icon name="play-outline"></ion-icon></button>
+        </div>
+        <div class="countdown-container">
+          <svg class="countdown-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g class="countdown-circle">
+              <circle class="countdown-path-elapsed" cx="50" cy="50" r="45" />
+              <path id="countdown-path-remaining" stroke-dasharray="283" class="countdown-path-remaining" d="
+          M 50, 50
+          m -45, 0
+          a 45,45 0 1,0 90,0
+          a 45,45 0 1,0 -90,0
+        "></path>
+            </g>
+          </svg>
+          <span>
+          </span>
+        </div>
+        <div class="controls-ui controls-countdown">
+          <button class="controls-countdown-pause">
+            <ion-icon name="pause-circle-outline"></ion-icon>
+            <button class="controls-countdown-stop">
+              <ion-icon name="close-circle-outline"></ion-icon>
+        </div>
+
+      </div>
+      <div class="app-main-ui main-stopwatch">
+        <div class="controls-ui controls-stopwatch"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/app.js"></script>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

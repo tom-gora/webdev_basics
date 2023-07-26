@@ -1,0 +1,372 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+:root {
+  --bg: #051b22;
+  --accent-color: #5de7c0;
+  --txt-color: #acfce8;
+  --txt-color-muted: #67978b;
+  --glass-border: 1px solid rgba(203, 253, 240, 0.2);
+  --glass-blur: blur(0.2rem);
+  --glass-bg: rgba(203, 253, 240, 0.05);
+  --glass-bg-active: rgba(203, 253, 240, 0.11);
+  --transition: all 200ms ease-in-out;
+  --alert-color: #c05de7;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  width: 100vw;
+  height: 100vh;
+  color: var(--txt-color);
+  background-image: url("../assets/bg.svg");
+  background-size: auto 100%;
+  display: grid;
+  place-items: center;
+}
+
+.credits {
+  position: absolute;
+  left: 2rem;
+  top: 1rem;
+  border-radius: 0.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-top: var(--glass-border);
+  border-left: var(--glass-border);
+  padding: 0.5rem 1rem;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 24rem;
+  aspect-ratio: 9 / 16;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: var(--glass-bg);
+  box-shadow: 1rem 1rem 3.5rem rgba(0, 0, 0, 0.5);
+  border-top: var(--glass-border);
+  border-left: var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+}
+
+/* navigation styles */
+
+.nav,
+.controls {
+  width: 100%;
+}
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  top: 0;
+  height: 8rem;
+  padding-inline: 0.5rem;
+  margin-bottom: 1rem;
+}
+.app-main {
+  width: 100%;
+  height: 100%;
+}
+.nav .nav-ui {
+  height: 7.25rem;
+  width: 7.25rem;
+  margin-block: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  border-top: 1px solid rgba(255, 255, 255, 0);
+  border-left: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 1rem;
+}
+.nav .nav-ui:hover,
+.nav .nav-ui:focus,
+.nav .nav-ui.active {
+  background: var(--glass-bg-active);
+  border-top: var(--glass-border);
+  border-left: var(--glass-border);
+}
+
+.nav .nav-ui:not(.active) {
+  color: var(--txt-color-muted);
+}
+
+.nav .nav-ui ion-icon {
+  font-size: 3rem;
+}
+
+.app-main-ui {
+  display: none;
+}
+/* ui styles - timer */
+
+.app-main-ui.main-timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+  width: 100%;
+  min-height: 100%;
+}
+
+form.timer-input[data-pop-out] {
+  animation: animate-pop-out 200ms forwards;
+}
+
+#timer-hours,
+#timer-minutes,
+#timer-seconds {
+  user-select: contain;
+  pointer-events: none !important;
+}
+
+.form-group.timer-group {
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+
+.form-group.timer-group label {
+  max-width: 4rem;
+  text-align: center;
+}
+
+.form-group.timer-group label input {
+  max-width: 100%;
+  aspect-ratio: 1/ 0.8;
+  border-right: none;
+  border-bottom: none;
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+  border-radius: 1rem;
+  margin-block: 0.5rem;
+  background: var(--glass-bg-active);
+  color: var(--txt-color-muted);
+  font-size: 2rem;
+  caret-color: transparent;
+  text-align: center;
+}
+.form-group.timer-group label input::selection {
+  background-color: transparent;
+  color: var(--txt-color);
+}
+
+.form-group.timer-group label input:focus {
+  border-right: none;
+  border-bottom: none;
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+  outline: none;
+}
+
+.num-pad {
+  margin-inline: 5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.num-pad .numpad-button {
+  background: var(--glass-bg);
+  width: 100%;
+  aspect-ratio: 1;
+  box-shadow: none !important;
+  border: none !important;
+  color: var(--txt-color);
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: var(--transition);
+  transform-origin: center;
+}
+
+.num-pad .numpad-button:focus-visible {
+  outline: none;
+  border: none;
+}
+
+.num-pad .numpad-button:hover,
+.numpad-back-button:hover {
+  background: var(--glass-bg-active);
+}
+
+.controls-timer,
+.controls-countdown {
+  display: flex;
+  gap: 2rem;
+  height: 7rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+.controls-timer .controls-timer-start,
+.controls-countdown .controls-countdown-stop,
+.controls-countdown .controls-countdown-pause {
+  background: var(--glass-bg);
+  width: 5rem;
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  color: transparent;
+  font-size: 3rem;
+  margin-block: 0.5rem;
+  display: none;
+  place-items: center;
+  transition: var(--transition);
+  animation: animate-pop-in 200ms forwards;
+}
+
+.controls-timer .controls-timer-start ion-icon,
+.controls-countdown .controls-countdown-pause ion-icon {
+  color: var(--txt-color);
+}
+
+.controls-countdown .controls-countdown-stop ion-icon {
+  color: var(--alert-color);
+}
+
+.controls-timer .controls-timer-start[data-pop-out],
+.controls-countdown .controls-countdown-stop[data-pop-out],
+.controls-countdown .controls-countdown-pause[data-pop-out] {
+  animation: animate-pop-out 200ms forwards;
+}
+
+.controls-timer .controls-timer-start:hover,
+.controls-timer .controls-timer-start:focus-visible,
+.controls-timer .controls-timer-start:active,
+.controls-countdown .controls-countdown-stop:hover,
+.controls-countdown .controls-countdown-stop:focus-visible,
+.controls-countdown .controls-countdown-stop:active,
+.controls-countdown .controls-countdown-pause:hover,
+.controls-countdown .controls-countdown-pause:focus-visible,
+.controls-countdown .controls-countdown-pause:active {
+  background: var(--glass-bg-active);
+  outline: none;
+  box-shadow: none;
+  border-right: none;
+  border-bottom: none;
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+}
+
+@keyframes animate-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5, 0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes animate-pop-out {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+
+  98% {
+    opacity: 0;
+    transform: scale(0.5, 0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+    height: 0;
+  }
+}
+
+/* countdown */
+
+.countdown-container {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 80%;
+  height: 25rem;
+}
+
+.countdown-container {
+  animation: animate-pop-in 200ms forwards;
+}
+
+.countdown-circle {
+  fill: none;
+  stroke: none;
+}
+
+.countdown-path-elapsed {
+  stroke-width: 2px;
+  stroke: var(--txt-color-muted);
+}
+
+.countdown-path-elapsed[data-flashing] {
+  animation: flash 1000ms linear infinite;
+}
+
+#countdown-path-remaining {
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke: var(--txt-color);
+  transform: rotate(90deg) scaleY(-1);
+  transform-origin: center;
+  transition: 1000ms linear all;
+}
+
+.countdown-container span {
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 1000ms linear all;
+}
+
+.alert {
+  width: 0;
+  height: 0;
+}
+
+@keyframes flash {
+  0% {
+    stroke: var(--alert-color);
+    stroke-width: 4px;
+  }
+  50% {
+    stroke: var(--txt-color);
+    stroke-width: 2px;
+  }
+
+  100% {
+    stroke: var(--alert-color);
+    stroke-width: 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    scale: 0.96;
+  }
+}
