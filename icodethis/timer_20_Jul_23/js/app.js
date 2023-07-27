@@ -1,6 +1,6 @@
 window.onload = () => {
   const timer = document.querySelector(".main-timer");
-  const timerInputSection = document.querySelector("form.timer-input");
+  const timerInputSection = document.querySelector(".timer-input");
   const numpadButtons = timer.querySelectorAll(".numpad-button");
   const controlsTimer = document.querySelector(".controls-timer");
   const startTimerBtn = document.querySelector(".controls-timer-start");

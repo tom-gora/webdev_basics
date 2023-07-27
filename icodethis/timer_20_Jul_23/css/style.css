@@ -121,7 +121,7 @@ body {
   min-height: 100%;
 }
 
-form.timer-input[data-pop-out] {
+.timer-input[data-pop-out] {
   animation: animate-pop-out 200ms forwards;
 }
 
@@ -132,7 +132,7 @@ form.timer-input[data-pop-out] {
   pointer-events: none !important;
 }
 
-.form-group.timer-group {
+.timer-group {
   padding: 1rem 2rem;
   display: flex;
   flex-direction: row;
@@ -140,12 +140,12 @@ form.timer-input[data-pop-out] {
   gap: 1rem;
 }
 
-.form-group.timer-group label {
+.timer-group label {
   max-width: 4rem;
   text-align: center;
 }
 
-.form-group.timer-group label input {
+.timer-group label input {
   max-width: 100%;
   aspect-ratio: 1/ 0.8;
   border-right: none;
@@ -160,12 +160,12 @@ form.timer-input[data-pop-out] {
   caret-color: transparent;
   text-align: center;
 }
-.form-group.timer-group label input::selection {
+.timer-group label input::selection {
   background-color: transparent;
   color: var(--txt-color);
 }
 
-.form-group.timer-group label input:focus {
+.timer-group label input:focus {
   border-right: none;
   border-bottom: none;
   border-left: var(--glass-border);
