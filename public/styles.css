@@ -1,0 +1,206 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+*,
+*::after,
+*:::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --background: linear-gradient(45deg, #fddb92 0%, #c0cacc 70%);
+  --primary: #231650;
+  --secondary: #cff2d7;
+  --accent: #bf5436;
+  --transition: all 200ms ease-in-out;
+}
+
+body {
+  font-family: Open Sans, sans-serif;
+  color: var(--primary);
+  background: var(--background);
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.card {
+  position: relative;
+  width: 26rem;
+  aspect-ratio: 4/6;
+
+  background-size: cover;
+  background-repeat: none;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0.5rem 0.5rem 1rem hsla(253, 30%, 20%, 0.3);
+}
+
+.skills {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-items: center;
+  align-items: center;
+  padding: 0 2rem;
+  max-width: 26rem;
+  height: 3rem;
+  background: var(--secondary);
+  box-shadow: 0 0.25rem 10px hsla(253, 10%, 20%, 0.3);
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.skills i {
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.thumb {
+  max-width: 26rem;
+  height: 90%;
+  background-image: url("https://365webresources.com/wp-content/uploads/2020/06/Responsive-Portfolio-Website-Alexa.png");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: -8.5rem;
+  max-width: 26rem;
+  height: fit-content;
+  background: var(--secondary);
+  padding-left: 2rem;
+  box-shadow: 0 -0.25rem 10px hsla(253, 10%, 20%, 0.3);
+  transition: var(--transition);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.details:hover {
+  bottom: 0;
+}
+
+.chevron-hint {
+  background: var(--secondary);
+  border-radius: 50%;
+  font-size: 2rem;
+  position: absolute;
+  left: 35%;
+  top: -1rem;
+  transition: var(--transition);
+}
+
+.details:hover .chevron-hint {
+  height: 0;
+  width: 5rem;
+  top: 0.5rem;
+}
+
+.details-top {
+  width: 100%;
+  height: 11rem;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.category {
+  align-self: flex-end;
+  grid-column: span 6;
+  /*   margin-bottom: 0.5rem; */
+}
+
+.title {
+  margin-top: 0;
+  grid-row: span 2;
+  grid-column: span 6;
+}
+
+.date {
+  color: var(--secondary);
+  grid-row: span 3;
+  grid-column: span 2;
+}
+
+.date .date-card {
+  width: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 0.5rem;
+  background: var(--accent);
+  margin-top: -1rem;
+  border-radius: 0.5rem;
+}
+
+.date-card span:first-of-type {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.date-card span:nth-child(2),
+.date-card span:nth-child(3) {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.details-bottom {
+  max-width: 26rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.description {
+  max-width: 80%;
+  text-align: justify;
+  text-justify: inter-word;
+  padding-bottom: 0.5rem;
+}
+
+.view-link {
+  margin-top: 1rem;
+  background: var(--primary);
+  border-top-left-radius: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2rem;
+}
+
+.view-link a ion-icon {
+  font-size: 2rem;
+  align-self: center;
+}
+
+.view-link a {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  max-width: rem;
+  height: 100%;
+  appearance: none;
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+.view-link a > * {
+  transition: var(--transition);
+}
+
+.view-link:hover ion-icon,
+.view-link:hover small {
+  color: var(--accent);
+}
