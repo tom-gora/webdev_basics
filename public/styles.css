@@ -2,7 +2,7 @@
 
 *,
 *::after,
-*::before {
+*:::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -14,7 +14,6 @@
   --secondary: #cff2d7;
   --accent: #bf5436;
   --transition: all 200ms ease-in-out;
-  --shadow-color: hsla(253, 30%, 20%, 0.3);
 }
 
 body {
@@ -23,26 +22,22 @@ body {
   background: var(--background);
   width: 100vw;
   height: 100vh;
-  padding-block: 3rem;
-  display: flex;
-  gap: 3rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
 }
 
 .card {
   position: relative;
-  width: 20rem;
+  width: 26rem;
   aspect-ratio: 4/6;
-  font-size: 0.8rem;
+
   background-size: cover;
   background-repeat: none;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 1rem 1rem var(--shadow-color);
+  box-shadow: 0.5rem 0.5rem 1rem hsla(253, 30%, 20%, 0.3);
 }
 
 .skills {
@@ -51,22 +46,22 @@ body {
   gap: 2rem;
   justify-items: center;
   align-items: center;
-  padding: 0 1.5rem;
-  width: 100%;
-  height: 2.2rem;
+  padding: 0 2rem;
+  max-width: 26rem;
+  height: 3rem;
   background: var(--secondary);
-  box-shadow: 0 0.2rem 1rem var(--shadow-color);
+  box-shadow: 0 0.25rem 10px hsla(253, 10%, 20%, 0.3);
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
 }
 
 .skills i {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: var(--primary);
 }
 
 .thumb {
-  width: 100%;
+  max-width: 26rem;
   height: 90%;
   background-image: url("https://365webresources.com/wp-content/uploads/2020/06/Responsive-Portfolio-Website-Alexa.png");
   background-size: cover;
@@ -78,12 +73,12 @@ body {
   display: flex;
   flex-direction: column;
   position: absolute;
-  bottom: -9rem;
-  width: 100%;
+  bottom: -8.5rem;
+  max-width: 26rem;
   height: fit-content;
   background: var(--secondary);
   padding-left: 2rem;
-  box-shadow: 0 -0.2rem 1rem var(--shadow-color);
+  box-shadow: 0 -0.25rem 10px hsla(253, 10%, 20%, 0.3);
   transition: var(--transition);
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
@@ -96,10 +91,10 @@ body {
 .chevron-hint {
   background: var(--secondary);
   border-radius: 50%;
-  font-size: 1.7rem;
+  font-size: 2rem;
   position: absolute;
   left: 35%;
-  top: -0.7rem;
+  top: -1rem;
   transition: var(--transition);
 }
 
@@ -111,20 +106,20 @@ body {
 
 .details-top {
   width: 100%;
-  height: 9rem;
+  height: 11rem;
   display: grid;
   grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(8, 1fr);
 }
 
 .category {
-  /* align-self: flex-end; */
+  align-self: flex-end;
   grid-column: span 6;
-  margin-top: 1rem;
+  /*   margin-bottom: 0.5rem; */
 }
 
 .title {
-  margin-top: -0.8rem;
+  margin-top: 0;
   grid-row: span 2;
   grid-column: span 6;
 }
@@ -136,31 +131,30 @@ body {
 }
 
 .date .date-card {
-  width: 4rem;
+  width: 5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding-block: 0.5rem;
   background: var(--accent);
-  margin-top: -0.8rem;
-  margin-left: -0.3rem;
+  margin-top: -1rem;
   border-radius: 0.5rem;
 }
 
 .date-card span:first-of-type {
-  font-size: 1.2rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
 .date-card span:nth-child(2),
 .date-card span:nth-child(3) {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
 .details-bottom {
-  width: 100%;
+  max-width: 26rem;
   display: flex;
   flex-direction: row;
   gap: 2rem;
@@ -170,14 +164,14 @@ body {
   max-width: 80%;
   text-align: justify;
   text-justify: inter-word;
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .view-link {
-  margin-top: 0rem;
+  margin-top: 1rem;
   background: var(--primary);
   border-top-left-radius: 1rem;
-  width: 130%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -186,14 +180,14 @@ body {
 }
 
 .view-link a ion-icon {
-  font-size: 1.6rem;
+  font-size: 2rem;
   align-self: center;
 }
 
 .view-link a {
   position: relative;
   display: flex;
-  gap: 0.6rem;
+  gap: 1rem;
   flex-direction: column;
   max-width: rem;
   height: 100%;
@@ -209,76 +203,4 @@ body {
 .view-link:hover ion-icon,
 .view-link:hover small {
   color: var(--accent);
-}
-
-@media (min-width: 600px) {
-  body {
-    font-size: 1rem;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: flex-start;
-    flex-wrap: initial;
-  }
-
-  .card {
-    margin-left: 3rem;
-    width: clamp(500px, 90vw, 1000px);
-    aspect-ratio: unset;
-    height: 11rem;
-  }
-
-  .card:hover .thumb {
-    height: 20rem;
-  }
-
-  .details-top {
-    height: 10rem;
-    grid-template-rows: repeat(1, 1fr);
-    grid-template-columns: repeat(7, 1fr);
-  }
-
-  .category {
-    margin-top: 0.5rem;
-  }
-
-  .date {
-    grid-column: span 1;
-  }
-
-  .details {
-    align-self: flex-start;
-  }
-
-  .details:hover {
-    bottom: initial;
-  }
-
-  .details-bottom {
-    display: grid;
-    grid-template-rows: repeat(1, 1fr);
-    grid-template-columns: repeat(7, 1fr);
-  }
-
-  .description {
-    grid-column: span 6;
-    padding-bottom: 0;
-  }
-
-  .thumb {
-    height: 0;
-  }
-
-  .view-link {
-    grid-column: span 1;
-    border-radius: 0.5rem;
-    width: 4rem;
-    align-self: center;
-    margin-left: -2rem;
-    margin-top: -1rem;
-    margin-bottom: 0.5rem;
-    padding-block: 0.5rem;
-
-    /* position: absolute; */
-    /* width: 3rem; */
-  }
 }
