@@ -51,13 +51,14 @@ body {
   gap: 2rem;
   justify-items: center;
   align-items: center;
-  padding: 0 1.5rem;
+  padding: 0.5rem 2rem;
   width: 100%;
   height: 2.2rem;
   background: var(--secondary);
   box-shadow: 0 0.2rem 1rem var(--shadow-color);
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
+  z-index: 1;
 }
 
 .skills i {
@@ -66,12 +67,28 @@ body {
 }
 
 .thumb {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
   width: 100%;
   height: 90%;
-  background-image: url("https://365webresources.com/wp-content/uploads/2020/06/Responsive-Portfolio-Website-Alexa.png");
+  background-image: url("https://freebiesui.com/wp-content/uploads/2020/07/dark-mode-desktop-ui-daily-media.jpg");
   background-size: cover;
   background-position: center;
-  z-index: -1;
+  transition: var(--transition);
+}
+
+.card[aria-expanded="false"][data-size="small"] .details {
+  bottom: -9rem;
+}
+
+.card[aria-expanded="false"][data-size="small"] .chevron-hint {
+  transform: rotate(0deg);
+}
+
+.card[aria-expanded="false"][data-size="small"] .thumb {
+  height: 90%;
 }
 
 .details {
@@ -87,26 +104,22 @@ body {
   transition: var(--transition);
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
-}
-
-.details:hover {
-  bottom: 0;
+  z-index: 1;
 }
 
 .chevron-hint {
+  cursor: pointer;
   background: var(--secondary);
   border-radius: 50%;
-  font-size: 1.7rem;
+  font-size: 2rem;
   position: absolute;
   left: 35%;
-  top: -0.7rem;
+  top: -1rem;
   transition: var(--transition);
 }
 
-.details:hover .chevron-hint {
-  height: 0;
-  width: 5rem;
-  top: 0.5rem;
+.card:not(:hover) .thumb {
+  transition: var(--transition);
 }
 
 .details-top {
@@ -118,7 +131,6 @@ body {
 }
 
 .category {
-  /* align-self: flex-end; */
   grid-column: span 6;
   margin-top: 1rem;
 }
@@ -133,6 +145,7 @@ body {
   color: var(--secondary);
   grid-row: span 3;
   grid-column: span 2;
+  z-index: 1;
 }
 
 .date .date-card {
@@ -173,7 +186,11 @@ body {
   padding-bottom: 1rem;
 }
 
-.view-link {
+.thumb .view-link {
+  display: none;
+}
+
+.details .view-link {
   margin-top: 0rem;
   background: var(--primary);
   border-top-left-radius: 1rem;
@@ -185,12 +202,12 @@ body {
   padding-top: 2rem;
 }
 
-.view-link a ion-icon {
+.details .view-link a ion-icon {
   font-size: 1.6rem;
   align-self: center;
 }
 
-.view-link a {
+.details .view-link a {
   position: relative;
   display: flex;
   gap: 0.6rem;
@@ -206,8 +223,7 @@ body {
   transition: var(--transition);
 }
 
-.view-link:hover ion-icon,
-.view-link:hover small {
+.view-link:hover a > * {
   color: var(--accent);
 }
 
@@ -216,6 +232,7 @@ body {
     font-size: 1rem;
     flex-direction: column;
     gap: 2rem;
+    justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: initial;
   }
@@ -224,21 +241,26 @@ body {
     margin-left: 3rem;
     width: clamp(500px, 90vw, 1000px);
     aspect-ratio: unset;
-    height: 11rem;
+    height: fit-content;
   }
 
-  .card:hover .thumb {
-    height: 20rem;
+  .thumb {
+    transform-origin: top;
+  }
+
+  .skills {
+    padding-block: 0.5rem;
   }
 
   .details-top {
-    height: 10rem;
+    height: fit-content;
     grid-template-rows: repeat(1, 1fr);
     grid-template-columns: repeat(7, 1fr);
+    box-shadow: none;
   }
 
   .category {
-    margin-top: 0.5rem;
+    margin-block: 0.5rem;
   }
 
   .date {
@@ -246,16 +268,20 @@ body {
   }
 
   .details {
+    position: relative;
     align-self: flex-start;
+    bottom: 0;
+    box-shadow: none;
+    padding-bottom: 0.5rem;
   }
 
-  .details:hover {
-    bottom: initial;
+  .title {
+    margin-block: 0.8rem;
   }
 
   .details-bottom {
     display: grid;
-    grid-template-rows: repeat(1, 1fr);
+    grid-template-rows: 1fr;
     grid-template-columns: repeat(7, 1fr);
   }
 
@@ -266,19 +292,52 @@ body {
 
   .thumb {
     height: 0;
+    box-shadow: inset 0 -0.2rem 1rem var(--shadow-color);
   }
 
-  .view-link {
-    grid-column: span 1;
-    border-radius: 0.5rem;
-    width: 4rem;
-    align-self: center;
-    margin-left: -2rem;
-    margin-top: -1rem;
-    margin-bottom: 0.5rem;
-    padding-block: 0.5rem;
+  .details .view-link {
+    display: none;
+  }
+  .thumb .view-link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin: 1rem 2rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    background: var(--secondary);
+    padding: 0.5rem 1rem;
+  }
 
-    /* position: absolute; */
-    /* width: 3rem; */
+  .thumb .view-link a {
+    text-decoration: none;
+    color: var(--primary);
+    padding-bottom: 3px;
+  }
+
+  .thumb .view-link a ion-icon {
+    margin-bottom: -0.25rem;
+    margin-left: 0.5rem;
+  }
+
+  .chevron-hint {
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    transform: rotate(180deg);
+  }
+
+  .card[aria-expanded="false"][data-size="large"] .details {
+    bottom: 0;
+  }
+
+  .card[aria-expanded="false"][data-size="large"] .chevron-hint {
+    transform: rotate(180deg);
+  }
+
+  .card[aria-expanded="false"][data-size="large"] .thumb {
+    height: 0;
   }
 }
