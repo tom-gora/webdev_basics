@@ -16,7 +16,6 @@ window.onload = () => {
   const handleResize = () => {
     addSizeMetadata(cards);
   };
-  let wasLessThan600 = window.innerWidth < 600;
 
   window.addEventListener("resize", handleResize);
 
@@ -56,26 +55,26 @@ window.onload = () => {
     });
   });
 
-  const resetOnResize = () => {
-    console.log("crossed the breakpoint!");
-    let cardsSize = cards[0].getAttribute("data-size");
-    console.log(cardsSize);
-
-    cards.forEach((card) => {
-      card.setAttribute("aria-expanded", "false");
-    });
+  const resetCards = () => {
+    console.log("data-size attribute has changed!");
+    location.reload();
   };
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "data-size" &&
+        mutation.oldValue !== mutation.target.getAttribute("data-size")
+      ) {
+        resetCards();
+      }
+    }
+  });
 
-  const breakpointHandler = (mutationsList) => {
-    resetOnResize;
-  };
-
-  const observer = new MutationObserver(breakpointHandler);
-
-  cards.forEach((card) => {
-    observer.observe(card, {
-      attributes: true,
-      attributeFilter: ["data-size"],
-    });
+  const testedCard = cards[0];
+  observer.observe(testedCard, {
+    attributes: true,
+    attributeFilter: ["data-size"],
+    attributeOldValue: true, // Include the old value in the mutation object
   });
 };

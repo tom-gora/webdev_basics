@@ -18,17 +18,29 @@
 }
 
 body {
+  display: flex;
+  justify-content: center;
   font-family: Open Sans, sans-serif;
   color: var(--primary);
   background: var(--background);
+  background-repeat: no-repeat;
   width: 100vw;
-  height: 100vh;
-  padding-block: 3rem;
+  min-height: 100vh;
+}
+
+.cards-container {
   display: flex;
   gap: 3rem;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  background: hsla(0, 0%, 100%, 0.4);
+  border-radius: 1rem;
+  margin-block: 2rem;
+  padding-block: 2rem;
+  width: 24rem;
+  max-width: 96%;
+  height: fit-content;
 }
 
 .card {
@@ -73,22 +85,10 @@ body {
   justify-content: flex-end;
   width: 100%;
   height: 90%;
-  background-image: url("https://freebiesui.com/wp-content/uploads/2020/07/dark-mode-desktop-ui-daily-media.jpg");
+  background-image: url("https://bootstrapmade.com/content/templatefiles/PhotoFolio/PhotoFolio-bootstrap-website-template-md.webp");
   background-size: cover;
   background-position: center;
   transition: var(--transition);
-}
-
-.card[aria-expanded="false"][data-size="small"] .details {
-  bottom: -9rem;
-}
-
-.card[aria-expanded="false"][data-size="small"] .chevron-hint {
-  transform: rotate(0deg);
-}
-
-.card[aria-expanded="false"][data-size="small"] .thumb {
-  height: 90%;
 }
 
 .details {
@@ -230,16 +230,23 @@ body {
 @media (min-width: 600px) {
   body {
     font-size: 1rem;
+  }
+
+  .cards-container {
     flex-direction: column;
     gap: 2rem;
     justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: initial;
+    border-radius: 1rem;
+    margin: auto;
+    align-self: flex-start;
+    width: clamp(590px, 96%, 1000px);
   }
 
   .card {
-    margin-left: 3rem;
-    width: clamp(500px, 90vw, 1000px);
+    margin: auto;
+    width: clamp(500px, 90%, 1000px);
     aspect-ratio: unset;
     height: fit-content;
   }
@@ -327,17 +334,5 @@ body {
     transform: translateX(-50%);
     font-size: 2rem;
     transform: rotate(180deg);
-  }
-
-  .card[aria-expanded="false"][data-size="large"] .details {
-    bottom: 0;
-  }
-
-  .card[aria-expanded="false"][data-size="large"] .chevron-hint {
-    transform: rotate(180deg);
-  }
-
-  .card[aria-expanded="false"][data-size="large"] .thumb {
-    height: 0;
   }
 }
