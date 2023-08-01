@@ -64,12 +64,12 @@ window.onload = () => {
         element.style.transform = "rotate(180deg)";
         currentlyExpandedCard.setAttribute("data-expanded", "false");
         currentlyExpandedCard.setAttribute("aria-expanded", "false");
-        currentlyExpandedFooter.style.bottom = "-8rem";
+        currentlyExpandedFooter.style.bottom = "-9rem";
         currentlyExpandedToggle.style.transform = "rotate(0deg)";
       } else if (cardSize === "small" && cardState === "true") {
         parentCard.setAttribute("data-expanded", "false");
         parentCard.setAttribute("aria-expanded", "false");
-        parentFooter.style.bottom = "-8rem";
+        parentFooter.style.bottom = "-9rem";
         element.style.transform = "rotate(0deg)";
       } else if (cardSize === "large" && cardState === "false") {
         parentFooter.style.bottom = 0;
