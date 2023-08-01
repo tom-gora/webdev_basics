@@ -356,6 +356,7 @@ body {
 }
 
 #wave {
+  width: 100%;
   margin-bottom: -5px;
 }
 
@@ -544,7 +545,7 @@ body {
   }
 
   .title {
-    margin-block: 0.8rem;
+    margin-block: 0.5rem;
   }
 
   .details-bottom {
@@ -554,8 +555,13 @@ body {
   }
 
   .description {
+    max-width:unset;
+    padding-right: 1rem;
+    padding-top: .5rem;
     grid-column: span 7;
     padding-bottom: 0;
+    height: 0;
+    opacity: 0;
   }
 
   .thumb {

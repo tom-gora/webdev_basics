@@ -28,7 +28,8 @@ window.onload = () => {
   const expandContent = (element) => {
     const parentCard = element.closest(".card");
     const parentFooter = element.parentElement;
-    const cardThumbnail = parentCard.querySelector(".thumb");
+    const parentCardThumbnail = parentCard.querySelector(".thumb");
+    const parentCardDescription = parentCard.querySelector(".description");
     let cardSize = parentCard.getAttribute("data-size");
     let cardState = parentCard.getAttribute("data-expanded");
 
@@ -38,6 +39,7 @@ window.onload = () => {
     let currentlyExpandedFooter;
     let currentlyExpandedToggle;
     let currentlyExpandedThumbnail;
+    let currentlyExpandedDescription;
 
     if (currentlyExpandedCard === null && cardSize === "small") {
       parentCard.setAttribute("data-expanded", "true");
@@ -48,7 +50,9 @@ window.onload = () => {
       parentFooter.style.bottom = 0;
       parentCard.setAttribute("data-expanded", "true");
       parentCard.setAttribute("aria-expanded", "true");
-      cardThumbnail.style.height = "25rem";
+      parentCardThumbnail.style.height = "25rem";
+      parentCardDescription.style.height = "fit-content";
+      parentCardDescription.style.opacity = "1";
       element.style.transform = "rotate(0deg)";
     } else {
       currentlyExpandedFooter = currentlyExpandedCard.querySelector(".details");
@@ -56,6 +60,8 @@ window.onload = () => {
         currentlyExpandedCard.querySelector(".chevron-hint");
       currentlyExpandedThumbnail =
         currentlyExpandedCard.querySelector(".thumb");
+      currentlyExpandedDescription =
+        currentlyExpandedCard.querySelector(".description");
 
       if (cardSize === "small" && cardState === "false") {
         parentCard.setAttribute("data-expanded", "true");
@@ -75,17 +81,23 @@ window.onload = () => {
         parentFooter.style.bottom = 0;
         parentCard.setAttribute("data-expanded", "true");
         parentCard.setAttribute("aria-expanded", "true");
-        cardThumbnail.style.height = "25rem";
+        parentCardThumbnail.style.height = "25rem";
+        parentCardDescription.style.height = "fit-content";
+        parentCardDescription.style.opacity = "1";
         element.style.transform = "rotate(0deg)";
         currentlyExpandedCard.setAttribute("data-expanded", "false");
         currentlyExpandedCard.setAttribute("aria-expanded", "false");
         currentlyExpandedThumbnail.style.height = 0;
         currentlyExpandedToggle.style.transform = "rotate(180deg)";
+        currentlyExpandedDescription.style.height = "0";
+        currentlyExpandedDescription.style.opacity = "0";
       } else if (cardSize === "large" && cardState === "true") {
         parentFooter.style.bottom = 0;
         parentCard.setAttribute("data-expanded", "false");
         parentCard.setAttribute("aria-expanded", "false");
-        cardThumbnail.style.height = 0;
+        parentCardThumbnail.style.height = 0;
+        parentCardDescription.style.height = "0";
+        parentCardDescription.style.opacity = "0";
         element.style.transform = "rotate(180deg)";
       }
     }
