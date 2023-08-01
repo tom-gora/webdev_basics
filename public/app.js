@@ -91,9 +91,11 @@ window.onload = () => {
     const menuState = navigation.getAttribute("data-expanded");
     if (menuState === "false") {
       navigation.setAttribute("data-expanded", "true");
+      navigation.style.paddingLeft = "1rem";
       navigationIcon.setAttribute("name", "close-circle");
     } else {
       navigation.setAttribute("data-expanded", "false");
+      navigation.style.paddingLeft = "0.25rem";
       navigationIcon.setAttribute("name", "chevron-back-circle");
     }
   };
