@@ -29,32 +29,65 @@ window.onload = () => {
     const parentCard = element.closest(".card");
     const parentFooter = element.parentElement;
     const cardThumbnail = parentCard.querySelector(".thumb");
-
     let cardSize = parentCard.getAttribute("data-size");
     let cardState = parentCard.getAttribute("data-expanded");
 
-    if (cardSize === "small" && cardState === "false") {
+    const currentlyExpandedCard = document.querySelector(
+      ".card[data-expanded='true']"
+    );
+    let currentlyExpandedFooter;
+    let currentlyExpandedToggle;
+    let currentlyExpandedThumbnail;
+
+    if (currentlyExpandedCard === null && cardSize === "small") {
       parentCard.setAttribute("data-expanded", "true");
       parentCard.setAttribute("aria-expanded", "true");
       parentFooter.style.bottom = 0;
       element.style.transform = "rotate(180deg)";
-    } else if (cardSize === "small" && cardState === "true") {
-      parentCard.setAttribute("data-expanded", "false");
-      parentCard.setAttribute("aria-expanded", "false");
-      parentFooter.style.bottom = "-8rem";
-      element.style.transform = "rotate(0deg)";
-    } else if (cardSize === "large" && cardState === "false") {
+    } else if (currentlyExpandedCard === null && cardSize === "large") {
       parentFooter.style.bottom = 0;
       parentCard.setAttribute("data-expanded", "true");
       parentCard.setAttribute("aria-expanded", "true");
       cardThumbnail.style.height = "25rem";
       element.style.transform = "rotate(0deg)";
-    } else if (cardSize === "large" && cardState === "true") {
-      parentFooter.style.bottom = 0;
-      parentCard.setAttribute("data-expanded", "false");
-      parentCard.setAttribute("aria-expanded", "false");
-      cardThumbnail.style.height = 0;
-      element.style.transform = "rotate(180deg)";
+    } else {
+      currentlyExpandedFooter = currentlyExpandedCard.querySelector(".details");
+      currentlyExpandedToggle =
+        currentlyExpandedCard.querySelector(".chevron-hint");
+      currentlyExpandedThumbnail =
+        currentlyExpandedCard.querySelector(".thumb");
+
+      if (cardSize === "small" && cardState === "false") {
+        parentCard.setAttribute("data-expanded", "true");
+        parentCard.setAttribute("aria-expanded", "true");
+        parentFooter.style.bottom = 0;
+        element.style.transform = "rotate(180deg)";
+        currentlyExpandedCard.setAttribute("data-expanded", "false");
+        currentlyExpandedCard.setAttribute("aria-expanded", "false");
+        currentlyExpandedFooter.style.bottom = "-8rem";
+        currentlyExpandedToggle.style.transform = "rotate(0deg)";
+      } else if (cardSize === "small" && cardState === "true") {
+        parentCard.setAttribute("data-expanded", "false");
+        parentCard.setAttribute("aria-expanded", "false");
+        parentFooter.style.bottom = "-8rem";
+        element.style.transform = "rotate(0deg)";
+      } else if (cardSize === "large" && cardState === "false") {
+        parentFooter.style.bottom = 0;
+        parentCard.setAttribute("data-expanded", "true");
+        parentCard.setAttribute("aria-expanded", "true");
+        cardThumbnail.style.height = "25rem";
+        element.style.transform = "rotate(0deg)";
+        currentlyExpandedCard.setAttribute("data-expanded", "false");
+        currentlyExpandedCard.setAttribute("aria-expanded", "false");
+        currentlyExpandedThumbnail.style.height = 0;
+        currentlyExpandedToggle.style.transform = "rotate(180deg)";
+      } else if (cardSize === "large" && cardState === "true") {
+        parentFooter.style.bottom = 0;
+        parentCard.setAttribute("data-expanded", "false");
+        parentCard.setAttribute("aria-expanded", "false");
+        cardThumbnail.style.height = 0;
+        element.style.transform = "rotate(180deg)";
+      }
     }
   };
 
@@ -66,6 +99,7 @@ window.onload = () => {
   });
 
   const resetCards = () => {
+    console.log("reset");
     location.reload();
   };
   const observer = new MutationObserver((mutationsList) => {
