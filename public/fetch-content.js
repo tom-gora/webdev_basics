@@ -47,7 +47,7 @@ fetchProjectList().then((response) => {
     });
 
     const cardHtml = `<header class="skills">${skillsHTML}</header>
-      <div class="thumb" style="background-image: url('https://raw.githubusercontent.com/tom-gora${project.source}master/thumbnail.png')";>
+      <div class="thumb" style="background-image: url('https://raw.githubusercontent.com/tom-gora${project.source}/thumbnail.png')";>
         <button class="view-link">
           <a href="#">
             <small>View it!</small>
