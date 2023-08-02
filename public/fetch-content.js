@@ -84,7 +84,7 @@ fetchProjectList().then((response) => {
       </footer>
 `;
     const tempElement = document.createElement("div");
-    tempElement.setAttribute("id", `${counter}`);
+    tempElement.setAttribute("id", `card${counter}`);
     tempElement.setAttribute("class", "card");
     tempElement.setAttribute("data-size", "");
     tempElement.setAttribute("data-expanded", "false");
