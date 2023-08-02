@@ -73,14 +73,6 @@
       "date": "2023-06-24"
     },
     {
-      "skills": ["html5", "css3"],
-      "categories": ["personal", "tutorial", "component"],
-      "title": "Animated Border Button 2",
-      "description": "A button with a custom glowing animation of the border.",
-      "source": "/webdev_basics/random/glowing_border_24_June_23/",
-      "date": "2023-06-24"
-    },
-    {
       "skills": ["html5", "css3", "javascript"],
       "categories": ["personal", "tutorial", "component"],
       "title": "Epanding User Profile Card",
