@@ -460,13 +460,20 @@ body {
 
   .links-navbar ul {
     flex-direction: row;
-    gap: 1rem;
+    gap: 0;
     flex-wrap: nowrap;
+    justify-content: flex-end;
+  }
+  .links-navbar ul > * {
+    width: 6rem;
+    display: flex;
+    justify-content: center;
   }
 
   .links-navbar ul li a,
   #toggle-mode {
     margin: 0;
+    padding: 0;
   }
 
   .links-navbar ul li a:hover,
@@ -555,9 +562,9 @@ body {
   }
 
   .description {
-    max-width:unset;
+    max-width: unset;
     padding-right: 1rem;
-    padding-top: .5rem;
+    padding-top: 0.5rem;
     grid-column: span 7;
     padding-bottom: 0;
     height: 0;
