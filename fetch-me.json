@@ -58,7 +58,7 @@
     },
     {
       "skills": ["html5", "css3", "javascript"],
-      "categories": ["icodethis", "app", "custom", "glassmorphism"],
+      "categories": ["icodethis", "app", "glassmorphism"],
       "title": "Timer App",
       "description": "Simple web app replicating functionality of Android timer application. Custom styling.",
       "source": "/webdev_basics/master/icodethis/timer_20_Jul_23/",
