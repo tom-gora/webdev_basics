@@ -5,7 +5,7 @@
       "categories": ["icodethis", "page", "school"],
       "title": "404 Page Challenge",
       "description": "Simple 404 page project using responsively moving svgs to replicate an image based background in the orginal.",
-      "source": "/webdev_basics/icodethis/404_Page_26_Jun_23/",
+      "source": "/webdev_basics/master/icodethis/404_Page_26_Jun_23/",
       "date": "2023-06-26"
     },
     {
@@ -13,7 +13,7 @@
       "categories": ["icodethis", "component"],
       "title": "Address Finder Challenge",
       "description": "A simple project replicating the look of address finder.",
-      "source": "/webdev_basics/icodethis/address_finder_18_Jun_23/",
+      "source": "/webdev_basics/master/icodethis/address_finder_18_Jun_23/",
       "date": "2023-06-18"
     },
     {
@@ -21,7 +21,7 @@
       "categories": ["personal", "component", "svg"],
       "title": "Announcement Card with SVG blob",
       "description": "A simple project replicating the look of announcement card.",
-      "source": "/webdev_basic/icodethis/announcement_card_blob_19_Jun_23/",
+      "source": "/webdev_basics/master/master/icodethis/announcement_card_blob_19_Jun_23/",
       "date": "2023-06-19"
     },
     {
@@ -29,7 +29,7 @@
       "categories": ["icodethis", "component"],
       "title": "Apps Card Challenge",
       "description": "A simple project replicating the look of an apps component.",
-      "source": "/webdev_basics/icodethis/apps_card/",
+      "source": "/webdev_basicscs/master/icodethis/apps_card/",
       "date": "2023-07-21"
     },
     {
@@ -37,7 +37,7 @@
       "categories": ["icodethis", "component"],
       "title": "Colored Cards Challenge",
       "description": "Simple set of cards, that generate a set of random pastel colors on click. Responsive flexbox.",
-      "source": "/webdev_basics/icodethis/colored_cards_20_Jun_23/",
+      "source": "/webdev_basics/master/icodethis/colored_cards_20_Jun_23/",
       "date": "2023-06-20"
     },
     {
@@ -45,7 +45,7 @@
       "categories": ["icodethis", "component", "darkmode"],
       "title": "Social Media Get in Touch Card",
       "description": "Simple card with social media links that is able to switch between dark/light modes and stores preference in localstorage.",
-      "source": "/webdev_basics/icodethis/get_in_touch_29_Jun_23/",
+      "source": "/webdev_basics/master/icodethis/get_in_touch_29_Jun_23/",
       "date": "2023-06-29"
     },
     {
@@ -53,7 +53,7 @@
       "categories": ["icodethis", "component", "custom"],
       "title": "Notifications Card Challenge",
       "description": "Card displaying custom memo posts. Max 3 at a time, posts dissapear with time.",
-      "source": "/webdev_basics/icodethis/notification_box_22_June_23/",
+      "source": "/webdev_basics/master/icodethis/notification_box_22_June_23/",
       "date": "2023-06-22"
     },
     {
@@ -61,7 +61,7 @@
       "categories": ["icodethis", "app", "custom"],
       "title": "Timer App",
       "description": "Simple web app replicating functionality of Android timer application. Custom styling.",
-      "source": "/webdev_basics/icodethis/timer_20_Jul_23/",
+      "source": "/webdev_basics/master/icodethis/timer_20_Jul_23/",
       "date": "2023-07-20"
     },
     {
@@ -77,7 +77,7 @@
       "categories": ["personal", "tutorial", "component"],
       "title": "Epanding User Profile Card",
       "description": "Simple component with user profile links. Expanding to reveal details.",
-      "source": "/webdev_basics/random/dropdown_profile_25_Jun_23/",
+      "source": "/webdev_basics/master/random/dropdown_profile_25_Jun_23/",
       "date": "2023-06-25"
     }
   ]
