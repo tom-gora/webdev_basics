@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get in touch!</title>
+    <style>
+      :root {
+  --body-background: linear-gradient(-20deg, #2b5876 0%, #171423 100%);
+  --card-background: #001c30;
+  --card-light-background: #faedf0;
+  --card-accents: #2b5876;
+  --card-secondary-accents: #9d4566;
+  --shadow: 5px 5px 1rem var(--card-background);
+}
+
+.lightmode {
+  --body-background: linear-gradient(-20deg, #a7a1bb 0%, #fff 100%);
+  --card-background: #faedf0;
+  --card-light-background: #001c30;
+  --card-accents: #2b5876;
+  --card-secondary-accents: #9d4566;
+  --shadow: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: var(--body-background);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+  font-family: sans-serif, "Ubuntu", system;
+}
+
+.card,
+#mode-toggle,
+.get-in-touch {
+  box-shadow: var(--shadow);
+}
+
+.card {
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+  align-self: self-end;
+  width: 40rem;
+  height: 20rem;
+  background: var(--card-background);
+  border: 0.5rem solid var(--card-light-background);
+  border-radius: 2rem;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.card-header {
+  background: var(--card-light-background);
+  color: var(--card-background);
+  height: 3rem;
+  grid-column: 2 / span 4;
+  border-radius: 0 0 1rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-header h2 ion-icon {
+  font-size: 2rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 5px;
+  color: var(--card-secondary-accents);
+  animation: beat 1s linear infinite;
+}
+.card-header h2 span {
+  color: var(--card-secondary-accents);
+}
+
+.close-btn {
+  color: var(--card-accents);
+  font-size: 3rem;
+  justify-self: self-end;
+  align-self: top;
+  padding-right: 0.75rem;
+  transition: color 200ms ease;
+  margin-top: 0.75rem;
+}
+
+.card .card-title {
+  grid-column: 2 / span 4;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--card-accents);
+}
+
+.contact {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  position: relative;
+  gap: 2.5rem;
+  grid-row: 3;
+  grid-column: 2 / span 4;
+  color: var(--card-accents);
+  font-size: 3rem;
+}
+.icon {
+  position: relative;
+  font-size: 2.225rem;
+  color: var(--card-accents);
+  transition: color 200ms ease;
+  transition: scale 200ms ease;
+  transform-origin: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon:hover,
+.close-btn:hover {
+  color: var(--card-secondary-accents);
+}
+
+.icon:hover::before {
+  scale: 1.05;
+}
+
+.icon::before {
+  content: "";
+  background: transparent;
+  border: 1px solid var(--card-accents);
+  position: absolute;
+  aspect-ratio: 1;
+  width: 160%;
+  border-radius: 50%;
+}
+
+button.get-in-touch {
+  grid-row: 3;
+  grid-column: 2 / span 1;
+  justify-self: self-start;
+  align-self: self-start;
+  background: var(--card-light-background);
+  color: var(--card-background);
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  border-radius: 100vw;
+  margin-top: 2rem;
+  margin-left: 1rem;
+  padding: 1em 2em;
+  transition: all 200ms ease-in-out;
+}
+
+button.get-in-touch:hover,
+button.get-in-touch:focus {
+  background: var(--card-secondary-accents);
+  color: var(--card-light-background);
+}
+
+#mode-toggle {
+  border: none;
+  justify-self: end;
+  align-self: flex-end;
+  margin-bottom: 2rem;
+  margin-right: 1rem;
+  grid-column: 2;
+  width: 3rem;
+  height: 2rem;
+  border-radius: 100vw;
+  background: var(--card-light-background);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+body.lightmode #mode-toggle {
+  justify-content: end;
+}
+
+#mode-toggle::after {
+  content: " ";
+  position: absolute;
+  margin-inline: 0.1rem;
+  background: var(--card-secondary-accents);
+  aspect-ratio: 1;
+  width: 1.8rem;
+  border-radius: 50%;
+}
+
+#mode-toggle::before {
+  position: absolute;
+  top: -1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  content: "Dark Mode";
+  display: block;
+  width: 6rem;
+  height: 2rem;
+  color: var(--card-light-background);
+  font-weight: 600;
+}
+
+body.lightmode #mode-toggle::before {
+  content: "Light Mode";
+}
+
+@keyframes beat {
+  0% {
+    scale: 1;
+  }
+  20% {
+    scale: 1.3;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+@media (max-width: 748px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .card {
+    position: relative;
+    max-width: 96vw;
+    align-self: center;
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+  }
+
+  .card-header {
+    grid-row: 1;
+    grid-column: 1;
+    margin-inline: 1.5rem;
+    margin-bottom: 2rem;
+    padding-block: 1rem;
+    height: fit-content;
+    width: 86%;
+    justify-self: center;
+    justify-content: start;
+    font-size: 0.8rem;
+    word-wrap: normal;
+  }
+
+  .card-header h2 {
+    padding-left: 2.5rem;
+    width: 65%;
+    text-align: left;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 2rem;
+  }
+  .card .card-title {
+    align-self: center;
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+  }
+  .contact {
+    max-width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    justify-self: center;
+    grid-column: 1 / span 1;
+    grid-row: 3 / span 2;
+  }
+
+  button.get-in-touch {
+    align-self: center;
+  }
+}
+
+    </style>
+  </head>
+
+  <body>
+    <button id="mode-toggle"></button>
+    <div class="card">
+      <div class="card-header">
+        <h2>
+          Created with
+          <ion-icon name="heart"></ion-icon> by <span>Tom Gora</span>
+        </h2>
+      </div>
+      <div class="close-btn"><ion-icon name="close-outline"></ion-icon></div>
+      <h1 class="card-title">Get in touch on</h1>
+      <div class="contact">
+        <div class="icon"><ion-icon name="logo-twitter"></ion-icon></div>
+        <div class="icon"><ion-icon name="logo-instagram"></ion-icon></div>
+        <div class="icon"><ion-icon name="logo-facebook"></ion-icon></div>
+        <div class="icon"><ion-icon name="logo-github"></ion-icon></div>
+        <div class="icon"><ion-icon name="logo-linkedin"></ion-icon></div>
+        <div class="icon"><ion-icon name="logo-mastodon"></ion-icon></div>
+      </div>
+    </div>
+    <button class="get-in-touch">Send Me a Message</button>
+    <!-- scipts -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  let light_mode = localStorage.getItem("light_mode");
+  const mode_toggle = document.querySelector("#mode-toggle");
+
+  const enable_dark_mode = () => {
+    document.body.classList.add("lightmode");
+    localStorage.setItem("light_mode", "enabled");
+  };
+
+  const disable_dark_mode = () => {
+    document.body.classList.remove("lightmode");
+    localStorage.setItem("light_mode", "disabled");
+  };
+
+  const check_mode = () => {
+    if (light_mode === "disabled") {
+      disable_dark_mode();
+      localStorage.setItem("light_mode", "disabled");
+    } else {
+      enable_dark_mode();
+      localStorage.setItem("light_mode", "enabled");
+    }
+  };
+  check_mode();
+
+  const toggle_mode = () => {
+    dark_mode = localStorage.getItem("light_mode");
+
+    if (dark_mode === "enabled") {
+      disable_dark_mode();
+      localStorage.setItem("light_mode", "disabled");
+    } else if (dark_mode === "disabled") {
+      enable_dark_mode();
+      localStorage.setItem("light_mode", "enabled");
+    }
+  };
+
+  mode_toggle.addEventListener("click", () => {
+    toggle_mode();
+  });
+});
+
+</script>
+  </body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glassmorphic timer</title>
+  <link rel="preconnect" href="https://fonts.bunny.net" />
+  <link href="https://fonts.bunny.net/css?family=roboto:400" rel="stylesheet" />
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+:root {
+  --bg: #051b22;
+  --accent-color: #5de7c0;
+  --txt-color: #acfce8;
+  --txt-color-muted: #67978b;
+  --glass-border: 1px solid rgba(203, 253, 240, 0.2);
+  --glass-blur: blur(0.2rem);
+  --glass-bg: rgba(203, 253, 240, 0.05);
+  --glass-bg-active: rgba(203, 253, 240, 0.11);
+  --transition: all 200ms ease-in-out;
+  --alert-color: #c05de7;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  width: 100vw;
+  height: 100vh;
+  color: var(--txt-color);
+  /* background-image: url("../assets/bg.svg"); */
+  background-image: url("data:image/svg+xml;base64,77u/PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyMDAwIDE1MDAnPjxyZWN0IGZpbGw9JyMwNTFiMjInIHdpZHRoPScyMDAwJyBoZWlnaHQ9JzE1MDAnLz48ZGVmcz48Y2lyY2xlICBzdHJva2U9JyM1REU3QzAnIHZlY3Rvci1lZmZlY3Q9J25vbi1zY2FsaW5nLXN0cm9rZScgaWQ9J2EnIGZpbGw9J25vbmUnIHN0cm9rZS13aWR0aD0nMi4yJyByPSczMTUnLz48dXNlIGlkPSdmJyBocmVmPScjYScgc3Ryb2tlLWRhc2hhcnJheT0nMTAwIDEwMCAxMDAgOTk5OScvPjx1c2UgaWQ9J2InIGhyZWY9JyNhJyBzdHJva2UtZGFzaGFycmF5PScyNTAgMjUwIDI1MCAyNTAgMjUwIDk5OTknLz48dXNlIGlkPSdlJyBocmVmPScjYScgc3Ryb2tlLWRhc2hhcnJheT0nMTAwMCA1MDAgMTAwMCA1MDAgOTk5OScvPjx1c2UgaWQ9J2cnIGhyZWY9JyNhJyBzdHJva2UtZGFzaGFycmF5PScxNTAwIDk5OTknLz48dXNlIGlkPSdoJyBocmVmPScjYScgc3Ryb2tlLWRhc2hhcnJheT0nMjAwMCA1MDAgNTAwIDk5OTknLz48dXNlIGlkPSdqJyBocmVmPScjYScgc3Ryb2tlLWRhc2hhcnJheT0nODAwIDgwMCA4MDAgODAwIDgwMCA5OTk5Jy8+PHVzZSBpZD0naycgaHJlZj0nI2EnIHN0cm9rZS1kYXNoYXJyYXk9JzEyMDAgMTIwMCAxMjAwIDEyMDAgMTIwMCA5OTk5Jy8+PHVzZSBpZD0nbCcgaHJlZj0nI2EnIHN0cm9rZS1kYXNoYXJyYXk9JzE2MDAgMTYwMCAxNjAwIDE2MDAgMTYwMCA5OTk5Jy8+PC9kZWZzPjxnIHRyYW5zZm9ybT0ndHJhbnNsYXRlKDEwMDAgNzUwKScgc3Ryb2tlLW9wYWNpdHk9JzAuNjYnPjxnICB0cmFuc2Zvcm09J3JvdGF0ZSgzOS42IDAgMCknID48Y2lyY2xlICBmaWxsPScjNWRlN2MwJyBmaWxsLW9wYWNpdHk9JzAuNjYnIHI9JzEwJy8+PGcgIHRyYW5zZm9ybT0ncm90YXRlKC00MiAwIDApJz48dXNlIGhyZWY9JyNmJyB0cmFuc2Zvcm09J3NjYWxlKC4xKSByb3RhdGUoNTAgMCAwKScgLz48dXNlIGhyZWY9JyNmJyB0cmFuc2Zvcm09J3NjYWxlKC4yKSByb3RhdGUoMTAwIDAgMCknIC8+PHVzZSBocmVmPScjZicgdHJhbnNmb3JtPSdzY2FsZSguMykgcm90YXRlKDE1MCAwIDApJyAvPjwvZz48ZyAgdHJhbnNmb3JtPScnPjx1c2UgaHJlZj0nI2InIHRyYW5zZm9ybT0nc2NhbGUoLjQpIHJvdGF0ZSgyMDAgMCAwKScgLz48dXNlIGhyZWY9JyN6JyB0cmFuc2Zvcm09J3NjYWxlKC41KSByb3RhdGUoMjUwIDAgMCknIC8+PC9nPjxnICBpZD0neicgdHJhbnNmb3JtPSdyb3RhdGUoMTguOSAwIDApJz48ZyAgdHJhbnNmb3JtPSdyb3RhdGUoMjQuNzUgMCAwKSc+PHVzZSBocmVmPScjYicvPjx1c2UgaHJlZj0nI2InIHRyYW5zZm9ybT0nc2NhbGUoMS4yKSByb3RhdGUoOTAgMCAwKScgLz48dXNlIGhyZWY9JyNiJyB0cmFuc2Zvcm09J3NjYWxlKDEuNCkgcm90YXRlKDYwIDAgMCknIC8+PHVzZSBocmVmPScjZScgdHJhbnNmb3JtPSdzY2FsZSgxLjYpIHJvdGF0ZSgxMjAgMCAwKScgLz48dXNlIGhyZWY9JyNlJyB0cmFuc2Zvcm09J3NjYWxlKDEuOCkgcm90YXRlKDMwIDAgMCknIC8+PC9nPjwvZz48ZyAgaWQ9J3knIHRyYW5zZm9ybT0nJz48ZyAgdHJhbnNmb3JtPSdyb3RhdGUoMTQuODUgMCAwKSc+PHVzZSBocmVmPScjZScgdHJhbnNmb3JtPSdzY2FsZSgxLjEpIHJvdGF0ZSgyMCAwIDApJyAvPjx1c2UgaHJlZj0nI2cnIHRyYW5zZm9ybT0nc2NhbGUoMS4zKSByb3RhdGUoLTQwIDAgMCknIC8+PHVzZSBocmVmPScjZycgdHJhbnNmb3JtPSdzY2FsZSgxLjUpIHJvdGF0ZSg2MCAwIDApJyAvPjx1c2UgaHJlZj0nI2gnIHRyYW5zZm9ybT0nc2NhbGUoMS43KSByb3RhdGUoLTgwIDAgMCknIC8+PHVzZSBocmVmPScjaicgdHJhbnNmb3JtPSdzY2FsZSgxLjkpIHJvdGF0ZSgxMDAgMCAwKScgLz48L2c+PC9nPjxnICB0cmFuc2Zvcm09J3JvdGF0ZSgtMjkuNyAwIDApJz48ZyAgdHJhbnNmb3JtPSdyb3RhdGUoLTE4LjkgMCAwKSc+PGcgIHRyYW5zZm9ybT0nJz48dXNlIGhyZWY9JyNoJyB0cmFuc2Zvcm09J3NjYWxlKDIpIHJvdGF0ZSg2MCAwIDApJy8+PHVzZSBocmVmPScjaicgdHJhbnNmb3JtPSdzY2FsZSgyLjEpIHJvdGF0ZSgxMjAgMCAwKScvPjx1c2UgaHJlZj0nI2onIHRyYW5zZm9ybT0nc2NhbGUoMi4zKSByb3RhdGUoMTgwIDAgMCknLz48dXNlIGhyZWY9JyNoJyB0cmFuc2Zvcm09J3NjYWxlKDIuNCkgcm90YXRlKDI0MCAwIDApJy8+PHVzZSBocmVmPScjaicgdHJhbnNmb3JtPSdzY2FsZSgyLjUpIHJvdGF0ZSgzMDAgMCAwKScvPjwvZz48dXNlIGhyZWY9JyN5JyB0cmFuc2Zvcm09J3NjYWxlKDIpIHJvdGF0ZSgxODAgMCAwKScgLz48dXNlIGhyZWY9JyNqJyB0cmFuc2Zvcm09J3NjYWxlKDIuNyknLz48dXNlIGhyZWY9JyNqJyB0cmFuc2Zvcm09J3NjYWxlKDIuOCkgcm90YXRlKDQ1IDAgMCknLz48dXNlIGhyZWY9JyNqJyB0cmFuc2Zvcm09J3NjYWxlKDIuOSkgcm90YXRlKDkwIDAgMCknLz48dXNlIGhyZWY9JyNrJyB0cmFuc2Zvcm09J3NjYWxlKDMuMSkgcm90YXRlKDEzNSAwIDApJy8+PHVzZSBocmVmPScjaycgdHJhbnNmb3JtPSdzY2FsZSgzLjIpIHJvdGF0ZSgxODAgMCAwKScvPjwvZz48dXNlIGhyZWY9JyNrJyB0cmFuc2Zvcm09J3NjYWxlKDMuMykgcm90YXRlKDIyNSAwIDApJy8+PHVzZSBocmVmPScjaycgdHJhbnNmb3JtPSdzY2FsZSgzLjUpIHJvdGF0ZSgyNzAgMCAwKScvPjx1c2UgaHJlZj0nI2snIHRyYW5zZm9ybT0nc2NhbGUoMy42KSByb3RhdGUoMzE1IDAgMCknLz48dXNlIGhyZWY9JyNrJyB0cmFuc2Zvcm09J3NjYWxlKDMuNyknLz48dXNlIGhyZWY9JyNrJyB0cmFuc2Zvcm09J3NjYWxlKDMuOSkgcm90YXRlKDc1IDAgMCknLz48L2c+PC9nPjwvZz48L3N2Zz4K");
+  background-size: auto 100%;
+  display: grid;
+  place-items: center;
+}
+
+.credits {
+  position: absolute;
+  left: 2rem;
+  top: 1rem;
+  border-radius: 0.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-top: var(--glass-border);
+  border-left: var(--glass-border);
+  padding: 0.5rem 1rem;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 24rem;
+  aspect-ratio: 9 / 16;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: var(--glass-bg);
+  box-shadow: 1rem 1rem 3.5rem rgba(0, 0, 0, 0.5);
+  border-top: var(--glass-border);
+  border-left: var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+}
+
+/* navigation styles */
+
+.nav,
+.controls {
+  width: 100%;
+}
+.nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  top: 0;
+  height: 8rem;
+  padding-inline: 0.5rem;
+  margin-bottom: 1rem;
+}
+.app-main {
+  width: 100%;
+  height: 100%;
+}
+.nav .nav-ui {
+  height: 7.25rem;
+  width: 7.25rem;
+  margin-block: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  border-top: 1px solid rgba(255, 255, 255, 0);
+  border-left: 1px solid rgba(255, 255, 255, 0);
+  border-radius: 1rem;
+}
+.nav .nav-ui:hover,
+.nav .nav-ui:focus,
+.nav .nav-ui.active {
+  background: var(--glass-bg-active);
+  border-top: var(--glass-border);
+  border-left: var(--glass-border);
+}
+
+.nav .nav-ui:not(.active) {
+  color: var(--txt-color-muted);
+}
+
+.nav .nav-ui ion-icon {
+  font-size: 3rem;
+}
+
+.app-main-ui {
+  display: none;
+}
+/* ui styles - timer */
+
+.app-main-ui.main-timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1rem;
+  width: 100%;
+  min-height: 100%;
+}
+
+.timer-input[data-pop-out] {
+  animation: animate-pop-out 200ms forwards;
+}
+
+#timer-hours,
+#timer-minutes,
+#timer-seconds {
+  user-select: contain;
+  pointer-events: none !important;
+}
+
+.timer-group {
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 1rem;
+}
+
+.timer-group label {
+  max-width: 4rem;
+  text-align: center;
+}
+
+.timer-group label input {
+  max-width: 100%;
+  aspect-ratio: 1/ 0.8;
+  border-right: none;
+  border-bottom: none;
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+  border-radius: 1rem;
+  margin-block: 0.5rem;
+  background: var(--glass-bg-active);
+  color: var(--txt-color-muted);
+  font-size: 2rem;
+  caret-color: transparent;
+  text-align: center;
+}
+.timer-group label input::selection {
+  background-color: transparent;
+  color: var(--txt-color);
+}
+
+.timer-group label input:focus {
+  border-right: none;
+  border-bottom: none;
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+  outline: none;
+}
+
+.num-pad {
+  margin-inline: 5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.num-pad .numpad-button {
+  background: var(--glass-bg);
+  width: 100%;
+  aspect-ratio: 1;
+  box-shadow: none !important;
+  border: none !important;
+  color: var(--txt-color);
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: var(--transition);
+  transform-origin: center;
+}
+
+.num-pad .numpad-button:focus-visible {
+  outline: none;
+  border: none;
+}
+
+.num-pad .numpad-button:hover,
+.numpad-back-button:hover {
+  background: var(--glass-bg-active);
+}
+
+.controls-timer,
+.controls-countdown {
+  display: flex;
+  gap: 2rem;
+  height: 7rem;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+.controls-timer .controls-timer-start,
+.controls-countdown .controls-countdown-stop,
+.controls-countdown .controls-countdown-pause {
+  background: var(--glass-bg);
+  width: 5rem;
+  aspect-ratio: 1;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  color: transparent;
+  font-size: 3rem;
+  margin-block: 0.5rem;
+  display: none;
+  place-items: center;
+  transition: var(--transition);
+  animation: animate-pop-in 200ms forwards;
+}
+
+.controls-timer .controls-timer-start ion-icon,
+.controls-countdown .controls-countdown-pause ion-icon {
+  color: var(--txt-color);
+}
+
+.controls-countdown .controls-countdown-stop ion-icon {
+  color: var(--alert-color);
+}
+
+.controls-timer .controls-timer-start[data-pop-out],
+.controls-countdown .controls-countdown-stop[data-pop-out],
+.controls-countdown .controls-countdown-pause[data-pop-out] {
+  animation: animate-pop-out 200ms forwards;
+}
+
+.controls-timer .controls-timer-start:hover,
+.controls-timer .controls-timer-start:focus-visible,
+.controls-timer .controls-timer-start:active,
+.controls-countdown .controls-countdown-stop:hover,
+.controls-countdown .controls-countdown-stop:focus-visible,
+.controls-countdown .controls-countdown-stop:active,
+.controls-countdown .controls-countdown-pause:hover,
+.controls-countdown .controls-countdown-pause:focus-visible,
+.controls-countdown .controls-countdown-pause:active {
+  background: var(--glass-bg-active);
+  outline: none;
+  box-shadow: none;
+  border-right: none;
+  border-bottom: none;
+  border-left: var(--glass-border);
+  border-top: var(--glass-border);
+}
+
+@keyframes animate-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5, 0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes animate-pop-out {
+  0% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+
+  98% {
+    opacity: 0;
+    transform: scale(0.5, 0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+    height: 0;
+  }
+}
+
+/* countdown */
+
+.countdown-container {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 80%;
+  height: 25rem;
+}
+
+.countdown-container {
+  animation: animate-pop-in 200ms forwards;
+}
+
+.countdown-circle {
+  fill: none;
+  stroke: none;
+}
+
+.countdown-path-elapsed {
+  stroke-width: 2px;
+  stroke: var(--txt-color-muted);
+}
+
+.countdown-path-elapsed[data-flashing] {
+  animation: flash 1000ms linear infinite;
+}
+
+#countdown-path-remaining {
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke: var(--txt-color);
+  transform: rotate(90deg) scaleY(-1);
+  transform-origin: center;
+  transition: 1000ms linear all;
+}
+
+.countdown-container span {
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 1000ms linear all;
+}
+
+.alert {
+  width: 0;
+  height: 0;
+}
+
+@keyframes flash {
+  0% {
+    stroke: var(--alert-color);
+    stroke-width: 4px;
+  }
+  50% {
+    stroke: var(--txt-color);
+    stroke-width: 2px;
+  }
+
+  100% {
+    stroke: var(--alert-color);
+    stroke-width: 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    scale: 0.96;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="credits">
+    <small>* Background by SVGBackgrounds.com</small>
+  </div>
+  <div class="main-container">
+    <audio src="https://raw.githubusercontent.com/tom-gora/webdev_basics/master/icodethis/timer_20_Jul_23/assets/alert.mp3" class="alert"></audio>
+    <!-- src:
+      https://cdn.freesound.org/previews/647/647215_5828667-lq.mp3
+    -->
+    <header class="nav">
+      <div class="nav-ui nav-alarm">
+        <ion-icon name="alarm-outline"></ion-icon> <span>Alarm</span>
+      </div>
+      <div class="nav-ui nav-timer active">
+        <ion-icon name="timer-outline"></ion-icon>
+        <span>Timer</span>
+      </div>
+      <div class="nav-ui nav-stopwatch"><ion-icon name="stopwatch-outline"></ion-icon><span>Stopwatch</div>
+    </header>
+    <section class="app-main">
+      <div class="app-main-ui main-alarm">
+        <div class="controls-ui controls-alarm"></div>
+      </div>
+      <div class="app-main-ui main-timer">
+        <div class="timer-input">
+          <div class="timer-group" tabindex="-1">
+            <label for="timer-hours">Hours
+              <input readonly type="text" id="timer-hours" dir="rtl" maxlength="2" pattern="\d*" value="00"
+                data-state="unmodified">
+            </label>
+            <label for="timer-minutes">Minutes
+              <input readonly type="text" id="timer-minutes" dir="rtl" maxlength="2" pattern="\d*" value="00"
+                data-state="unmodified">
+            </label>
+            <label for="timer-seconds">Seconds
+              <input readonly type="text" id="timer-seconds" dir="rtl" maxlength="2" pattern="\d*" value="00"
+                data-state="unmodified">
+            </label>
+          </div>
+          <div class="num-pad">
+            <button class="numpad-button">1</button>
+            <button class="numpad-button">2</button>
+            <button class="numpad-button">3</button>
+            <button class="numpad-button">4</button>
+            <button class="numpad-button">5</button>
+            <button class="numpad-button">6</button>
+            <button class="numpad-button">7</button>
+            <button class="numpad-button">8</button>
+            <button class="numpad-button">9</button>
+            <button class="numpad-button double-zero">00</button>
+            <button class="numpad-button">0</button>
+            <button class="numpad-button numpad-back"><ion-icon name="backspace-outline"></ion-icon></button>
+          </div>
+        </div>
+        <div class="controls-ui controls-timer">
+          <button class="controls-timer-start">
+            <ion-icon name="play-outline"></ion-icon></button>
+        </div>
+        <div class="countdown-container">
+          <svg class="countdown-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g class="countdown-circle">
+              <circle class="countdown-path-elapsed" cx="50" cy="50" r="45" />
+              <path id="countdown-path-remaining" stroke-dasharray="283" class="countdown-path-remaining" d="
+          M 50, 50
+          m -45, 0
+          a 45,45 0 1,0 90,0
+          a 45,45 0 1,0 -90,0
+        "></path>
+            </g>
+          </svg>
+          <span>
+          </span>
+        </div>
+        <div class="controls-ui controls-countdown">
+          <button class="controls-countdown-pause">
+            <ion-icon name="pause-circle-outline"></ion-icon>
+            <button class="controls-countdown-stop">
+              <ion-icon name="close-circle-outline"></ion-icon>
+        </div>
+
+      </div>
+      <div class="app-main-ui main-stopwatch">
+        <div class="controls-ui controls-stopwatch"></div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    window.onload = () => {
+  const timer = document.querySelector(".main-timer");
+  const timerInputSection = document.querySelector(".timer-input");
+  const numpadButtons = timer.querySelectorAll(".numpad-button");
+  const controlsTimer = document.querySelector(".controls-timer");
+  const startTimerBtn = document.querySelector(".controls-timer-start");
+  const timerInputs = document.querySelectorAll(".timer-group input");
+  const hoursTimerInput = document.querySelector(".timer-group #timer-hours");
+  const minutesTimerInput = document.querySelector(
+    ".timer-group #timer-minutes"
+  );
+  const secondsTimerInput = document.querySelector(
+    ".timer-group #timer-seconds"
+  );
+  let secondsState = "unmodified";
+  let minutesState = "unmodified";
+  let hoursState = "unmodified";
+
+  const numpadBack = document.querySelector(".numpad-button.numpad-back");
+  const timeDisplay = document.querySelector(".countdown-container span");
+  const countdownContainer = document.querySelector(".countdown-container");
+  const countdownButtonPause = document.querySelector(
+    ".controls-countdown-pause"
+  );
+  const countdownButtonStop = document.querySelector(
+    ".controls-countdown-stop"
+  );
+  const remainingCircle = document.getElementById("countdown-path-remaining");
+  const alert = document.querySelector(".alert");
+  const flashingSvg = document.querySelector(".countdown-path-elapsed");
+
+  const animatePopOut = (element) => {
+    element.setAttribute("data-pop-out", "");
+  };
+
+  const animatePopIn = (element) => {
+    element.setAttribute("data-pop-in", "");
+  };
+
+  const isInput = () => {
+    let isNonZero = false;
+    timerInputs.forEach((timerInput) => {
+      if (timerInput.value !== "00") {
+        isNonZero = true;
+        return;
+      }
+    });
+    if (isNonZero) {
+      console.log("at least one value is not = 00");
+      animatePopIn(startTimerBtn);
+      startTimerBtn.removeAttribute("data-pop-out");
+      startTimerBtn.style.display = "grid";
+      console.log(startTimerBtn);
+    } else {
+      animatePopOut(startTimerBtn);
+    }
+  };
+
+  const updateInput = (nextBtnPress) => {
+    const currentSecondsValue = secondsTimerInput.value;
+    const currentMinutesValue = minutesTimerInput.value;
+    const currentHoursValue = hoursTimerInput.value;
+    secondsState = secondsTimerInput.getAttribute("data-state");
+    minutesState = minutesTimerInput.getAttribute("data-state");
+    hoursState = hoursTimerInput.getAttribute("data-state");
+    if (
+      secondsState === "modified-two-digits" &&
+      minutesState === "modified-two-digits" &&
+      hoursState === "modified-two-digits"
+    ) {
+      hoursTimerInput.style.color = "var(--txt-color)";
+    }
+    // quickly handle the double-zero cases
+    if (nextBtnPress === "00") {
+      if (
+        // seconds
+        (secondsState === "unmodified" ||
+          secondsState === "modified-one-digit") &&
+        minutesState === "unmodified" &&
+        hoursState === "unmodified"
+      ) {
+        secondsTimerInput.setAttribute("data-state", "modified-two-digits");
+        secondsTimerInput.value = "00";
+        secondsTimerInput.setSelectionRange(0, 2);
+        secondsTimerInput.focus();
+        isInput();
+      } else if (
+        // minutes
+        secondsState === "modified-two-digits" &&
+        minutesState === "unmodified" &&
+        hoursState === "unmodified"
+      ) {
+        minutesTimerInput.setAttribute("data-state", "modified-two-digits");
+        minutesTimerInput.value = "00";
+        minutesTimerInput.setSelectionRange(0, 2);
+        minutesTimerInput.focus();
+        secondsTimerInput.style.color = "var(--txt-color)";
+        isInput();
+      } else {
+        // hours in the remaining case
+        hoursTimerInput.value = "00";
+        minutesTimerInput.style.color = "var(--txt-color)";
+        hoursTimerInput.setSelectionRange(0, 2);
+        hoursTimerInput.focus();
+        isInput();
+      }
+    } else {
+      // if not double-zero
+      if (
+        // seconds
+        secondsState === "unmodified" &&
+        minutesState === "unmodified" &&
+        hoursState === "unmodified"
+      ) {
+        secondsTimerInput.setAttribute("data-state", "modified-one-digit");
+        secondsTimerInput.value = nextBtnPress.padStart(2, "0");
+        secondsTimerInput.setSelectionRange(1, 2);
+        secondsTimerInput.focus();
+        isInput();
+      } else if (
+        secondsState === "modified-one-digit" &&
+        minutesState === "unmodified" &&
+        hoursState === "unmodified"
+      ) {
+        secondsTimerInput.setAttribute("data-state", "modified-two-digits");
+        secondsTimerInput.value = `${currentSecondsValue.charAt(
+          1
+        )}${nextBtnPress}`;
+        secondsTimerInput.setSelectionRange(0, 2);
+        secondsTimerInput.focus();
+        isInput();
+      } else if (
+        // minutes
+        secondsState === "modified-two-digits" &&
+        minutesState === "unmodified" &&
+        hoursState === "unmodified"
+      ) {
+        minutesTimerInput.setAttribute("data-state", "modified-one-digit");
+        minutesTimerInput.value = nextBtnPress.padStart(2, "0");
+        minutesTimerInput.setSelectionRange(1, 2);
+        minutesTimerInput.focus();
+        secondsTimerInput.style.color = "var(--txt-color)";
+        isInput();
+      } else if (
+        secondsState === "modified-two-digits" &&
+        minutesState === "modified-one-digit" &&
+        hoursState === "unmodified"
+      ) {
+        minutesTimerInput.setAttribute("data-state", "modified-two-digits");
+        minutesTimerInput.value = `${currentMinutesValue.charAt(
+          1
+        )}${nextBtnPress}`;
+        minutesTimerInput.setSelectionRange(0, 2);
+        minutesTimerInput.focus();
+        secondsTimerInput.style.color = "var(--txt-color)";
+        isInput();
+      } else if (
+        // hours
+        secondsState === "modified-two-digits" &&
+        minutesState === "modified-two-digits" &&
+        hoursState === "unmodified"
+      ) {
+        hoursTimerInput.setAttribute("data-state", "modified-one-digit");
+        hoursTimerInput.value = nextBtnPress.padStart(2, "0");
+        hoursTimerInput.setSelectionRange(1, 2);
+        hoursTimerInput.focus();
+        secondsTimerInput.style.color = "var(--txt-color)";
+        minutesTimerInput.style.color = "var(--txt-color)";
+        isInput();
+      } else if (
+        secondsState === "modified-two-digits" &&
+        minutesState === "modified-two-digits" &&
+        hoursState === "modified-one-digit"
+      ) {
+        hoursTimerInput.setAttribute("data-state", "modified-two-digits");
+        hoursTimerInput.value = `${currentMinutesValue.charAt(
+          1
+        )}${nextBtnPress}`;
+        hoursTimerInput.setSelectionRange(0, 2);
+        hoursTimerInput.focus();
+        secondsTimerInput.style.color = "var(--txt-color)";
+        minutesTimerInput.style.color = "var(--txt-color)";
+        isInput();
+      }
+    }
+  };
+
+  const handleBackspace = () => {
+    const currentSecondsValue = secondsTimerInput.value;
+    const currentMinutesValue = minutesTimerInput.value;
+    const currentHoursValue = hoursTimerInput.value;
+    let secondsState = secondsTimerInput.getAttribute("data-state");
+    let minutesState = minutesTimerInput.getAttribute("data-state");
+    let hoursState = hoursTimerInput.getAttribute("data-state");
+    if (
+      // seconds
+      secondsState === "modified-one-digit" &&
+      minutesState === "unmodified" &&
+      hoursState === "unmodified"
+    ) {
+      secondsTimerInput.setAttribute("data-state", "unmodified");
+      secondsTimerInput.value = "00";
+      secondsTimerInput.style.color = "var(--txt-color-muted)";
+      secondsTimerInput.setSelectionRange(0, 0);
+      isInput();
+    } else if (
+      secondsState === "modified-two-digits" &&
+      minutesState === "unmodified" &&
+      hoursState === "unmodified"
+    ) {
+      secondsTimerInput.setAttribute("data-state", "modified-one-digit");
+      secondsTimerInput.value = `${currentSecondsValue
+        .charAt(0)
+        .padStart("2", "0")}`;
+      secondsTimerInput.style.color = "var(--txt-color-muted)";
+      secondsTimerInput.setSelectionRange(1, 2);
+      secondsTimerInput.focus();
+    } else if (
+      // minutes
+      minutesState === "modified-one-digit" &&
+      secondsState === "modified-two-digits" &&
+      hoursState === "unmodified"
+    ) {
+      minutesTimerInput.setAttribute("data-state", "unmodified");
+      minutesTimerInput.value = "00";
+      minutesTimerInput.style.color = "var(--txt-color-muted)";
+      minutesTimerInput.setSelectionRange(0, 0);
+    } else if (
+      minutesState === "modified-two-digits" &&
+      secondsState === "modified-two-digits" &&
+      hoursState === "unmodified"
+    ) {
+      minutesTimerInput.setAttribute("data-state", "modified-one-digit");
+      minutesTimerInput.value = `${currentMinutesValue
+        .charAt(0)
+        .padStart("2", "0")}`;
+      minutesTimerInput.style.color = "var(--txt-color-muted)";
+      minutesTimerInput.setSelectionRange(1, 2);
+      minutesTimerInput.focus();
+    } else if (
+      // hours
+      hoursState === "modified-one-digit" &&
+      secondsState === "modified-two-digits" &&
+      minutesState === "modified-two-digits"
+    ) {
+      hoursTimerInput.setAttribute("data-state", "unmodified");
+      hoursTimerInput.value = "00";
+      hoursTimerInput.setSelectionRange(0, 0);
+    } else if (
+      hoursState === "modified-two-digits" &&
+      secondsState === "modified-two-digits" &&
+      minutesState === "modified-two-digits"
+    ) {
+      hoursTimerInput.setAttribute("data-state", "modified-one-digit");
+      hoursTimerInput.value = `${currentHoursValue
+        .charAt(0)
+        .padStart("2", "0")}`;
+      hoursTimerInput.style.color = "var(--txt-color-muted)";
+      hoursTimerInput.setSelectionRange(1, 2);
+      hoursTimerInput.focus();
+    }
+  };
+
+  numpadButtons.forEach((button) => {
+    button.onclick = () => {
+      isInput();
+      if (button === numpadBack) {
+        handleBackspace();
+      } else {
+        updateInput(button.textContent);
+      }
+    };
+  });
+
+  //countdown
+
+  let timeout = null;
+  let paused = false;
+  let timeRemaining = 0;
+  let circleDashArray = 283;
+  const fullDashArray = 283;
+  let originalInitialSeconds = 0;
+  let interval = null;
+
+  const handleCountdown = (initalValue, initialSeconds) => {
+    originalInitialSeconds;
+    timeDisplay.innerHTML = initalValue;
+    let timePassed = 0;
+    timeRemaining = initialSeconds;
+
+    const updateCountdown = () => {
+      if (initialSeconds === timePassed || paused) {
+        clearTimeout(timeout);
+        return;
+      }
+
+      if (timeRemaining <= 5) {
+        remainingCircle.style.stroke = "#c05de7";
+        timeDisplay.style.color = "#c05de7";
+      }
+
+      if (timeRemaining <= 1) {
+        setTimeout(() => {
+          countdownButtonPause.style.display = "none";
+          flashingSvg.setAttribute("data-flashing", "");
+          remainingCircle.style.stroke = "transparent";
+          alert.play();
+          alert.loop = true;
+        }, 1000);
+      }
+
+      timePassed += 1;
+      timeRemaining = initialSeconds - timePassed;
+      timeDisplay.innerHTML = countdownText(timeRemaining);
+      circleDashArray = `${(
+        (timeRemaining / originalInitialSeconds) *
+        fullDashArray
+      ).toFixed(0)} 283`;
+
+      remainingCircle.setAttribute("stroke-dasharray", circleDashArray);
+      timeout = setTimeout(updateCountdown, 1000);
+    };
+    timeout = setTimeout(updateCountdown, 1000);
+  };
+
+  countdownButtonPause.addEventListener("click", (e) => {
+    e.preventDefault();
+    paused = !paused;
+    if (!paused) {
+      handleCountdown(countdownText(timeRemaining), timeRemaining);
+      countdownButtonPause.innerHTML =
+        "<ion-icon name='pause-circle-outline'></ion-icon>";
+    } else {
+      countdownButtonPause.innerHTML =
+        "<ion-icon name='play-circle-outline'></ion-icon>";
+    }
+  });
+
+  countdownButtonStop.addEventListener("click", (e) => {
+    e.preventDefault();
+    remainingCircle.style.stroke = "#acfce8";
+    timeDisplay.style.color = "#acfce8";
+    flashingSvg.removeAttribute("data-flashing");
+    clearInterval(interval);
+    alert.pause();
+    alert.currentTime = 0;
+    secondsTimerInput.setAttribute("data-state", "unmodified");
+    minutesTimerInput.setAttribute("data-state", "unmodified");
+    hoursTimerInput.setAttribute("data-state", "unmodified");
+    startTimerBtn.removeAttribute("data-pop-out");
+    startTimerBtn.style.display = "none";
+    secondsTimerInput.value = "00";
+    minutesTimerInput.value = "00";
+    hoursTimerInput.value = "00";
+    timerInputSection.style.animation = "none";
+    timerInputSection.style.display = "block";
+    animatePopIn(timerInputSection);
+    controlsTimer.style.display = "flex";
+    animatePopIn(startTimerBtn);
+    animatePopOut(countdownContainer);
+    countdownButtonPause.style.display = "none";
+    countdownButtonStop.style.display = "none";
+    clearTimeout(timeout);
+    remainingCircle.setAttribute("stroke-dasharray", "283 283");
+  });
+
+  const countdownText = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const hoursString = hours.toString().padStart(2, "0");
+    const remainingSeconds = seconds % 3600;
+    const minutes = Math.floor(remainingSeconds / 60);
+    const minutesString = minutes.toString().padStart(2, "0");
+    const remainingSecondsAfterMinutes = remainingSeconds % 60;
+    const secondsString = remainingSecondsAfterMinutes
+      .toString()
+      .padStart(2, "0");
+    return `${hoursString}:${minutesString}:${secondsString}`;
+  };
+
+  startTimerBtn.onclick = (e) => {
+    e.preventDefault();
+    console.log(circleDashArray);
+    let currentSecondsValue = secondsTimerInput.value;
+    let currentMinutesValue = minutesTimerInput.value;
+    let currentHoursValue = hoursTimerInput.value;
+    let totalSeconds =
+      parseInt(currentSecondsValue) +
+      parseInt(currentMinutesValue) * 60 +
+      parseInt(currentHoursValue) * 3600;
+    timerInputSection.style.animation = "animate-pop-out 200ms forwards";
+    animatePopOut(timerInputSection);
+    controlsTimer.style.display = "none";
+    animatePopIn(startTimerBtn);
+    animatePopIn(countdownContainer);
+    countdownButtonPause.style.display = "grid";
+    countdownButtonStop.style.display = "grid";
+    handleCountdown(countdownText(totalSeconds), totalSeconds);
+    originalInitialSeconds = totalSeconds;
+  };
+};
+
+  </script>
+</body>
+
+</html>

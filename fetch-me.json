@@ -75,7 +75,7 @@
     {
       "skills": ["html5", "css3", "javascript"],
       "categories": ["personal", "tutorial", "component"],
-      "title": "Epanding User Profile Card",
+      "title": "Expanding User Profile Card",
       "description": "Simple component with user profile links. Expanding to reveal details.",
       "source": "/webdev_basics/master/random/dropdown_profile_25_Jun_23/",
       "date": "2023-06-25"

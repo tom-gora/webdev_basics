@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colorful Cards</title>
+    <style>
+        :root {
+  --body-background: #302441;
+  --color-shadow: hsla(217deg, 34%, 13%, 0.25);
+  --font-primary-color: #fff;
+  --font-secondary-color: rgba(255, 255, 255, 0.75);
+  --button-background: #453a54;
+}
+/* resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* page styles  */
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--body-background);
+  height: 100vh;
+  color: var(--font-primary-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+/* cards */
+
+.card-wrapper {
+  width: 54rem;
+  max-height: 80%;
+  border: none;
+  box-shadow: 0.5rem 1rem 2rem var(--color-shadow);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+  width: 18rem;
+  height: 18rem;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  padding: 1rem 2rem;
+}
+
+.card:first-of-type {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.card:last-of-type {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.card-header-section {
+  grid-row-end: span 2;
+  align-self: self-end;
+  padding-bottom: 2rem;
+}
+
+.card-header-section .title-section {
+  padding-block: 0.25rem;
+  color: var(--font-secondary-color);
+  font-size: 0.7rem;
+}
+.card-header-section .title-category {
+  color: var(--font-primary-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.synopsis {
+  align-self: self-start;
+}
+
+.go-to {
+  grid-row-end: span 2;
+  align-self: center;
+  color: var(--font-primary-color);
+  text-decoration: none;
+}
+
+.go-to:hover,
+.go-to:focus {
+  padding-left: 1rem;
+  color: var(--font-secondary-color);
+  transition: all 300ms ease;
+}
+
+.go-to:not(:hover) {
+  transition: all 300ms ease;
+}
+
+.go-to::after {
+  color: hsl(0, 0, 0);
+  content: "\203A";
+  margin-left: 1rem;
+}
+
+.get-pastels {
+  margin-bottom: 2rem;
+  border: none;
+  outline: none;
+  padding: 1rem 3rem;
+  color: var(--font-secondary-color);
+  background-color: var(--body-background);
+  border-radius: 100vw;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.get-pastels:hover {
+  background-color: var(--button-background);
+  scale: 1.1;
+  transition: all 300ms ease-in;
+}
+.get-pastels:not(:hover) {
+  transition: all 300ms ease-out;
+}
+
+@media (max-width: 980px) {
+  .card-wrapper {
+    width: 18rem;
+    height: 54rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .card:first-of-type {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .card:last-of-type {
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+}
+
+    </style>
+</head>
+
+  <body>
+    <button class="get-pastels">Get New Pastel Colors</button>
+    <div class="card-wrapper">
+      <div class="card">
+        <div class="card-header-section">
+          <h3 class="title-section">Featured</h3>
+          <h4 class="title-category">Challenge</h4>
+        </div>
+        <p class="synopsis">Design an icon set with your favourite hobbies.</p>
+        <a href="" class="go-to">View Details</a>
+      </div>
+      <div class="card">
+        <div class="card-header-section">
+          <h3 class="title-section">Blog</h3>
+          <h4 class="title-category">Interviews</h4>
+        </div>
+        <p class="synopsis">
+          8 examples of interviews with people who travelled through the
+          corporate hellscape.
+        </p>
+        <a href="" class="go-to">Read Post</a>
+      </div>
+      <div class="card">
+        <div class="card-header-section">
+          <h3 class="title-section">Daily</h3>
+          <h4 class="title-category">Practice</h4>
+        </div>
+        <p class="synopsis">Generate daily exercise to improve your skils.</p>
+        <a href="" class="go-to">Generate exercises</a>
+      </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+  let colors = [];
+
+  getColor = () => {
+    var hue, saturation, lightness;
+    hue = Math.floor(Math.random() * (360 - 0) + 0);
+    saturation = "40";
+    lightness = Math.floor(Math.random() * (75 - 65) + 65);
+
+    return `hsl(${hue},${saturation}%,${lightness}%)`;
+  };
+
+  var cards = document.getElementsByClassName("card");
+  const pastel_btn = document.getElementsByClassName("get-pastels")[0];
+
+  pastel_btn.addEventListener("click", function() {
+    redrawColors();
+  });
+
+  redrawColors = () => {
+    colors = [];
+    for (i = 0; i < 3; i++) {
+      var color = getColor();
+      colors.push(color);
+    }
+
+    for (i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      card.style.backgroundColor = colors[i];
+    }
+  };
+  redrawColors();
+});
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found</title>
+  <style>
+    :root {
+  --page-bg: linear-gradient(to bottom, #e6e9f0, #eef1f5);
+  --box-bg: linear-gradient(to left, #d558c8, #24d292);
+  --border: #45425a;
+  --text: #eef1f5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: "Ubuntu", Sans-serif, Helvetica, Arial, sans-serif;
+  display: grid;
+  place-items: center;
+}
+
+a {
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--border);
+}
+
+.big-box {
+  position: relative;
+  width: 90%;
+  height: 90%;
+  overflow: hidden;
+  background: var(--box-bg);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 2rem;
+  border: 0.25rem solid var(--border);
+}
+
+svg {
+  position: absolute;
+  max-height: clamp(40vh, 60vw, 48rem);
+  overflow: visible;
+  fill: url(#linear);
+  pointer-events: none;
+}
+
+#bubble1 {
+  right: clamp(-500px, 1400px - 100vw, -100px);
+  top: 0;
+}
+
+#bubble2 {
+  left: clamp(20px, 2000px - 100vw, 40%);
+  bottom: clamp(-800px, 70% - 100vh, -5rem);
+  min-height: 45rem;
+  max-height: 70rem;
+}
+#bubble3 {
+  left: clamp(10%, -1000px + 100vw, 80%);
+  top: clamp(20%, 30vw, 50%);
+  height: 15rem;
+}
+
+.prompt-container {
+  width: 40%;
+  padding: 2rem;
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.prompt-container .code {
+  font-size: 10rem;
+}
+
+.prompt-container .title {
+  font-size: 0.6rem;
+}
+
+@media (max-width: 767px) {
+  .prompt-container {
+    width: 100%;
+  }
+  .prompt-container .code {
+    font-size: 8rem;
+  }
+}
+
+  </style>
+<body>
+  <div class="big-box">
+    <div class="prompt-container">
+      <h3 class="tile">tomgoradesigns.ui</h3>
+      <h1 class="code">404</h1>
+      <h2 class="info">
+        The link you have clicked may be broken or the page it leads to is not
+        accessible.
+      </h2>
+      <p class="further-help-links">
+        Visit the <a href="#"> home page </a>or <a href="#">contact me</a> for
+        further help.
+      </p>
+    </div>
+    <svg id="bubble1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="linear" x1="0%" y1="40%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+          <stop offset="100%" stop-color="rgba(255,255,255,0.1)" />
+        </linearGradient>
+      </defs>
+      <path
+        d="M67.5,-22.2C76.3,5.1,64.4,38.8,41.8,54.5C19.2,70.2,-14.3,68,-35.5,51.9C-56.7,35.8,-65.7,5.8,-57.7,-20.4C-49.7,-46.6,-24.9,-68.9,2.2,-69.7C29.4,-70.4,58.7,-49.5,67.5,-22.2Z"
+        transform="translate(50 50)" />
+    </svg>
+    <svg id="bubble2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M67.5,-22.2C76.3,5.1,64.4,38.8,41.8,54.5C19.2,70.2,-14.3,68,-35.5,51.9C-56.7,35.8,-65.7,5.8,-57.7,-20.4C-49.7,-46.6,-24.9,-68.9,2.2,-69.7C29.4,-70.4,58.7,-49.5,67.5,-22.2Z"
+        transform="translate(50 50)" />
+    </svg>
+    <svg id="bubble3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M67.5,-22.2C76.3,5.1,64.4,38.8,41.8,54.5C19.2,70.2,-14.3,68,-35.5,51.9C-56.7,35.8,-65.7,5.8,-57.7,-20.4C-49.7,-46.6,-24.9,-68.9,2.2,-69.7C29.4,-70.4,58.7,-49.5,67.5,-22.2Z"
+        transform="translate(50 50)" />
+    </svg>
+
+  </div>
+</body>
+
+</html>

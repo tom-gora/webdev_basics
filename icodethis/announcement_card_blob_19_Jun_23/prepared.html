@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Announcement card</title>
+<style>
+    :root {
+  --text-primary-color: #fff;
+  --text-secondary-color: #8b95bb;
+  --accent-color: #657fd1;
+  --card-background-color: #2e395d;
+  --notification-background-color: #202a47;
+  --notification-background-color-focus: #1a2239;
+  --button-background-color: #4a9bff;
+  --color-shadow: hsla(217deg, 34%, 13%, 0.25);
+}
+
+/* global props & background */
+
+body {
+  color: var(--text-primary-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  overflow: hidden;
+  font-weight: 400;
+  width: 100vw;
+  height: 100vh;
+  background-image: radial-gradient(
+    circle,
+    #4b749f,
+    #416188,
+    #364e72,
+    #2b3c5c,
+    #202b47
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overrides */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#blob-svg {
+  position: fixed;
+  bottom: clamp(-180px, -40%, -500px);
+  right: -20%;
+  transform-origin: bottom right;
+  height: clamp(800px, calc(2000px - 100vw), 1200px);
+  scale: 1.2;
+  user-select: none;
+  z-index: -5;
+}
+
+/* .page-content */
+
+.card {
+  width: clamp(450px, 50vw, 900px);
+}
+
+.card-header {
+  border-radius: 1rem 1rem 0 0;
+}
+
+.card-content {
+  min-height: 50vh;
+  overflow-y: auto;
+}
+
+.card-footer {
+  border-radius: 0 0 1rem 1rem;
+  text-align: center;
+}
+
+.card > * {
+  background: var(--card-background-color);
+  padding: 1rem 2rem;
+  box-shadow: 0.5rem 1rem 2rem var(--color-shadow);
+}
+
+.counter {
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.notification {
+  background: var(--notification-background-color);
+  margin-block: 0.5rem;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+}
+
+.notification:hover {
+  background-color: var(--notification-background-color-focus);
+  scale: 1.03;
+  transition: scale 300ms ease-in;
+  transition: background-color 300ms ease-in;
+}
+
+.announcement-overview {
+  grid-column: span 2;
+}
+
+.expand {
+  border: none;
+  background: transparent;
+  outline: none;
+  justify-self: end;
+  align-self: flex-start;
+  color: var(--accent-color);
+}
+.expand::after {
+  content: "\2026";
+  font-size: 1rem;
+}
+
+.expand:focus,
+.expand:hover {
+  color: var(--text-secondary-color);
+  outline: none;
+  font-weight: 900;
+  transition: all 300ms ease-in-out;
+}
+
+.time-elapsed {
+  justify-self: end;
+  color: var(--text-secondary-color);
+  font-size: 0.8rem;
+  align-self: center;
+}
+
+.announcer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  grid-column: span 2;
+}
+
+.announcer-img {
+  border: 2px solid var(--accent-color);
+  border-radius: 50%;
+  height: 2rem;
+  box-shadow: 0 0 0 1px var(--text-secondary-color);
+}
+
+.announcer-name {
+  justify-self: flex-start;
+  margin-inline: 1rem;
+  color: var(--text-secondary-color);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.dismiss {
+  background-color: var(--button-background-color);
+  padding: 0.75rem 1.5rem;
+  border: none;
+  outline: none;
+  border-radius: 0.25rem;
+  color: inherit;
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-block: 1.5rem;
+}
+
+.dismiss:hover {
+  background-color: var(--notification-background-color-focus);
+  color: var(--text-secondary-color);
+  transition: all 300ms ease-in;
+}
+
+.dismiss:not(:hover),
+.notification:not(:hover) {
+  transition: all 300ms ease-out;
+}
+
+@media (max-width: 668px) {
+  .card {
+    max-width: 96vw;
+    max-height: 90vh;
+  }
+  .card > * {
+    padding: 0.75rem;
+  }
+  .notification {
+    padding: 0.5rem;
+    magin: 0.5rem;
+  }
+  .card-content {
+    max-height: 30vh;
+  }
+}
+
+</style>
+</head>
+
+  <body>
+    <svg id="blob-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">
+          <stop
+            id="stop1"
+            stop-color="rgba(246, 167, 37, 1)"
+            offset="0%"
+            style="--darkreader-inline-stopcolor: #9b2700"
+            data-darkreader-inline-stopcolor=""
+          ></stop>
+          <stop
+            id="stop2"
+            stop-color="rgba(246, 125.627, 37, 1)"
+            offset="100%"
+            style="--darkreader-inline-stopcolor: #a66000"
+            data-darkreader-inline-stopcolor=""
+          ></stop>
+        </linearGradient>
+      </defs>
+      <path
+        fill="url(#sw-gradient)"
+        d="M17.3,-28.8C22.4,-23.6,26.6,-18.8,29.6,-13.2C32.6,-7.6,34.4,-1.2,35.1,6.1C35.7,13.5,35.2,21.7,31,27.2C26.8,
+        32.6,19,35.2,11,37.8C3,40.3,-5.2,42.8,-11,40C-16.8,37.1,-20.4,28.9,-26.4,22.5C-32.4,16.2,-40.9,11.6,-42.2,
+        5.8C-43.5,-0.1,-37.6,-7.3,-32.4,-13.1C-27.1,-18.9,-22.5,-23.4,-17.2,-28.5C-11.9,-33.6,-6,-39.4,0.1,-39.5C6.1,
+        -39.6,12.2,-34,17.3,-28.8Z"
+        width="100%"
+        height="100%"
+        transform="translate(50 50)"
+        style="transition: all 0.3s ease 0s"
+        stroke-width="0"
+        stroke="url(#sw-gradient)"
+      ></path>
+    </svg>
+    <div class="page-content">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="counter">3 Announcements</h2>
+        </div>
+        <div class="card-content">
+          <div class="notification">
+            <p class="announcement-overview">
+              Exciting news! Guest speaker Dr. Smith will give a lecture next
+              Tuesday at 3 pm.
+            </p>
+            <button class="expand"></button>
+            <div class="announcer">
+              <img
+                src="https://i.pravatar.cc/48?img=38"
+                alt=""
+                class="announcer-img"
+              />
+              <p class="announcer-name">Margaret Connor</p>
+            </div>
+            <p class="time-elapsed">2 hours ago</p>
+          </div>
+          <div class="notification">
+            <p class="announcement-overview">
+              Reminder: Office hours today from 2-4 pm. Drop by with any
+              questions!
+            </p>
+            <button class="expand"></button>
+            <div class="announcer">
+              <img
+                src="https://i.pravatar.cc/48?img=49"
+                alt=""
+                class="announcer-img"
+              />
+              <p class="announcer-name">Anna Robertson</p>
+            </div>
+            <p class="time-elapsed">5 hours ago</p>
+          </div>
+          <div class="notification">
+            <p class="announcement-overview">
+              Attention students: Don't forget to submit your assignments by
+              Friday, 11:59 pm.
+            </p>
+            <button class="expand"></button>
+            <div class="announcer">
+              <img
+                src="https://i.pravatar.cc/48?img=12"
+                alt=""
+                class="announcer-img"
+              />
+              <p class="announcer-name">John Doe</p>
+            </div>
+            <p class="time-elapsed">7 hours ago</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="dismiss">Dismiss All</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
