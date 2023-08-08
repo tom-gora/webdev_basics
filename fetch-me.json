@@ -55,6 +55,14 @@
       "description": "Simple component with user profile links. Expanding to reveal details.",
       "source": "/webdev_basics/master/random/dropdown_profile_25_Jun_23/",
       "date": "2023-06-25"
+    },
+    {
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["personal", "icodethis", "component"],
+      "title": "Pricing Cards",
+      "description": "Simple pricing plan cards from the challenge, spiced up with responsiveness, dark and light mode and some css effects.",
+      "source": "/webdev_basics/master/random/pricing_cards_01_08_2023/",
+      "date": "2023-08-08"
     }
   ]
 }
