@@ -1,0 +1,338 @@
+@import url(https://fonts.bunny.net/css?family=dm-sans:400,500,700);
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --background: linear-gradient(to top, #f3e7e9 0%, #e3eeff 100%);
+  --card-background: #f3f7fa;
+  --text: #0e1114;
+  --free-background: linear-gradient(45deg, #88afcb 0%, #d4e1eb 100%);
+  --lite-background: linear-gradient(45deg, #9795f0 0%, #fbc8d4 100%);
+  --pro-background: linear-gradient(45deg, #ffc796 0%, #ff6b95 100%);
+  --transition: all 500ms ease-in-out;
+}
+
+body[data-theme="dark"] {
+  --background: linear-gradient(to top, #29323c 0%, #879093 100%);
+  --card-background: #242b32;
+  --text: #dadde0;
+  --free-background: linear-gradient(45deg, #2c5364 0%, #9fa6a9 100%);
+  --lite-background: linear-gradient(45deg, #9795f0 0%, #fbc8d4 100%);
+  --pro-background: linear-gradient(45deg, #ffc796 0%, #ff6b95 100%);
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--background);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+}
+
+.card-container {
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  color: var(--text);
+  width: 100%;
+  max-width: 24rem;
+  aspect-ratio: 2/2.75;
+  position: relative;
+  transition: var(--transition);
+}
+
+.card::before {
+  z-index: 1;
+  content: "";
+  width: 5rem;
+  height: 90%;
+  position: absolute;
+  top: 1rem;
+  transform-origin: center;
+}
+
+.card-header {
+  z-index: 2;
+  background: var(--card-background);
+  padding: 0.5rem;
+  width: 98%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.card-header h2 {
+  z-index: 2;
+  color: var(--card-background);
+  font-weight: 400;
+  font-size: 1rem;
+  width: 98%;
+  padding-block: 0.5rem;
+  text-align: center;
+}
+
+.card.free-tier .card-header > h2 {
+  background: var(--free-background);
+  color: var(--text);
+}
+
+.card.lite-tier .card-header > h2 {
+  background: var(--lite-background);
+}
+
+.card.pro-tier .card-header > h2 {
+  background: var(--pro-background);
+}
+
+.card-body {
+  z-index: 2;
+  background: var(--card-background);
+  width: 98%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1/0.8;
+  gap: 1rem;
+}
+
+.price {
+  position: relative;
+}
+
+.price span:nth-child(1) {
+  font-weight: 500;
+  position: absolute;
+  left: -0.75rem;
+  top: -0.5rem;
+  vertical-align: super;
+  line-height: 3rem;
+}
+
+.price span:nth-child(2) {
+  font-weight: 700;
+  font-size: 4rem;
+}
+
+.price span:nth-child(3) {
+  font-weight: 500;
+  vertical-align: sub;
+  line-height: 3rem;
+}
+
+.description {
+  width: 70%;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.get-started-btn {
+  margin-top: 1rem;
+  position: relative;
+  background: var(--card-background);
+  border: 1px solid var(--text);
+  padding: 1rem 2.5rem;
+  font-weight: 700;
+  outline: none;
+  overflow: hidden;
+}
+
+body[data-theme="dark"] .get-started-btn {
+  border: none;
+  background: var(--text);
+}
+
+.get-started-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -260%;
+  transform: translateY(-90%);
+  rotate: 45deg;
+  width: 15rem;
+  height: 15rem;
+  transition: var(--transition);
+}
+
+.card.free-tier .get-started-btn::before,
+.card.free-tier::before {
+  background: var(--free-background);
+}
+
+.card.lite-tier .get-started-btn::before,
+.card.lite-tier::before {
+  background: var(--lite-background);
+}
+
+.card.pro-tier .get-started-btn::before,
+.card.pro-tier::before {
+  background: var(--pro-background);
+}
+
+.get-started-btn:hover::before,
+.get-started-btn:active::before,
+.get-started-btn:focus::before {
+  left: -100%;
+}
+
+.get-started-btn:hover,
+.get-started-btn:focus,
+.get-started-btn:active {
+  outline: none;
+}
+
+.get-started-btn span {
+  z-index: 1;
+  isolation: isolate;
+  transition-delay: 250ms;
+}
+
+.get-started-btn:hover span,
+.get-started-btn:focus span,
+.get-started-btn:active span {
+  color: var(--card-background);
+}
+
+.card:has(button:hover)::before {
+  animation: spin 1s linear forwards;
+}
+
+@keyframes spin {
+  0% {
+    top: 1rem;
+    height: 90%;
+    transform: rotate(0deg);
+  }
+  2% {
+    top: -6rem;
+    height: 200%;
+    transform: rotate(0deg);
+  }
+  98% {
+    top: -6rem;
+    height: 200%;
+    transform: rotate(180deg);
+  }
+  100% {
+    top: 1rem;
+    height: 90%;
+    transform: rotate(180deg);
+  }
+}
+
+.card-footer {
+  z-index: 2;
+  background: var(--card-background);
+  /* border: 1px dashed purple; */
+  width: 98%;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.benefits {
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.benefit-item {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+ion-icon[name="checkmark-outline"] {
+  color: #5aa17f;
+}
+
+ion-icon[name="close-outline"] {
+  color: #f7665e;
+}
+
+.toggle {
+  position: absolute;
+  left: 50%;
+  z-index: 4;
+  appearance: none;
+  min-width: 4.5rem;
+  height: 2rem;
+  display: inline-block;
+  position: relative;
+  border-radius: 50px;
+  overflow: hidden;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: #88afcb;
+  transition: background-color ease 0.3s;
+}
+
+.toggle:before {
+  content: "light dark";
+  position: absolute;
+  z-index: 5;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: #242b32;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: bold;
+  word-spacing: 2rem;
+  white-space: nowrap;
+  color: #242b32;
+  transition: all cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toggle:checked {
+  color: #f3f7fa;
+  background: #2c5364;
+}
+
+.toggle:checked::before {
+  color: #f3f7fa;
+  background: #f3f7fa;
+}
+
+.toggle:checked:before {
+  left: 2.6rem;
+}
+
+@media (min-width: 980px) {
+  .card-container {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .card {
+    aspect-ratio: 2/3;
+  }
+}
