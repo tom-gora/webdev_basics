@@ -68,7 +68,7 @@
       "skills": ["html5", "css3", "javascript"],
       "categories": ["tutorial", "app", "oop", "custom"],
       "title": "Calculator",
-      "description": "Simple calculator based on a tutoprial, with custom changes and a few fixes. Made to practice OOP style js code.",
+      "description": "Simple calculator based on a tutorial, with custom changes and a few fixes. Made to practice OOP style js code.",
       "source": "/webdev_basics/master/random/calculator/",
       "date": "2023-08-10"
     }
