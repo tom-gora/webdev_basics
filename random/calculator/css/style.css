@@ -1,0 +1,134 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  font-family: "Source Code Pro", monospace;
+  font-weight: 500;
+}
+
+:root {
+  --background: linear-gradient(
+    27deg,
+    rgba(22, 6, 32, 1) 35%,
+    rgba(255, 165, 38, 1) 100%
+  );
+}
+
+body {
+  background: var(--background);
+  background-size: cover;
+  background-repeat: none;
+}
+
+.calculator {
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(4, 80px);
+  grid-template-rows: minmax(100px, auto) repeat(5, 80px);
+}
+
+.wide {
+  grid-column: span 2;
+  aspect-ratio: 2/0.92;
+  width: 95%;
+}
+
+.calculator button:not(.wide) {
+  aspect-ratio: 1;
+  width: 90%;
+}
+
+.calculator button {
+  position: relative;
+  cursor: pointer;
+  font-size: 2rem;
+  outline: none;
+  inset: 5px;
+  color: #fff;
+  border: none;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.calculator .accent {
+  background: rgba(255, 129, 38, 0.5);
+}
+
+.calculator .warn {
+  background: rgba(219, 55, 55, 0.5);
+}
+
+.calculator button::after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 200ms ease-in-out;
+}
+
+.calculator button:not(.accent)::after {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.calculator button.accent::after {
+  background: rgba(255, 129, 38, 0.8);
+}
+
+.calculator button.warn::after {
+  background: rgba(219, 55, 55, 0.8);
+}
+
+.calculator button:hover::after {
+  opacity: 1;
+}
+
+.calculator button:actiive,
+.calculator button:focus {
+  outline: none;
+}
+
+.output {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+  background: rgba(250, 250, 250, 0.5);
+  width: 97%;
+  height: 100%;
+  justify-self: end;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.output .previous {
+  text-align: end;
+  font-size: 1.5rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.output .current {
+  text-align: end;
+  font-size: 2rem;
+}
+
+ion-icon {
+  margin-bottom: -0.25rem;
+}
+
+/* consider animated bg? */
+/* https://codepen.io/P1N2O/pen/pyBNzX */
