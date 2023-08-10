@@ -130,5 +130,12 @@ ion-icon {
   margin-bottom: -0.25rem;
 }
 
+.icons8 {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  color: #fff;
+}
+
 /* consider animated bg? */
 /* https://codepen.io/P1N2O/pen/pyBNzX */

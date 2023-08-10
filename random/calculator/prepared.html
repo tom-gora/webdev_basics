@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <title>Calculator</title>
+    <link rel="icon" href="favicon.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link
+      href="https://fonts.bunny.net/css?family=source-code-pro:500"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        font-family: "Source Code Pro", monospace;
+        font-weight: 500;
+      }
+
+      :root {
+        --background: linear-gradient(
+          27deg,
+          rgba(22, 6, 32, 1) 35%,
+          rgba(255, 165, 38, 1) 100%
+        );
+      }
+
+      body {
+        background: var(--background);
+        background-size: cover;
+        background-repeat: none;
+      }
+
+      .calculator {
+        height: 100vh;
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        justify-items: center;
+        align-items: center;
+        grid-template-columns: repeat(4, 80px);
+        grid-template-rows: minmax(100px, auto) repeat(5, 80px);
+      }
+
+      .wide {
+        grid-column: span 2;
+        aspect-ratio: 2/0.92;
+        width: 95%;
+      }
+
+      .calculator button:not(.wide) {
+        aspect-ratio: 1;
+        width: 90%;
+      }
+
+      .calculator button {
+        position: relative;
+        cursor: pointer;
+        font-size: 2rem;
+        outline: none;
+        inset: 5px;
+        color: #fff;
+        border: none;
+        border-radius: 1rem;
+        background: rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+
+      .calculator .accent {
+        background: rgba(255, 129, 38, 0.5);
+      }
+
+      .calculator .warn {
+        background: rgba(219, 55, 55, 0.5);
+      }
+
+      .calculator button::after {
+        z-index: -1;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: all 200ms ease-in-out;
+      }
+
+      .calculator button:not(.accent)::after {
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      .calculator button.accent::after {
+        background: rgba(255, 129, 38, 0.8);
+      }
+
+      .calculator button.warn::after {
+        background: rgba(219, 55, 55, 0.8);
+      }
+
+      .calculator button:hover::after {
+        opacity: 1;
+      }
+
+      .calculator button:actiive,
+      .calculator button:focus {
+        outline: none;
+      }
+
+      .output {
+        grid-column: span 4;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-end;
+        background: rgba(250, 250, 250, 0.5);
+        width: 97%;
+        height: 100%;
+        justify-self: end;
+        border-radius: 1rem;
+        padding: 0.5rem 1rem;
+        word-wrap: break-word;
+        word-break: break-all;
+      }
+
+      .output .previous {
+        text-align: end;
+        font-size: 1.5rem;
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      .output .current {
+        text-align: end;
+        font-size: 2rem;
+      }
+
+      ion-icon {
+        margin-bottom: -0.25rem;
+      }
+
+      .icons8 {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="calculator">
+      <div class="output">
+        <div data-previous class="previous"></div>
+        <div data-current class="current"></div>
+      </div>
+      <button data-cl class="wide">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button>
+      <button data-del class="warn">
+        <ion-icon name="backspace-outline"></ion-icon>
+      </button>
+      <button data-operation="division" class="accent">&div;</button>
+      <button data-number>1</button>
+      <button data-number>2</button>
+      <button data-number>3</button>
+      <button data-operation="multiplication" class="accent">&times;</button>
+      <button data-number>4</button>
+      <button data-number>5</button>
+      <button data-number>6</button>
+      <button data-operation="subtraction" class="accent">&minus;</button>
+      <button data-number>7</button>
+      <button data-number>8</button>
+      <button data-number>9</button>
+      <button data-operation="addition" class="accent">&plus;</button>
+      <button data-number>.</button>
+      <button data-number>0</button>
+      <button data-equals class="wide accent">&equals;</button>
+    </div>
+    <script>
+      class Calculator {
+        constructor(previousOutput, currentOutput) {
+          this.previousOutput = previousOutput;
+          this.currentOutput = currentOutput;
+          this.clear();
+        }
+
+        clear() {
+          this.currentValue = "";
+          this.previousValue = "";
+          this.operation = undefined;
+          this.updateOutput();
+        }
+
+        delete() {
+          if (this.currentValue === "") {
+            this.currentValue = this.previousValue;
+            this.previousValue = "";
+            this.operation = undefined;
+            this.updateOutput();
+          } else {
+            this.currentValue = this.currentValue.toString().slice(0, -1);
+          }
+        }
+
+        append(value) {
+          if (value === "." && this.currentValue.includes(".")) return;
+          this.currentValue = this.currentValue.toString() + value.toString();
+        }
+
+        selectOperation(operation) {
+          if (this.currentValue === "") return;
+          if (this.previousValue !== "") {
+            this.calculate();
+          }
+          this.operation = operation;
+
+          this.previousValue = this.currentValue;
+          this.currentValue = "";
+        }
+
+        calculate() {
+          let result;
+          const prev = parseFloat(this.previousValue);
+          const cur = parseFloat(this.currentValue);
+          if (isNaN(prev) || isNaN(cur)) return;
+
+          console.log(this.operation);
+
+          if (this.operation === "addition") result = prev + cur;
+          else if (this.operation === "subtraction") result = prev - cur;
+          else if (this.operation === "multiplication") result = prev * cur;
+          else if (this.operation === "division") result = prev / cur;
+          else return;
+
+          this.currentValue = result;
+          this.operation = undefined;
+          this.previousValue = "";
+        }
+
+        formatDisplayedValue(value) {
+          const stringValue = value.toString();
+          const intPart = parseFloat(stringValue.split(".")[0]);
+          const floatPart = stringValue.split(".")[1];
+          let intToDisplay;
+          if (isNaN(intPart)) {
+            intToDisplay = "";
+          } else {
+            intToDisplay = intPart.toLocaleString("en", {
+              maximumFractionDigits: 0,
+            });
+          }
+          if (floatPart != null) {
+            return `${intToDisplay}.${floatPart}`;
+          } else {
+            return intToDisplay;
+          }
+        }
+
+        updateOutput() {
+          this.sign = "";
+          if (this.operation === "addition") this.sign = " +";
+          else if (this.operation === "subtraction") this.sign = " -";
+          else if (this.operation === "multiplication") this.sign = " ×";
+          else if (this.operation === "division") this.sign = " ÷";
+          this.currentOutput.innerText = this.formatDisplayedValue(
+            this.currentValue
+          );
+          this.previousOutput.innerText =
+            this.formatDisplayedValue(this.previousValue) + this.sign;
+        }
+      }
+
+      const numberButtons = document.querySelectorAll("button[data-number]");
+      const clearButton = document.querySelector("[data-cl]");
+      const deleteButton = document.querySelector("[data-del");
+      const operationButtons = document.querySelectorAll("[data-operation]");
+      const equalsButton = document.querySelector("[data-equals]");
+
+      const currentOutput = document.querySelector(".current");
+      const previousOutput = document.querySelector(".previous");
+
+      const calculator = new Calculator(previousOutput, currentOutput);
+
+      console.log(currentOutput.innerText);
+
+      numberButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          calculator.append(button.innerText);
+          calculator.updateOutput();
+        });
+      });
+
+      clearButton.addEventListener("click", () => {
+        calculator.clear();
+      });
+
+      operationButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const currentOperation = button.getAttribute("data-operation");
+          calculator.selectOperation(currentOperation);
+          calculator.updateOutput();
+        });
+      });
+
+      equalsButton.addEventListener("click", () => {
+        calculator.calculate();
+        calculator.updateOutput();
+      });
+
+      deleteButton.addEventListener("click", () => {
+        calculator.delete();
+        calculator.updateOutput();
+      });
+    </script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>

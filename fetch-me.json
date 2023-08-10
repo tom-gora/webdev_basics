@@ -63,6 +63,14 @@
       "description": "Simple pricing plan cards from the challenge, spiced up with responsiveness, dark and light mode and some css effects.",
       "source": "/webdev_basics/master/icodethis/pricing_cards_01_08_2023/",
       "date": "2023-08-08"
+    },
+    {
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["tutorial", "app", "oop", "custom"],
+      "title": "Calculator",
+      "description": "Simple calculator based on a tutoprial, with custom changes and a few fixes. Made to practice OOP style js code.",
+      "source": "/webdev_basics/master/random/calculator/",
+      "date": "2023-08-10"
     }
   ]
 }

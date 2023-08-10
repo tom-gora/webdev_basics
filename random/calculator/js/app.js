@@ -58,8 +58,6 @@ class Calculator {
     this.previousValue = "";
   }
 
-  //TODO: Implement formatting?
-
   formatDisplayedValue(value) {
     const stringValue = value.toString();
     const intPart = parseFloat(stringValue.split(".")[0]);
