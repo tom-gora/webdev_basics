@@ -16,10 +16,10 @@ class Calculator {
     if (this.currentValue === "") {
       this.currentValue = this.previousValue;
       this.previousValue = "";
-    } else {
-      this.currentValue = this.currentValue.toString().slice(0, -1);
       this.operation = undefined;
       this.updateOutput();
+    } else {
+      this.currentValue = this.currentValue.toString().slice(0, -1);
     }
   }
 
@@ -60,13 +60,22 @@ class Calculator {
 
   //TODO: Implement formatting?
 
-  // formatDisplay(value) {
-  //   if (isNaN(value)) return;
-  //   else {
-  //     const floatValue = parseFloat(value);
-  //     return floatValue.toLocaleString("en");
-  //   }
-  // }
+  formatDisplayedValue(value) {
+    const stringValue = value.toString();
+    const intPart = parseFloat(stringValue.split(".")[0]);
+    const floatPart = stringValue.split(".")[1];
+    let intToDisplay;
+    if (isNaN(intPart)) {
+      intToDisplay = "";
+    } else {
+      intToDisplay = intPart.toLocaleString("en", { maximumFractionDigits: 0 });
+    }
+    if (floatPart != null) {
+      return `${intToDisplay}.${floatPart}`;
+    } else {
+      return intToDisplay;
+    }
+  }
 
   updateOutput() {
     this.sign = "";
@@ -74,8 +83,9 @@ class Calculator {
     else if (this.operation === "subtraction") this.sign = " -";
     else if (this.operation === "multiplication") this.sign = " ×";
     else if (this.operation === "division") this.sign = " ÷";
-    this.currentOutput.innerText = this.currentValue;
-    this.previousOutput.innerText = this.previousValue.toString() + this.sign;
+    this.currentOutput.innerText = this.formatDisplayedValue(this.currentValue);
+    this.previousOutput.innerText =
+      this.formatDisplayedValue(this.previousValue) + this.sign;
   }
 }
 
