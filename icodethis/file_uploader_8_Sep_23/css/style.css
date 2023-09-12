@@ -63,7 +63,7 @@ body {
 }
 
 .card-body section.uploads-list {
-  border: 1px solid red;
+  /* border: 1px solid red; */
   height: 100%;
   width: 90%;
   overflow: auto;
@@ -96,7 +96,7 @@ body {
 
 .filetype {
   position: relative;
-  color: var(--text-dark);
+  color: var(--text-light);
   display: flex;
   justify-content: start;
   align-items: center;
@@ -125,7 +125,7 @@ body {
 
 .progress-bar span {
   font-size: 2rem;
-  color: var(--text-dark);
+  color: var(--text-light);
 }
 
 .progress-bar .bar {
@@ -158,7 +158,7 @@ body {
     var(--bar-accent-light) 5px,
     var(--bar-accent-light) 10px
   );
-  transition: all 1s linear;
+  transition: all 2s linear;
 }
 
 .progress-bar .bar::before {
@@ -166,16 +166,17 @@ body {
   position: absolute;
   height: 150%;
   top: 50%;
-  left: 55%;
-  transform: translate(-50%, -50%) skew(-45deg);
-  display: inline-block;
+  left: -5%;
+  transform: translate(-50%, -30%);
   vertical-align: middle;
-  content: "69%";
-  color: purple;
-  background: var(--card-bg);
+  content: "0%";
+  color: var(--bar-accent-dark);
+  background: transparent;
+  margin-left: 2.5rem;
   font-size: 1rem;
   font-weight: 700;
-  transition: all 1s linear;
+  text-align: right;
+  transition: all 2s linear;
 }
 
 .progress-bar .controls {
@@ -193,6 +194,13 @@ body {
   color: var(--card-accent-dark);
   text-decoration: underline;
   font-size: 1rem;
+  transition: all 200ms ease-in;
+}
+
+.progress-bar .controls button:hover,
+.progress-bar .controls button:focus {
+  color: var(--bar-accent-dark);
+  text-decoration: none;
 }
 
 .stop-download {
@@ -206,4 +214,10 @@ body {
 .stop-download ion-icon {
   color: var(--text-dark);
   font-size: 2rem;
+  transition: color 200ms ease-in;
+}
+
+.stop-download ion-icon:hover,
+.stop-download ion-icon:focus {
+  color: var(--card-accent-dark);
 }
