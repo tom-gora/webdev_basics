@@ -17,27 +17,40 @@
   --bar-accent-dark: #2daff1;
   --text-light: #ccccc6;
   --text-dark: #454641;
-  --box-shadow: box-shadow: 0.5rem 0.5rem 0.5rem #e4cfbc;
+  --box-shadow: #e8cfb7;
+  --scrollbar-light: #f5f5f5;
+  --scrollbar-dark: #adadab;
+  --error: #b81604;
 }
 
 body {
   background: var(--page-bg);
   color: var(--text-light);
   font-family: "albert-sans", Arial, Helvetica, system-ui, sans-serif;
+  /* min-width: 100dvw; */
   min-height: 100dvh;
   display: grid;
   place-items: center;
 }
 
 .card {
-  width: clamp(530px, 96vw, 800px);
-  aspect-ratio: 2/3;
+  width: 90vw;
+  max-width: 850px;
+  max-height: 90dvh;
   border: 3px solid var(--card-accent-dark);
   background: var(--card-bg);
   border-radius: 3px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
+  padding-bottom: 2rem;
+  box-shadow: 2rem 2rem 0 var(--box-shadow);
+}
+
+@media (min-width: 1080px) {
+  .card {
+    max-width: 680px;
+  }
 }
 
 .card-title-bar {
@@ -58,15 +71,34 @@ body {
 
 .card-body {
   display: grid;
+  margin-right: 2rem;
   place-items: center;
-  height: 40%;
+  min-height: 12rem;
+  max-height: 22rem;
+  overflow: auto;
+}
+
+/* mozilla fallback */
+.card-body {
+  scrollbar-width: 8px;
+  scrollbar-color: var(--scrollbar-dark) var(--scrollbar-light);
+}
+
+.card-body::-webkit-scrollbar {
+  width: 8px;
+  background-color: var(--scrollbar-light);
+}
+
+.card-body::-webkit-scrollbar-thumb {
+  width: 8px;
+  background-color: var(--scrollbar-dark);
+  border-radius: 100vw;
 }
 
 .card-body section.uploads-list {
-  /* border: 1px solid red; */
   height: 100%;
   width: 90%;
-  overflow: auto;
+  z-index: 10;
 }
 
 .uploads-list ul {
@@ -80,18 +112,6 @@ body {
   height: 10rem;
   display: grid;
   grid-template-columns: 6rem 1fr 4rem;
-}
-
-.card-footer {
-  height: 40%;
-  display: grid;
-  place-items: center;
-}
-
-.card-footer section.uploader {
-  border: 1px solid green;
-  height: 100%;
-  width: 90%;
 }
 
 .filetype {
@@ -110,6 +130,7 @@ body {
 .filetype span {
   font-weight: 700;
   font-size: 1.25rem;
+  text-transform: uppercase;
   position: absolute;
   left: 50%;
   bottom: 50%;
@@ -124,7 +145,7 @@ body {
 }
 
 .progress-bar span {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: var(--text-light);
 }
 
@@ -132,7 +153,7 @@ body {
   position: relative;
   border: 4px solid var(--bar-accent-dark);
   border-radius: 4px;
-  height: 2rem;
+  height: 3rem;
   overflow: hidden;
 }
 
@@ -140,16 +161,16 @@ body {
   left: -10%;
 }
 .progress-bar .bar:hover::before {
-  left: 110%;
+  left: 125%;
 }
 
 .progress-bar .bar::after {
   position: absolute;
   top: -0.5rem;
-  left: -125%;
+  left: -135%;
   content: "";
   width: 120%;
-  height: 2.5rem;
+  height: 3.5rem;
   transform: skew(-45deg);
   background: repeating-linear-gradient(
     90deg,
@@ -166,14 +187,13 @@ body {
   position: absolute;
   height: 150%;
   top: 50%;
-  left: -5%;
+  left: 0;
   transform: translate(-50%, -30%);
-  vertical-align: middle;
   content: "0%";
   color: var(--bar-accent-dark);
   background: transparent;
-  margin-left: 2.5rem;
-  font-size: 1rem;
+  margin-left: 2rem;
+  font-size: 2rem;
   font-weight: 700;
   text-align: right;
   transition: all 2s linear;
@@ -188,19 +208,41 @@ body {
 }
 
 .progress-bar .controls button {
+  position: relative;
   background: none;
   border: none;
   outline: none;
   color: var(--card-accent-dark);
-  text-decoration: underline;
-  font-size: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
   transition: all 200ms ease-in;
+}
+
+.progress-bar .controls button:last-of-type {
+  display: none;
+}
+
+.progress-bar .controls button::after {
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  content: "";
+  width: 100%;
+  border-bottom: 4px solid var(--bar-accent-dark);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: all 200ms ease-in;
+}
+
+.progress-bar .controls button:hover::after,
+.progress-bar .controls button:focus::after {
+  transform: scaleX(1);
 }
 
 .progress-bar .controls button:hover,
 .progress-bar .controls button:focus {
   color: var(--bar-accent-dark);
-  text-decoration: none;
 }
 
 .stop-download {
@@ -212,12 +254,101 @@ body {
 }
 
 .stop-download ion-icon {
-  color: var(--text-dark);
-  font-size: 2rem;
+  color: var(--card-accent-dark);
+  font-size: 3rem;
   transition: color 200ms ease-in;
 }
 
 .stop-download ion-icon:hover,
 .stop-download ion-icon:focus {
-  color: var(--card-accent-dark);
+  color: var(--bar-accent-dark);
+}
+
+.card-footer {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  margin-bottom: 2rem;
+}
+
+.card-footer section.uploader {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid green; */
+  height: 100%;
+  width: auto;
+  padding-inline: 4rem;
+  padding-block-end: 2rem;
+  isolation: isolate;
+}
+
+.uploader svg {
+  height: 80%;
+  min-height: 250px;
+  position: absolute;
+  stroke-width: 2px;
+  stroke-dasharray: 5px;
+  user-select: none;
+  z-index: -1;
+}
+
+.uploader svg path {
+  opacity: 0.2;
+  fill: var(--bar-accent-light);
+  stroke: var(--bar-accent-dark);
+}
+
+.uploader input[type="file"] {
+  scale: 0;
+}
+
+label[for="file-input"] {
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  z-index: 10;
+}
+
+label[for="file-input"] span {
+  display: none;
+}
+
+@media all and (min-width: 900px) {
+  label[for="file-input"] span {
+    display: block;
+  }
+}
+
+label[for="file-input"] button {
+  color: var(--card-bg);
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  font-weight: 900;
+  padding: 0.5em 1em;
+  background: var(--card-accent-light);
+  border: none;
+  border-radius: 3px;
+  transition: all 200ms ease-out;
+}
+
+label[for="file-input"] button:hover {
+  box-shadow: 0 0.5rem 0 var(--card-accent-dark);
+}
+
+#error-message {
+  margin-top: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--error);
 }
