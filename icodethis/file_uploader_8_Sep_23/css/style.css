@@ -129,7 +129,7 @@ body {
 
 .filetype span {
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1rem;
   text-transform: uppercase;
   position: absolute;
   left: 50%;
@@ -158,7 +158,7 @@ body {
 }
 
 .progress-bar .bar.bar-moving::after {
-  animation: barAnimation 10s linear forwards;
+  animation: barAnimation var(--animation-time) linear forwards;
 }
 
 @keyframes barAnimation {
@@ -194,20 +194,20 @@ body {
   left: -10%;
   transform: translate(-50%, -50%);
   font-size: 2rem;
-  color: red;
+  color: var(--bar-accent-dark);
   margin-left: 2rem;
   z-index: 200;
 }
 
 .progress-bar .bar.bar-moving .progress-counter {
-  animation: counterAnimation 10s linear forwards;
+  animation: counterAnimation var(--animation-time) linear forwards;
 }
 
 @keyframes counterAnimation {
   0% {
     left: -10%;
   }
-  100% {
+  99% {
     left: 115%;
   }
 }
@@ -258,7 +258,7 @@ body {
   color: var(--bar-accent-dark);
 }
 
-.stop-download {
+.stop-delete {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,38 +266,38 @@ body {
   margin-bottom: 2.75rem;
 }
 
-.stop-download ion-icon {
+.stop-delete ion-icon {
   color: var(--card-accent-dark);
   font-size: 3rem;
   transition: color 200ms ease-in;
 }
 
-.stop-download ion-icon:hover,
-.stop-download ion-icon:focus {
+.stop-delete ion-icon:hover,
+.stop-delete ion-icon:focus {
   color: var(--bar-accent-dark);
 }
 
 .card-footer {
-  height: 200px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
-  margin-bottom: 2rem;
 }
 
 .card-footer section.uploader {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* border: 1px solid green; */
-  height: 100%;
-  width: auto;
-  padding-inline: 4rem;
-  padding-block-end: 2rem;
+  display: grid;
+  place-items: center;
   isolation: isolate;
+}
+
+.uploader .drag-and-drop-area {
+  /* border: 1px green solid; */
+  position: absolute;
+  inset-inline: -4rem;
+  inset-block: -2rem;
+  z-index: 10;
 }
 
 .uploader svg {
@@ -314,6 +314,14 @@ body {
   opacity: 0.2;
   fill: var(--bar-accent-light);
   stroke: var(--bar-accent-dark);
+}
+
+.uploader.active > *:not(.drag-and-drop-area) {
+  z-index: -1;
+}
+
+.uploader.active svg path {
+  opacity: 0.8;
 }
 
 .uploader input[type="file"] {
@@ -360,7 +368,7 @@ label[for="file-input"] button:hover {
 }
 
 #error-message {
-  margin-top: 3rem;
+  margin-top: 5rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--error);
