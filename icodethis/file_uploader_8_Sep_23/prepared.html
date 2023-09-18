@@ -302,7 +302,7 @@
       height: 80%;
       min-height: 200px;
       position: absolute;
-      stroke-width: 2px;
+      stroke-width: 1px;
       stroke-dasharray: 5px;
       user-select: none;
       z-index: -1;
@@ -538,9 +538,13 @@
             bar.classList.add("bar-moving");
             const timeToAnimate = addedNode.getAttribute("data-time");
 
-            const viewButton = addedNode.querySelector(".controls :nth-child(3)");
+            const viewButton = addedNode.querySelector(
+              ".controls :nth-child(3)",
+            );
             const stopDeleteButton = addedNode.querySelector(".stop-delete");
-            const stopDeleteIcon = addedNode.querySelector(".stop-delete ion-icon");
+            const stopDeleteIcon = addedNode.querySelector(
+              ".stop-delete ion-icon",
+            );
 
             scrollableSection.scrollTo({
               top: uploadListContainer.scrollHeight,
@@ -552,7 +556,10 @@
             });
 
             bar.style.setProperty("--animation-time", timeToAnimate + "ms");
-            counter.style.setProperty("--animation-time", timeToAnimate + "ms");
+            counter.style.setProperty(
+              "--animation-time",
+              timeToAnimate + "ms",
+            );
 
             const countTo100 = (node, time) => {
               const interval = time / 100;

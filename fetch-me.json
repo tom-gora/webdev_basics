@@ -1,157 +1,80 @@
 {
   "projects": [
     {
-      "skills": [
-        "html5",
-        "css3"
-      ],
-      "categories": [
-        "icodethis",
-        "page",
-        "school"
-      ],
+      "skills": ["html5", "css3"],
+      "categories": ["icodethis", "page", "school"],
       "title": "404 Page Challenge",
       "description": "Simple 404 page project using responsively moving svgs to replicate an image based background in the orginal.",
       "source": "/webdev_basics/master/icodethis/404_Page_26_Jun_23/",
       "date": "2023-06-26"
     },
     {
-      "skills": [
-        "html5",
-        "css3"
-      ],
-      "categories": [
-        "personal",
-        "component",
-        "svg"
-      ],
+      "skills": ["html5", "css3"],
+      "categories": ["personal", "component", "svg"],
       "title": "Announcement Card with SVG blob",
       "description": "A simple project replicating the look of announcement card.",
       "source": "/webdev_basics/master/icodethis/announcement_card_blob_19_Jun_23/",
       "date": "2023-06-19"
     },
     {
-      "skills": [
-        "html5",
-        "css3"
-      ],
-      "categories": [
-        "icodethis",
-        "component"
-      ],
+      "skills": ["html5", "css3"],
+      "categories": ["icodethis", "component"],
       "title": "Apps Card Challenge",
       "description": "A simple project replicating the look of an apps component.",
       "source": "/webdev_basics/master/icodethis/apps_card/",
       "date": "2023-07-21"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "icodethis",
-        "component"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["icodethis", "component"],
       "title": "Colored Cards Challenge",
       "description": "Simple set of cards, that generate a set of random pastel colors on click. Responsive flexbox.",
       "source": "/webdev_basics/master/icodethis/colored_cards_20_Jun_23/",
       "date": "2023-06-20"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "icodethis",
-        "component",
-        "darkmode"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["icodethis", "component", "darkmode"],
       "title": "Social Media Get in Touch Card",
       "description": "Simple card with social media links that is able to switch between dark/light modes and stores preference in localstorage.",
       "source": "/webdev_basics/master/icodethis/get_in_touch_29_Jun_23/",
       "date": "2023-06-29"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "icodethis",
-        "app",
-        "glassmorphism"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["icodethis", "app", "glassmorphism"],
       "title": "Timer App",
       "description": "Simple web app replicating functionality of Android timer application. Custom styling.",
       "source": "/webdev_basics/master/icodethis/timer_20_Jul_23/",
       "date": "2023-07-20"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "personal",
-        "tutorial",
-        "component"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["personal", "tutorial", "component"],
       "title": "Expanding User Profile Card",
       "description": "Simple component with user profile links. Expanding to reveal details.",
       "source": "/webdev_basics/master/random/dropdown_profile_25_Jun_23/",
       "date": "2023-06-25"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "personal",
-        "icodethis",
-        "component"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["personal", "icodethis", "component"],
       "title": "Pricing Cards",
       "description": "Simple pricing plan cards from the challenge, spiced up with responsiveness, dark and light mode and some css effects.",
       "source": "/webdev_basics/master/icodethis/pricing_cards_01_08_2023/",
       "date": "2023-08-08"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "tutorial",
-        "app",
-        "oop",
-        "custom"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["tutorial", "app", "oop", "custom"],
       "title": "Calculator",
       "description": "Simple calculator based on a tutorial, with custom changes and a few fixes. Made to practice OOP style js code.",
       "source": "/webdev_basics/master/random/calculator/",
       "date": "2023-08-10"
     },
     {
-      "skills": [
-        "html5",
-        "css3",
-        "javascript"
-      ],
-      "categories": [
-        "component",
-        "interactive",
-        "demo",
-        "icodethis"
-      ],
+      "skills": ["html5", "css3", "javascript"],
+      "categories": ["component", "interactive", "icodethis"],
       "title": "File Uploader",
       "description": "File uploading component in pure js, that emulates upload with animations based off selected file size.",
       "source": "/webdev_basics/master/icodethis/file_uploader_8_Sep_23",

@@ -294,7 +294,7 @@ body {
   height: 80%;
   min-height: 200px;
   position: absolute;
-  stroke-width: 2px;
+  stroke-width: 1px;
   stroke-dasharray: 5px;
   user-select: none;
   z-index: -1;
