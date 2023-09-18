@@ -152,7 +152,7 @@
         "demo",
         "icodethis"
       ],
-      "title": "Calculator",
+      "title": "File Uploader",
       "description": "File uploading component in pure js, that emulates upload with animations based off selected file size.",
       "source": "/webdev_basics/master/icodethis/file_uploader_8_Sep_23",
       "date": "2023-09-18"
