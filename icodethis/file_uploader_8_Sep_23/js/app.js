@@ -1,4 +1,5 @@
 const uploadListContainer = document.querySelector(".uploads-list");
+const scrollableSection = document.querySelector(".card-body");
 const getUploadItemHTML = (fileExtension, fileName, time) => {
   return `<li class="upload-item" data-time="${time}">
             <div class="filetype">
@@ -86,7 +87,10 @@ const observer = new MutationObserver((mutationList, observer) => {
         const stopDeleteButton = addedNode.querySelector(".stop-delete");
         const stopDeleteIcon = addedNode.querySelector(".stop-delete ion-icon");
 
-        uploadListContainer.scrollIntoView(false);
+        scrollableSection.scrollTo({
+          top: uploadListContainer.scrollHeight,
+          behavior: "smooth",
+        });
 
         stopDeleteButton.addEventListener("click", () => {
           uploadListContainer.removeChild(addedNode);
@@ -106,6 +110,8 @@ const observer = new MutationObserver((mutationList, observer) => {
             } else {
               clearInterval(intervalId);
               node.style.left = "50%";
+              node.style.margin = "0";
+
               node.style.color = "var(--card-bg)";
               node.style.fontWeight = "900";
               viewButton.style.display = "block";
