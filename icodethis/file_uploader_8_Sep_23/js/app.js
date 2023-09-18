@@ -109,6 +109,7 @@ const observer = new MutationObserver((mutationList, observer) => {
               currentStep++;
             } else {
               clearInterval(intervalId);
+              addedNode.classList.add("completed");
               node.style.left = "50%";
               node.style.margin = "0";
 

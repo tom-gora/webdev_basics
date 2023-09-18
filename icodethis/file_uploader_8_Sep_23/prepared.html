@@ -1,462 +1,462 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewpot" content="width=device-width, initial-scale=1.0" />
-    <title>File Uploader</title>
-    <style>
-      @import url(https://fonts.bunny.net/css?family=albert-sans:100,200,300,400,500,600,700,800,900);
 
-      *,
-      *::after,
-      *::before {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewpot" content="width=device-width, initial-scale=1.0" />
+  <title>File Uploader</title>
+  <style>
+    @import url(https://fonts.bunny.net/css?family=albert-sans:100,200,300,400,500,600,700,800,900);
+
+    *,
+    *::after,
+    *::before {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --page-bg: #e9ddd1;
+      --card-bg: #fefff8;
+      --card-accent-light: #fd9436;
+      --card-accent-dark: #d67221;
+      --bar-accent-light: #6bd1f4;
+      --bar-accent-dark: #2daff1;
+      --text-light: #ccccc6;
+      --text-dark: #454641;
+      --box-shadow: #e8cfb7;
+      --scrollbar-light: #f5f5f5;
+      --scrollbar-dark: #adadab;
+      --error: #b81604;
+    }
+
+    body {
+      background: var(--page-bg);
+      color: var(--text-light);
+      font-family: "albert-sans", Arial, Helvetica, system-ui, sans-serif;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      width: 80vw;
+      max-width: 850px;
+      max-height: 90dvh;
+      border: 3px solid var(--card-accent-dark);
+      background: var(--card-bg);
+      border-radius: 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      box-shadow: 2rem 2rem 0 var(--box-shadow);
+    }
+
+    .card-title-bar {
+      min-height: 6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--card-accent-light);
+    }
+
+    .card-title-bar h1 {
+      color: var(--card-bg);
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      padding-block: 3rem;
+      font-weight: 900;
+    }
+
+    .card-body {
+      display: flex;
+      margin-inline: 0.5rem;
+      padding-bottom: 1rem;
+      align-items: center;
+      justify-content: start;
+      max-width: 100%;
+      max-height: 20rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* mozilla fallback */
+    .card-body {
+      scrollbar-width: 8px;
+      scrollbar-color: var(--scrollbar-dark) var(--scrollbar-light);
+    }
+
+    .card-body::-webkit-scrollbar {
+      width: 8px;
+      background-color: var(--scrollbar-light);
+    }
+
+    .card-body::-webkit-scrollbar-thumb {
+      width: 8px;
+      background-color: var(--scrollbar-dark);
+      border-radius: 100vw;
+    }
+
+    .card-body section.uploads-list {
+      height: 100%;
+      width: 96%;
+      z-index: 10;
+    }
+
+    .uploads-list ul {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .uploads-list li {
+      margin-bottom: 1.25rem;
+      display: grid;
+      grid-template-columns: 5rem 1fr 4rem;
+    }
+
+    .uploads-list li.completed {
+      color: var(--text-dark);
+    }
+
+    .filetype {
+      position: relative;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+    }
+
+    .filetype ion-icon {
+      font-size: 5rem;
+      --ionicon-stroke-width: 20px;
+    }
+
+    .filetype span {
+      font-weight: 900;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%);
+    }
+
+    .progress-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      justify-content: end;
+    }
+
+    .progress-bar span {
+      font-size: 1rem;
+    }
+
+    .progress-bar .bar {
+      position: relative;
+      border: 4px solid var(--bar-accent-dark);
+      border-radius: 4px;
+      height: 1.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar .bar.bar-moving::after {
+      animation: barAnimation var(--animation-time) linear forwards;
+    }
+
+    @keyframes barAnimation {
+      0% {
+        left: -140%;
       }
 
-      :root {
-        --page-bg: #e9ddd1;
-        --card-bg: #fefff8;
-        --card-accent-light: #fd9436;
-        --card-accent-dark: #d67221;
-        --bar-accent-light: #6bd1f4;
-        --bar-accent-dark: #2daff1;
-        --text-light: #ccccc6;
-        --text-dark: #454641;
-        --box-shadow: #e8cfb7;
-        --scrollbar-light: #f5f5f5;
-        --scrollbar-dark: #adadab;
-        --error: #b81604;
+      100% {
+        left: -15%;
       }
+    }
 
-      body {
-        background: var(--page-bg);
-        color: var(--text-light);
-        font-family: "albert-sans", Arial, Helvetica, system-ui, sans-serif;
-        min-height: 100dvh;
-        display: grid;
-        place-items: center;
-      }
-
-      .card {
-        width: 80vw;
-        max-width: 850px;
-        max-height: 90dvh;
-        border: 3px solid var(--card-accent-dark);
-        background: var(--card-bg);
-        border-radius: 3px;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        box-shadow: 2rem 2rem 0 var(--box-shadow);
-      }
-
-      .card-title-bar {
-        min-height: 6rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--card-accent-light);
-      }
-
-      .card-title-bar h1 {
-        color: var(--card-bg);
-        font-size: 2.5rem;
-        text-transform: uppercase;
-        padding-block: 3rem;
-        font-weight: 900;
-      }
-
-      .card-body {
-        display: flex;
-        margin-inline: 0.5rem;
-        padding-bottom: 1rem;
-        align-items: center;
-        justify-content: start;
-        max-width: 100%;
-        max-height: 20rem;
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-
-      /* mozilla fallback */
-      .card-body {
-        scrollbar-width: 8px;
-        scrollbar-color: var(--scrollbar-dark) var(--scrollbar-light);
-      }
-
-      .card-body::-webkit-scrollbar {
-        width: 8px;
-        background-color: var(--scrollbar-light);
-      }
-
-      .card-body::-webkit-scrollbar-thumb {
-        width: 8px;
-        background-color: var(--scrollbar-dark);
-        border-radius: 100vw;
-      }
-
-      .card-body section.uploads-list {
-        height: 100%;
-        width: 96%;
-        z-index: 10;
-      }
-
-      .uploads-list ul {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .uploads-list li {
-        height: 5rem;
-        margin-bottom: 1.25rem;
-        display: grid;
-        grid-template-columns: 5rem 1fr 4rem;
-      }
-
-      .filetype {
-        position: relative;
-        color: var(--text-light);
-        display: flex;
-        justify-content: start;
-        align-items: center;
-      }
-
-      .filetype ion-icon {
-        font-size: 5rem;
-        --ionicon-stroke-width: 20px;
-      }
-
-      .filetype span {
-        font-weight: 900;
-        font-size: 1rem;
-        text-transform: uppercase;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%);
-      }
-
-      .progress-bar {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        justify-content: end;
-      }
-
-      .progress-bar span {
-        font-size: 1rem;
-        color: var(--text-light);
-      }
-
-      .progress-bar .bar {
-        position: relative;
-        border: 4px solid var(--bar-accent-dark);
-        border-radius: 4px;
-        height: 1.5rem;
-        overflow: hidden;
-      }
-
-      .progress-bar .bar.bar-moving::after {
-        animation: barAnimation var(--animation-time) linear forwards;
-      }
-
-      @keyframes barAnimation {
-        0% {
-          left: -140%;
-        }
-
-        100% {
-          left: -15%;
-        }
-      }
-
-      .progress-bar .bar::after {
-        position: absolute;
-        top: -0.5rem;
-        left: -135%;
-        content: "";
-        width: 125%;
-        height: 3.5rem;
-        transform: skew(-45deg);
-        background: repeating-linear-gradient(
-          90deg,
+    .progress-bar .bar::after {
+      position: absolute;
+      top: -0.5rem;
+      left: -135%;
+      content: "";
+      width: 125%;
+      height: 3.5rem;
+      transform: skew(-45deg);
+      background: repeating-linear-gradient(90deg,
           var(--bar-accent-dark),
           var(--bar-accent-dark) 5px,
           var(--bar-accent-light) 5px,
-          var(--bar-accent-light) 10px
-        );
-        transition: all 2s linear;
+          var(--bar-accent-light) 10px);
+      transition: all 2s linear;
+    }
+
+    .progress-bar .bar .progress-counter {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      color: var(--bar-accent-dark);
+      z-index: 200;
+    }
+
+    .progress-bar .bar.bar-moving .progress-counter {
+      animation: counterAnimation var(--animation-time) linear forwards;
+    }
+
+    @keyframes counterAnimation {
+      0% {
+        left: -5%;
       }
 
-      .progress-bar .bar .progress-counter {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        transform: translate(-50%, -50%);
-        font-size: 1rem;
-        color: var(--bar-accent-dark);
-        z-index: 200;
+      99% {
+        left: 120%;
       }
+    }
 
-      .progress-bar .bar.bar-moving .progress-counter {
-        animation: counterAnimation var(--animation-time) linear forwards;
-      }
+    .progress-bar .controls {
+      display: flex;
+      justify-content: end;
+      gap: 0.5rem;
+      height: 1.25rem;
+    }
 
-      @keyframes counterAnimation {
-        0% {
-          left: -5%;
-        }
+    .progress-bar .controls button {
+      position: relative;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--card-accent-dark);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.25rem 0.5rem;
+      transition: all 200ms ease-in;
+    }
 
-        99% {
-          left: 120%;
-        }
-      }
+    .progress-bar .controls button:last-of-type {
+      display: none;
+    }
 
-      .progress-bar .controls {
-        display: flex;
-        justify-content: end;
-        gap: 0.5rem;
-        height: 1.25rem;
-      }
+    .progress-bar .controls button::after {
+      position: absolute;
+      bottom: -0.25rem;
+      left: 0;
+      content: "";
+      width: 100%;
+      border-bottom: 0px solid var(--bar-accent-dark);
+      transition: all 200ms ease-in;
+    }
 
-      .progress-bar .controls button {
-        position: relative;
-        background: none;
-        border: none;
-        outline: none;
-        color: var(--card-accent-dark);
-        font-size: 1rem;
-        font-weight: 700;
-        padding: 0.25rem 0.5rem;
-        transition: all 200ms ease-in;
-      }
+    .controls button:hover::after,
+    .controls button:focus::after {
+      border-bottom: 3px solid var(--bar-accent-dark);
+    }
 
-      .progress-bar .controls button:last-of-type {
+    .progress-bar .controls button:hover,
+    .progress-bar .controls button:focus {
+      color: var(--bar-accent-dark);
+    }
+
+    .stop-delete {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: end;
+      margin-bottom: 1.75rem;
+    }
+
+    .stop-delete ion-icon {
+      color: var(--card-accent-dark);
+      font-size: 1.5rem;
+      transition: color 200ms ease-in;
+    }
+
+    .stop-delete ion-icon:hover,
+    .stop-delete ion-icon:focus {
+      color: var(--bar-accent-dark);
+    }
+
+    .card-footer {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+    }
+
+    .card-footer section.uploader {
+      position: relative;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .uploader .drag-and-drop-area {
+      /* border: 1px green solid; */
+      position: absolute;
+      inset: -2rem;
+      z-index: 10;
+    }
+
+    .uploader svg {
+      height: 80%;
+      min-height: 200px;
+      position: absolute;
+      stroke-width: 2px;
+      stroke-dasharray: 5px;
+      user-select: none;
+      z-index: -1;
+    }
+
+    .uploader svg path {
+      opacity: 0.2;
+      fill: var(--bar-accent-light);
+      stroke: var(--bar-accent-dark);
+    }
+
+    .uploader.active>*:not(.drag-and-drop-area) {
+      z-index: -1;
+    }
+
+    .uploader.active svg path {
+      opacity: 0.8;
+    }
+
+    .uploader input[type="file"] {
+      scale: 0;
+    }
+
+    label[for="file-input"] {
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 3rem;
+      z-index: 10;
+    }
+
+    label[for="file-input"] span {
+      display: block;
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+
+    label[for="file-input"] button {
+      color: var(--card-bg);
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      font-weight: 900;
+      padding: 0.25em 0.5em;
+      background: var(--card-accent-light);
+      border: none;
+      border-radius: 3px;
+      transition: all 200ms ease-out;
+    }
+
+    label[for="file-input"] button:hover {
+      box-shadow: 0 0.25rem 0 var(--card-accent-dark);
+    }
+
+    #error-message {
+      max-width: 80%;
+      text-align: center;
+      margin-top: 5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--error);
+    }
+
+    @media (max-width: 800px) {
+      .drag-and-drop-area {
         display: none;
       }
 
-      .progress-bar .controls button::after {
-        position: absolute;
-        bottom: -0.25rem;
-        left: 0;
-        content: "";
-        width: 100%;
-        border-bottom: 0px solid var(--bar-accent-dark);
-        transition: all 200ms ease-in;
-      }
-
-      .controls button:hover::after,
-      .controls button:focus::after {
-        border-bottom: 3px solid var(--bar-accent-dark);
-      }
-
-      .progress-bar .controls button:hover,
-      .progress-bar .controls button:focus {
-        color: var(--bar-accent-dark);
-      }
-
-      .stop-delete {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: end;
-        margin-bottom: 1.75rem;
-      }
-
-      .stop-delete ion-icon {
-        color: var(--card-accent-dark);
-        font-size: 1.5rem;
-        transition: color 200ms ease-in;
-      }
-
-      .stop-delete ion-icon:hover,
-      .stop-delete ion-icon:focus {
-        color: var(--bar-accent-dark);
-      }
-
-      .card-footer {
-        margin-top: 3rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-      }
-
-      .card-footer section.uploader {
-        position: relative;
-        display: grid;
-        place-items: center;
-        isolation: isolate;
-      }
-
-      .uploader .drag-and-drop-area {
-        /* border: 1px green solid; */
-        position: absolute;
-        inset: -2rem;
-        z-index: 10;
-      }
-
-      .uploader svg {
-        height: 80%;
-        min-height: 200px;
-        position: absolute;
-        stroke-width: 2px;
-        stroke-dasharray: 5px;
-        user-select: none;
-        z-index: -1;
-      }
-
-      .uploader svg path {
-        opacity: 0.2;
-        fill: var(--bar-accent-light);
-        stroke: var(--bar-accent-dark);
-      }
-
-      .uploader.active > *:not(.drag-and-drop-area) {
-        z-index: -1;
-      }
-
-      .uploader.active svg path {
-        opacity: 0.8;
-      }
-
-      .uploader input[type="file"] {
-        scale: 0;
-      }
-
-      label[for="file-input"] {
-        font-size: 1.2rem;
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        margin-top: 3rem;
-        z-index: 10;
-      }
-
       label[for="file-input"] span {
-        display: block;
-        font-size: 1rem;
-        color: var(--text-dark);
+        display: none;
       }
 
-      label[for="file-input"] button {
-        color: var(--card-bg);
-        font-size: 1.2rem;
-        text-transform: uppercase;
-        font-weight: 900;
-        padding: 0.25em 0.5em;
-        background: var(--card-accent-light);
-        border: none;
-        border-radius: 3px;
-        transition: all 200ms ease-out;
+      .card {
+        width: 90vw;
       }
 
-      label[for="file-input"] button:hover {
-        box-shadow: 0 0.25rem 0 var(--card-accent-dark);
+      .card-body {
+        max-height: 14rem;
       }
 
-      #error-message {
-        max-width: 80%;
-        text-align: center;
-        margin-top: 5rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--error);
+      .uploads-list li {
+        margin-bottom: 1rem;
       }
 
-      @media (max-width: 800px) {
-        .drag-and-drop-area {
-          display: none;
-        }
+      .progress-bar .controls button {
+        font-size: 0.8rem;
+      }
+    }
 
-        label[for="file-input"] span {
-          display: none;
-        }
-
-        .card {
-          width: 90vw;
-        }
-
-        .card-body {
-          max-height: 14rem;
-        }
-
-        .uploads-list li {
-          margin-bottom: 1rem;
-        }
+    @media (max-width: 510px) {
+      .progress-bar .controls button::after {
+        display: none;
       }
 
-      @media (max-width: 510px) {
-        .progress-bar .controls button::after {
-          display: none;
-        }
-
-        .uploads-list li {
-          margin-bottom: 1.5rem;
-        }
+      .uploads-list li {
+        margin-bottom: 1.5rem;
       }
+    }
 
-      @media (max-width: 600px) {
-        .progress-bar .progress-counter {
-          margin-left: 1.5rem;
-        }
+    @media (max-width: 600px) {
+      .progress-bar .progress-counter {
+        margin-left: 1.5rem;
       }
-    </style>
-  </head>
+    }
+  </style>
+</head>
 
-  <body>
-    <div class="card">
-      <div class="card-title-bar">
-        <h1>File upload</h1>
-      </div>
-      <div class="card-body">
-        <section class="uploads-list">
-          <ul></ul>
-        </section>
-      </div>
-      <div class="card-footer">
-        <section class="uploader">
-          <div class="drag-and-drop-area"></div>
-          <input type="file" class="file-input" id="file-input" />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="3.28 11.22 41.43 25.57"
-          >
-            <defs>
-              <style>
-                .a {
-                  fill: none;
-                  stroke: #000000;
-                  stroke-linecap: round;
-                  stroke-linejoin: round;
-                }
-              </style>
-            </defs>
-            <path
-              class="a"
-              d="M10.7834,35.5733h23.979c13.016,0,10.8384-19.5863-2.215-15.2434,0-10.8758-19.5863-10.8758-19.5863,2.1776C2.0729,20.33,2.0729,35.5733,10.7834,35.5733Z"
-            ></path>
-          </svg>
-          <label for="file-input">
-            <span>Drag and drop files here</span>
-            <span>OR</span>
-            <button class="select-files">Select files</button>
-          </label>
-        </section>
-        <div id="error-message"></div>
-      </div>
+<body>
+  <div class="card">
+    <div class="card-title-bar">
+      <h1>File upload</h1>
     </div>
+    <div class="card-body">
+      <section class="uploads-list">
+        <ul></ul>
+      </section>
+    </div>
+    <div class="card-footer">
+      <section class="uploader">
+        <div class="drag-and-drop-area"></div>
+        <input type="file" class="file-input" id="file-input" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="3.28 11.22 41.43 25.57">
+          <defs>
+            <style>
+              .a {
+                fill: none;
+                stroke: #000000;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+              }
+            </style>
+          </defs>
+          <path class="a"
+            d="M10.7834,35.5733h23.979c13.016,0,10.8384-19.5863-2.215-15.2434,0-10.8758-19.5863-10.8758-19.5863,2.1776C2.0729,20.33,2.0729,35.5733,10.7834,35.5733Z">
+          </path>
+        </svg>
+        <label for="file-input">
+          <span>Drag and drop files here</span>
+          <span>OR</span>
+          <button class="select-files">Select files</button>
+        </label>
+      </section>
+      <div id="error-message"></div>
+    </div>
+  </div>
 
-    <script>
-      const uploadListContainer = document.querySelector(".uploads-list");
-      const scrollableSection = document.querySelector(".card-body");
-      const getUploadItemHTML = (fileExtension, fileName, time) => {
-        return `<li class="upload-item" data-time="${time}">
+  <script>
+    const uploadListContainer = document.querySelector(".uploads-list");
+    const scrollableSection = document.querySelector(".card-body");
+    const getUploadItemHTML = (fileExtension, fileName, time) => {
+      return `<li class="upload-item" data-time="${time}">
             <div class="filetype">
               <ion-icon name="document-outline"></ion-icon>
               <span>${fileExtension}</span>
@@ -476,155 +476,144 @@
               <ion-icon name="close-outline"></ion-icon>
             </div>
           </li>`;
+    };
+
+    const fileInput = document.querySelector("input[type='file']");
+    const dragAndDropArea = document.querySelector(".drag-and-drop-area");
+    const dragAndDropUploader = document.querySelector(".uploader");
+    const uploadButton = document.querySelector(".select-files");
+    const cloudIndicator = document.querySelector(".uploader svg path");
+    const errorMessage = document.querySelector("#error-message");
+
+    const truncateFileName = (string) => {
+      if (string.length > 12) return `${string.slice(0, 12)}...`;
+      else return string;
+    };
+
+    const fileHandler = (file) => {
+      if (file.size > 52428800) {
+        errorMessage.innerText = "You can upload files up to 50MB in size";
+        return;
+      }
+
+      // calculate arbitrary time as 20s per mb of file read
+      const megaBytes = file.size / 1048576;
+      const timeInSeconds = Math.floor(megaBytes * 20000);
+
+      errorMessage.innerText = "";
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const fileExtension = file.name.split(".")[1];
+        const fileName = `${truncateFileName(
+          file.name.split(".")[0],
+        )} .${fileExtension}`;
+        uploadListContainer.insertAdjacentHTML(
+          "beforeend",
+          getUploadItemHTML(fileExtension, fileName, timeInSeconds),
+        );
       };
+    };
 
-      const fileInput = document.querySelector("input[type='file']");
-      const dragAndDropArea = document.querySelector(".drag-and-drop-area");
-      const dragAndDropUploader = document.querySelector(".uploader");
-      const uploadButton = document.querySelector(".select-files");
-      const cloudIndicator = document.querySelector(".uploader svg path");
-      const errorMessage = document.querySelector("#error-message");
-
-      const truncateFileName = (string) => {
-        if (string.length > 12) return `${string.slice(0, 12)}...`;
-        else return string;
-      };
-
-      const fileHandler = (file) => {
-        if (file.size > 52428800) {
-          errorMessage.innerText = "You can upload files up to 50MB in size";
-          return;
-        }
-
-        // calculate arbitrary time as 20s per mb of file read
-        const megaBytes = file.size / 1048576;
-        const timeInSeconds = Math.floor(megaBytes * 20000);
-
-        errorMessage.innerText = "";
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          const fileExtension = file.name.split(".")[1];
-          const fileName = `${truncateFileName(
-            file.name.split(".")[0],
-          )} .${fileExtension}`;
-          uploadListContainer.insertAdjacentHTML(
-            "beforeend",
-            getUploadItemHTML(fileExtension, fileName, timeInSeconds),
-          );
-        };
-      };
-
-      fileInput.addEventListener("change", () => {
-        Array.from(fileInput.files).forEach((file) => {
-          fileHandler(file);
-        });
+    fileInput.addEventListener("change", () => {
+      Array.from(fileInput.files).forEach((file) => {
+        fileHandler(file);
       });
+    });
 
-      // reroute the custom button to hidden input action
-      uploadButton.addEventListener("click", () => {
-        fileInput.click();
-      });
+    // reroute the custom button to hidden input action
+    uploadButton.addEventListener("click", () => {
+      fileInput.click();
+    });
 
-      const observerConfig = { childList: true, subtree: false };
+    const observerConfig = {childList: true, subtree: false};
 
-      const observer = new MutationObserver((mutationList, observer) => {
-        mutationList.forEach((mutation) => {
-          if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-            const addedNodes = mutation.addedNodes;
-            addedNodes.forEach((addedNode) => {
-              const bar = addedNode.querySelector(".bar");
-              const counter = addedNode.querySelector(".progress-counter");
-              bar.classList.add("bar-moving");
-              const timeToAnimate = addedNode.getAttribute("data-time");
+    const observer = new MutationObserver((mutationList, observer) => {
+      mutationList.forEach((mutation) => {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          const addedNodes = mutation.addedNodes;
+          addedNodes.forEach((addedNode) => {
+            const bar = addedNode.querySelector(".bar");
+            const counter = addedNode.querySelector(".progress-counter");
+            bar.classList.add("bar-moving");
+            const timeToAnimate = addedNode.getAttribute("data-time");
 
-              const viewButton = addedNode.querySelector(
-                ".controls :nth-child(3)",
-              );
-              const stopDeleteButton = addedNode.querySelector(".stop-delete");
-              const stopDeleteIcon = addedNode.querySelector(
-                ".stop-delete ion-icon",
-              );
+            const viewButton = addedNode.querySelector(".controls :nth-child(3)");
+            const stopDeleteButton = addedNode.querySelector(".stop-delete");
+            const stopDeleteIcon = addedNode.querySelector(".stop-delete ion-icon");
 
-              scrollableSection.scrollTo({
-                top: uploadListContainer.scrollHeight,
-                behavior: "smooth",
-              });
-
-              stopDeleteButton.addEventListener("click", () => {
-                uploadListContainer.removeChild(addedNode);
-              });
-
-              bar.style.setProperty("--animation-time", timeToAnimate + "ms");
-              counter.style.setProperty(
-                "--animation-time",
-                timeToAnimate + "ms",
-              );
-
-              const countTo100 = (node, time) => {
-                const interval = time / 100;
-                let currentStep = 0;
-
-                const intervalId = setInterval(() => {
-                  if (currentStep <= 100) {
-                    node.innerText = `${currentStep}%`;
-                    currentStep++;
-                  } else {
-                    clearInterval(intervalId);
-                    node.style.left = "50%";
-                    node.style.margin = "0";
-
-                    node.style.color = "var(--card-bg)";
-                    node.style.fontWeight = "900";
-                    viewButton.style.display = "block";
-                    stopDeleteIcon.setAttribute("name", "trash-outline");
-                  }
-                }, interval);
-              };
-
-              countTo100(counter, timeToAnimate);
+            scrollableSection.scrollTo({
+              top: uploadListContainer.scrollHeight,
+              behavior: "smooth",
             });
-          } else return;
-        });
-      });
 
-      observer.observe(uploadListContainer, observerConfig);
+            stopDeleteButton.addEventListener("click", () => {
+              uploadListContainer.removeChild(addedNode);
+            });
 
-      dragAndDropArea.addEventListener("dragenter", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dragAndDropUploader.classList.add("active");
-      });
+            bar.style.setProperty("--animation-time", timeToAnimate + "ms");
+            counter.style.setProperty("--animation-time", timeToAnimate + "ms");
 
-      dragAndDropArea.addEventListener("dragleave", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dragAndDropUploader.classList.remove("active");
-      });
+            const countTo100 = (node, time) => {
+              const interval = time / 100;
+              let currentStep = 0;
 
-      dragAndDropArea.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dragAndDropUploader.classList.add("active");
-      });
+              const intervalId = setInterval(() => {
+                if (currentStep <= 100) {
+                  node.innerText = `${currentStep}%`;
+                  currentStep++;
+                } else {
+                  clearInterval(intervalId);
+                  addedNode.classList.add("completed");
+                  node.style.left = "50%";
+                  node.style.margin = "0";
 
-      dragAndDropArea.addEventListener("drop", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dragAndDropUploader.classList.remove("active");
-        let files = e.dataTransfer.files;
-        Array.from(files).forEach((file) => {
-          fileHandler(file);
-        });
+                  node.style.color = "var(--card-bg)";
+                  node.style.fontWeight = "900";
+                  viewButton.style.display = "block";
+                  stopDeleteIcon.setAttribute("name", "trash-outline");
+                }
+              }, interval);
+            };
+
+            countTo100(counter, timeToAnimate);
+          });
+        } else return;
       });
-    </script>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
-  </body>
+    });
+
+    observer.observe(uploadListContainer, observerConfig);
+
+    dragAndDropArea.addEventListener("dragenter", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragAndDropUploader.classList.add("active");
+    });
+
+    dragAndDropArea.addEventListener("dragleave", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragAndDropUploader.classList.remove("active");
+    });
+
+    dragAndDropArea.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragAndDropUploader.classList.add("active");
+    });
+
+    dragAndDropArea.addEventListener("drop", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dragAndDropUploader.classList.remove("active");
+      let files = e.dataTransfer.files;
+      Array.from(files).forEach((file) => {
+        fileHandler(file);
+      });
+    });
+  </script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+
 </html>
