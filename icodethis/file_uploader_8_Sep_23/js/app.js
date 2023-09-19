@@ -1,5 +1,13 @@
 const uploadListContainer = document.querySelector(".uploads-list");
 const scrollableSection = document.querySelector(".card-body");
+const fileInput = document.querySelector("input[type='file']");
+const dragAndDropArea = document.querySelector(".drag-and-drop-area");
+const dragAndDropUploader = document.querySelector(".uploader");
+const uploadButton = document.querySelector(".select-files");
+const cloudIndicator = document.querySelector(".uploader svg path");
+const errorMessage = document.querySelector("#error-message");
+
+// return markup for injection with string literal used
 const getUploadItemHTML = (fileExtension, fileName, time) => {
   return `<li class="upload-item" data-time="${time}">
             <div class="filetype">
@@ -23,57 +31,85 @@ const getUploadItemHTML = (fileExtension, fileName, time) => {
           </li>`;
 };
 
-const fileInput = document.querySelector("input[type='file']");
-const dragAndDropArea = document.querySelector(".drag-and-drop-area");
-const dragAndDropUploader = document.querySelector(".uploader");
-const uploadButton = document.querySelector(".select-files");
-const cloudIndicator = document.querySelector(".uploader svg path");
-const errorMessage = document.querySelector("#error-message");
+const formatFileName = (fullFileName) => {
+  const fileNameParts = [];
 
-const truncateFileName = (string) => {
-  if (string.length > 12) return `${string.slice(0, 12)}...`;
-  else return string;
+  //if no extension at all
+  if (!fullFileName.includes(".")) {
+    // case name too long check
+    if (fullFileName.length >= 12)
+      fullFileName = `${fullFileName.slice(0, 12)}...`;
+    fileNameParts.push(fullFileName);
+    fileNameParts.push(" ");
+    return fileNameParts;
+  }
+  // if contains dot, then split
+  const fileExtension = fullFileName.split(".")[1];
+  const fileName = fullFileName.split(".")[0];
+
+  // if no extension or extension too long
+  if (fileExtension.length > 4 || fileExtension <= 0) {
+    // case name too long check
+    if (fullFileName.length > 12)
+      fullFileName = `${fullFileName.slice(0, 12)}...`;
+    fileNameParts.push(fullFileName);
+    fileNameParts.push("");
+    return fileNameParts;
+  }
+  // if filename too long
+  if (fileName.length > 12) {
+    fileNameParts.push(`${fullFileName.split(".")[0].slice(0, 12)}..`);
+    fileNameParts.push(fileExtension);
+    return fileNameParts;
+  }
+
+  // name not too long with regular extension up to 4 chars
+  fileNameParts.push(fileName);
+  fileNameParts.push(fileExtension);
+  return fileNameParts;
+};
+
+// calculate arbitrary time as 20s per mb of file read
+const getDuration = (fileSize) => {
+  const megaBytes = fileSize / 1048576;
+  return Math.floor(megaBytes * 20000);
 };
 
 const fileHandler = (file) => {
+  // disallow uploads above 50mb
   if (file.size > 52428800) {
     errorMessage.innerText = "You can upload files up to 50MB in size";
     return;
   }
 
-  // calculate arbitrary time as 20s per mb of file read
-  const megaBytes = file.size / 1048576;
-  const timeInSeconds = Math.floor(megaBytes * 20000);
+  const timeInSeconds = getDuration(file.size);
 
   errorMessage.innerText = "";
   const reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = () => {
-    const fileExtension = file.name.split(".")[1];
-    const fileName = `${truncateFileName(
-      file.name.split(".")[0],
-    )} .${fileExtension}`;
+    const fileNameFormatted = formatFileName(file.name);
+    let fileName;
+    // handle names depending if they need a dot because it'd be stupid
+    // if there is no file extension and "." were appended for no reason
+    if (fileNameFormatted[1] === "") {
+      fileName = `${fileNameFormatted[0]}${fileNameFormatted[1]}`;
+    } else {
+      fileName = `${fileNameFormatted[0]}.${fileNameFormatted[1]}`;
+    }
     uploadListContainer.insertAdjacentHTML(
       "beforeend",
-      getUploadItemHTML(fileExtension, fileName, timeInSeconds),
+      getUploadItemHTML(fileNameFormatted[1], fileName, timeInSeconds),
     );
   };
 };
 
-fileInput.addEventListener("change", () => {
-  Array.from(fileInput.files).forEach((file) => {
-    fileHandler(file);
-  });
-});
-
-// reroute the custom button to hidden input action
-uploadButton.addEventListener("click", () => {
-  fileInput.click();
-});
-
+// observer config. only look at parent container
 const observerConfig = { childList: true, subtree: false };
 
-const observer = new MutationObserver((mutationList, observer) => {
+// observer updating the ui as nodes appended, handling animation etc.
+// all props, listeners and actions for injected list items kept here for scoping reasons
+const observer = new MutationObserver((mutationList) => {
   mutationList.forEach((mutation) => {
     if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
       const addedNodes = mutation.addedNodes;
@@ -120,7 +156,6 @@ const observer = new MutationObserver((mutationList, observer) => {
             }
           }, interval);
         };
-
         countTo100(counter, timeToAnimate);
       });
     } else return;
@@ -129,29 +164,54 @@ const observer = new MutationObserver((mutationList, observer) => {
 
 observer.observe(uploadListContainer, observerConfig);
 
-dragAndDropArea.addEventListener("dragenter", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  dragAndDropUploader.classList.add("active");
+// listeners
+
+fileInput.addEventListener("change", () => {
+  Array.from(fileInput.files).forEach((file) => {
+    fileHandler(file);
+  });
 });
 
-dragAndDropArea.addEventListener("dragleave", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+// reroute the custom button to hidden input action
+uploadButton.addEventListener("click", () => {
+  fileInput.click();
+});
+
+dragAndDropArea.addEventListener(
+  "dragenter",
+  (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragAndDropUploader.classList.add("active");
+  },
+  false,
+);
+
+dragAndDropArea.addEventListener(
+  "dragleave",
+  (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragAndDropUploader.classList.remove("active");
+  },
+  false,
+);
+
+dragAndDropArea.addEventListener(
+  "dragover",
+  (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragAndDropUploader.classList.add("active");
+  },
+  false,
+);
+
+dragAndDropArea.addEventListener("drop", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
   dragAndDropUploader.classList.remove("active");
-});
-
-dragAndDropArea.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  dragAndDropUploader.classList.add("active");
-});
-
-dragAndDropArea.addEventListener("drop", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  dragAndDropUploader.classList.remove("active");
-  let files = e.dataTransfer.files;
+  let files = event.dataTransfer.files;
   Array.from(files).forEach((file) => {
     fileHandler(file);
   });
