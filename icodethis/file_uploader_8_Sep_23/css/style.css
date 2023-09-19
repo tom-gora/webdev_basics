@@ -32,6 +32,11 @@ body {
   place-items: center;
 }
 
+button {
+  user-select: none;
+  cursor: pointer;
+}
+
 .card {
   width: 70vw;
   max-width: 550px;
@@ -52,6 +57,7 @@ body {
   justify-content: center;
   align-items: center;
   background: var(--card-accent-light);
+  user-select: none;
 }
 
 .card-title-bar h1 {
@@ -113,11 +119,27 @@ body {
   color: var(--text-dark);
 }
 
+.uploads-list li.completed .progress-counter {
+  color: var(--card-bg);
+  left: 50%;
+  margin: 0;
+  font-weight: 900;
+}
+
+.uploads-list li.completed .stop-delete {
+  display: flex;
+}
+
+.uploads-list li.completed button:last-of-type {
+  display: inline-block;
+}
+
 .filetype {
   position: relative;
   display: flex;
   justify-content: start;
   align-items: center;
+  user-select: none;
 }
 
 .filetype ion-icon {
@@ -188,11 +210,14 @@ body {
 .progress-bar .bar .progress-counter {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: 40%;
   transform: translate(-50%, -50%);
+  /* fine tune alignment with fixed value not percentage */
+  margin-left: 5px;
   font-size: 1rem;
   color: var(--bar-accent-dark);
-  z-index: 200;
+  z-index: -1;
+  user-select: none;
 }
 
 .progress-bar .bar.bar-moving .progress-counter {
@@ -204,7 +229,7 @@ body {
     left: -5%;
   }
   99% {
-    left: 120%;
+    left: 118%;
   }
 }
 

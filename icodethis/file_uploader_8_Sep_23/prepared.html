@@ -40,6 +40,11 @@
       place-items: center;
     }
 
+    button {
+      user-select: none;
+      cursor: pointer;
+    }
+
     .card {
       width: 70vw;
       max-width: 550px;
@@ -60,6 +65,7 @@
       justify-content: center;
       align-items: center;
       background: var(--card-accent-light);
+      user-select: none;
     }
 
     .card-title-bar h1 {
@@ -121,11 +127,27 @@
       color: var(--text-dark);
     }
 
+    .uploads-list li.completed .progress-counter {
+      color: var(--card-bg);
+      left: 50%;
+      margin: 0;
+      font-weight: 900;
+    }
+
+    .uploads-list li.completed .stop-delete {
+      display: flex;
+    }
+
+    .uploads-list li.completed button:last-of-type {
+      display: inline-block;
+    }
+
     .filetype {
       position: relative;
       display: flex;
       justify-content: start;
       align-items: center;
+      user-select: none;
     }
 
     .filetype ion-icon {
@@ -195,11 +217,14 @@
     .progress-bar .bar .progress-counter {
       position: absolute;
       top: 50%;
-      left: 0;
+      left: 40%;
       transform: translate(-50%, -50%);
+      /* fine tune alignment with fixed value not percentage */
+      margin-left: 5px;
       font-size: 1rem;
       color: var(--bar-accent-dark);
-      z-index: 200;
+      z-index: -1;
+      user-select: none;
     }
 
     .progress-bar .bar.bar-moving .progress-counter {
@@ -212,7 +237,7 @@
       }
 
       99% {
-        left: 120%;
+        left: 118%;
       }
     }
 
@@ -473,7 +498,7 @@
             <div class="progress-bar">
               <div class="filename"><span>${fileName}</span></div>
               <div class="bar">
-                <div class="progress-counter">xx</div>
+                <div class="progress-counter"></div>
               </div>
               <div class="controls">
                 <button>Pause</button>
@@ -504,7 +529,7 @@
       const fileName = fullFileName.split(".")[0];
 
       // if no extension or extension too long
-      if (fileExtension.length > 4 || fileExtension <= 0) {
+      if (fileExtension.length > 4 || fileExtension.length <= 0) {
         // case name too long check
         if (fullFileName.length > 12)
           fullFileName = `${fullFileName.slice(0, 12)}...`;
@@ -575,13 +600,8 @@
             bar.classList.add("bar-moving");
             const timeToAnimate = addedNode.getAttribute("data-time");
 
-            const viewButton = addedNode.querySelector(
-              ".controls :nth-child(3)",
-            );
             const stopDeleteButton = addedNode.querySelector(".stop-delete");
-            const stopDeleteIcon = addedNode.querySelector(
-              ".stop-delete ion-icon",
-            );
+            const stopDeleteIcon = addedNode.querySelector(".stop-delete ion-icon");
 
             scrollableSection.scrollTo({
               top: uploadListContainer.scrollHeight,
@@ -593,10 +613,7 @@
             });
 
             bar.style.setProperty("--animation-time", timeToAnimate + "ms");
-            counter.style.setProperty(
-              "--animation-time",
-              timeToAnimate + "ms",
-            );
+            counter.style.setProperty("--animation-time", timeToAnimate + "ms");
 
             const countTo100 = (node, time) => {
               const interval = time / 100;
@@ -609,12 +626,7 @@
                 } else {
                   clearInterval(intervalId);
                   addedNode.classList.add("completed");
-                  node.style.left = "50%";
-                  node.style.margin = "0";
-
-                  node.style.color = "var(--card-bg)";
-                  node.style.fontWeight = "900";
-                  viewButton.style.display = "block";
+                  counter.style.zIndex = "200";
                   stopDeleteIcon.setAttribute("name", "trash-outline");
                 }
               }, interval);
@@ -627,7 +639,7 @@
 
     observer.observe(uploadListContainer, observerConfig);
 
-    // listeners
+    // global listeners
 
     fileInput.addEventListener("change", () => {
       Array.from(fileInput.files).forEach((file) => {

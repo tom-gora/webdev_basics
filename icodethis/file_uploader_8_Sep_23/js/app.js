@@ -17,7 +17,7 @@ const getUploadItemHTML = (fileExtension, fileName, time) => {
             <div class="progress-bar">
               <div class="filename"><span>${fileName}</span></div>
               <div class="bar">
-                <div class="progress-counter">xx</div>
+                <div class="progress-counter"></div>
               </div>
               <div class="controls">
                 <button>Pause</button>
@@ -48,7 +48,7 @@ const formatFileName = (fullFileName) => {
   const fileName = fullFileName.split(".")[0];
 
   // if no extension or extension too long
-  if (fileExtension.length > 4 || fileExtension <= 0) {
+  if (fileExtension.length > 4 || fileExtension.length <= 0) {
     // case name too long check
     if (fullFileName.length > 12)
       fullFileName = `${fullFileName.slice(0, 12)}...`;
@@ -119,7 +119,6 @@ const observer = new MutationObserver((mutationList) => {
         bar.classList.add("bar-moving");
         const timeToAnimate = addedNode.getAttribute("data-time");
 
-        const viewButton = addedNode.querySelector(".controls :nth-child(3)");
         const stopDeleteButton = addedNode.querySelector(".stop-delete");
         const stopDeleteIcon = addedNode.querySelector(".stop-delete ion-icon");
 
@@ -146,12 +145,7 @@ const observer = new MutationObserver((mutationList) => {
             } else {
               clearInterval(intervalId);
               addedNode.classList.add("completed");
-              node.style.left = "50%";
-              node.style.margin = "0";
-
-              node.style.color = "var(--card-bg)";
-              node.style.fontWeight = "900";
-              viewButton.style.display = "block";
+              counter.style.zIndex = "200";
               stopDeleteIcon.setAttribute("name", "trash-outline");
             }
           }, interval);
@@ -164,7 +158,7 @@ const observer = new MutationObserver((mutationList) => {
 
 observer.observe(uploadListContainer, observerConfig);
 
-// listeners
+// global listeners
 
 fileInput.addEventListener("change", () => {
   Array.from(fileInput.files).forEach((file) => {
