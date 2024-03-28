@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PhoneZone</title>
-  <link href="css/output/styles.css" rel="stylesheet" />
+  <link href="css/output/tailwind-styles.css" rel="stylesheet" />
   <!--NOTE: Logo font used is: Suez One-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
