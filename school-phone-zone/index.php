@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1) ?>
+<!-- source for box shadow snippets https://manuarora.in/boxshadows -->
+<!-- animations from https://www.tailwindcss-animated.com/ -->
 <!doctype html>
 <html lang="en">
 
@@ -23,47 +28,99 @@
   </style>
 </head>
 
+
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 py-24">
-  <nav class="w-screen px-12 bg-[--brand-color-light-blue] flex justify-between items-center shadow-md fixed top-0">
-    <div class="logo">
-      <img src="res/logo-h.png" alt="Store Logo" width="200px" class="m-4">
-    </div>
-    <ul class="flex gap-4 font-bold text-[--brand-color-blue] transition">
-      <li class="text-xl hover:text-[--brand-color-dark-blue] transition"><a href="#">Home</a></li>
-      <li class="text-xl hover:text-[--brand-color-dark-blue] transition"><a href="#">Products</a></li>
-      <li class="text-xl hover:text-[--brand-color-dark-blue] transition"><a href="#">Login</a></li>
-      <li class="text-xl hover:text-[--brand-color-dark-blue] transition mt-[-4px]"><a href="#"><i class="fa-duotone fa-cart-shopping text-3xl"></i></a></li>
-    </ul>
-  </nav>
-  <section class="w-10/12 flex flex-col items-center gap-0 ">
-    <h2 class="text-center font-bold text-xl py-4">Explore our great range of phones!</h2>
-    <div class="bg-cover bg-[url('../../res/cta-bg.png')] bg-no-repeat bg-top w-full h-64"></div>
-    <p class="p-4 text-justify">Welcome to our online store, where finding your next smartphone is as simple as a few clicks. Explore our wide selection of top-tier devices and experience the ease of upgrading with just a touch.</p>
-  </section>
-  <section class="bg-gray-200 w-screen flex flex-col items-center">
-    <div class="w-10/12 flex flex-col items-center gap-4">
-      <h2 class="text-center font-bold text-xl py-4">About Us</h2>
-      <p class="p-4 text-justify">Established in 2022, our online store has been a trusted destination for smartphone enthusiasts seeking quality devices and seamless shopping experiences. With a passion for innovation and a commitment to customer satisfaction, we strive to provide the latest technology paired with exceptional service, making us your go-to destination for all things mobile.</p>
-    </div>
-  </section>
+  <?php
+  $nav_html = file_get_contents("./html_components/navigation.html");
+  $cta_html = file_get_contents("./html_components/call_to_action.html");
+  $about_html = file_get_contents("./html_components/about.html");
+  echo $nav_html;
+  echo $cta_html;
+  echo $about_html;
+  ?>
+  
   <section class="pb-24">
     <h2 class="text-center font-bold text-xl py-4">Top Products</h2>
     <div class="w-screen px-12 grid grid-cols-1 gap-y-8 col-span-full place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <?php
-      for ($i = 0; $i < 8; $i++) {
-        echo "<div class='w-56 h-96 flex flex-col gap-2 py-8 px-2 bg-white rounded-lg justify-center items-center'>
-        <img src='res/phone.png' alt='Phone' width='100%' class='m-4 aspect-[1/1]'>
-        <p class='text-center'>Phone Name</p>
-        <p class='text-center font-bold'>$100</p>
-        <button class='bg-[--brand-color-green] text-white px-4 py-2 rounded-md mt-[auto] transition-all hover:bg-[--brand-color-dark-blue] hover:text-[--brand-color-light-blue] hover:font-semibold'>Add to Cart</button>
-        </div>";
+      require_once "scripts/get_products.php";
+
+      $products = get_products();
+      $eight_rand_product_keys = array_rand($products, 4);
+      $eight_rand_products = [];
+      foreach ($eight_rand_product_keys as $key) {
+        array_push($eight_rand_products, $products[$key]);
+      }
+
+      $phone_card_html = file_get_contents("./html_components/phone_card.html");
+
+      foreach ($eight_rand_products as $product) {
+        $next_product_card_html = str_replace(
+          ["PRODUCT_NAME", "PRODUCT_PRICE", "PRODUCT_IMG_PATH"],
+          [
+            $product->product_name,
+            $product->product_price,
+            $product->product_img_path,
+          ],
+          $phone_card_html
+        );
+        echo $next_product_card_html;
       }
       ?>
     </div>
   </section>
-  <footer class="fixed bottom-0 w-screen bg-gray-100 h-16 px-12 flex justify-end items-center shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]">
-    <p>&copy; 2024 PhoneZone. All rights reserved.</p>
-  </footer>
+  <?php
+  $footer_html = file_get_contents("./html_components/footer.html");
+  echo $footer_html;
+  ?>
+  <script>
+    const loginBtn = document.querySelector('#login-btn');
+    const loginDialog = document.querySelector('#login-dialog');
+    const loginErrMsgBox = document.querySelector('#err-msg');
+    const emailInput = document.querySelector('input[name="email"]');
+    const loginDialogCloseBtn = document.querySelector('#login-dialog-close');
+    const passInput = document.querySelector('input[name="password"]');
+
+    loginBtn.onclick = (e) => {
+     e.preventDefault();
+      loginDialog.showModal();
+      loginDialog.classList.add('animate-fade-down', 'animate-duration-300', 'animate-ease-out');
+    };
+    
+    // src: https://www.stefanjudis.com/blog/a-look-at-the-dialog-elements-super-powers/
+    loginDialog.onclick = (e) => {
+      if (e.target.nodeName === 'DIALOG') {
+        loginDialog.close();
+      }
+    };
+
+    emailInput.onfocus = () => {
+      emailInput.setAttribute("autocomplete", "email");
+    };
+
+    loginDialog.onclose = () => {
+      loginErrMsgBox.classList.remove("opacity-1");
+      loginErrMsgBox.classList.add("opacity-0");
+      emailInput.setAttribute("autocomplete", "off");
+    };
+
+      loginDialogCloseBtn.onclick = (e) => {
+      e.preventDefault();
+      loginDialog.close();
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get('error');
+    switch (err) {
+      case 'nouser':
+      console.log('nouser');
+      loginErrMsgBox.innerText = "No user with that email and password.";
+      loginErrMsgBox.classList.remove("opacity-0");
+      loginErrMsgBox.classList.add("opacity-1");
+      loginDialog.showModal();
+      break;
+    }
+    </script>
 </body>
 
 </html>

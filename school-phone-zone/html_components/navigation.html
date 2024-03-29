@@ -1,0 +1,65 @@
+<nav
+  class="fixed top-0 flex w-screen items-center justify-between bg-[--brand-color-light-blue] px-12 shadow-md">
+  <div class="logo">
+    <a href="index.php">
+      <img src="res/logo-h.png" alt="Store Logo" width="200px" class="m-4" />
+    </a>
+  </div>
+  <ul class="flex gap-4 font-bold text-[--brand-color-blue] transition">
+    <li class="text-xl transition hover:text-[--brand-color-dark-blue]">
+      <a href="#">Home</a>
+    </li>
+    <li class="text-xl transition hover:text-[--brand-color-dark-blue]">
+      <a href="#">Products</a>
+    </li>
+    <li class="text-xl transition hover:text-[--brand-color-dark-blue]">
+      <a id="login-btn">Login</a>
+    </li>
+    <li
+      class="mt-[-4px] text-xl transition hover:text-[--brand-color-dark-blue]">
+      <a href="#"><i class="fa-duotone fa-cart-shopping text-3xl"></i></a>
+    </li>
+  </ul>
+  <dialog
+    id="login-dialog"
+    class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+    <h2 class="text-center text-xl font-bold">Login</h2>
+    <div
+      id="err-msg"
+      class="my-4 w-full rounded-md bg-red-300 py-1 text-center font-bold text-red-900 opacity-0">
+      &nbsp;
+    </div>
+    <form autofocus action="scripts/login.php" method="POST">
+      <div class="flex flex-col gap-4">
+        <input
+          required
+          type="email"
+          name="email"
+          autocomplete="off"
+          placeholder="Email"
+          class="w-full rounded-md border-2 border-black bg-[#F0F2F6] px-2 py-2 text-black" />
+        <input
+          required
+          type="password"
+          name="password"
+          placeholder="Password"
+          class="w-full rounded-md border-2 border-black bg-[#F0F2F6] px-2 py-2 text-black" />
+        <button
+          type="submit"
+          class="justify-self-center rounded-md bg-[--brand-color-green] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-green] hover:font-semibold hover:text-[--brand-color-light-green]">
+          Login
+        </button>
+        <button
+          class="mt-2 justify-self-center rounded-md bg-[--brand-color-blue] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-blue] hover:font-semibold hover:text-[--brand-color-light-blue]"
+          id="login-dialog-close">
+          Cancel
+        </button>
+      </div>
+    </form>
+    <p class="p-2 text-center text-sm">
+      If you don't have an account, please
+      <a class="text-[--brand-color-blue]" href="#">register</a>
+      .
+    </p>
+  </dialog>
+</nav>
