@@ -33,18 +33,17 @@ declare(strict_types=1) ?>
   <?php
   $nav_html = file_get_contents("./html_components/navigation.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
-  $about_html = file_get_contents("./html_components/about.html");
   echo $nav_html;
   echo $cta_html;
-  echo $about_html;
   ?>
   
-  <section class="pb-24">
+  <section class="pb-16 bg-gray-200">
     <h2 class="text-center font-bold text-xl py-4">Top Products</h2>
     <div class="w-screen px-12 grid grid-cols-1 gap-y-8 col-span-full place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       <?php
       require_once "scripts/get_products.php";
 
+      $current_url = $_SERVER["PHP_SELF"];
       $products = get_products();
       $eight_rand_product_keys = array_rand($products, 4);
       $eight_rand_products = [];
@@ -55,6 +54,16 @@ declare(strict_types=1) ?>
       $phone_card_html = file_get_contents("./html_components/phone_card.html");
 
       foreach ($eight_rand_products as $product) {
+        if (str_contains($current_url, "index.php")) {
+          $next_product_card_html = str_replace(
+            ["PROMO", "promo-sticker h-0"],
+            [
+              '<div class="text-white text-sm text-center absolute w-36 h-6 bg-red-400 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
+              "",
+            ],
+            $phone_card_html
+          );
+        }
         $next_product_card_html = str_replace(
           ["PRODUCT_NAME", "PRODUCT_PRICE", "PRODUCT_IMG_PATH"],
           [
@@ -62,7 +71,7 @@ declare(strict_types=1) ?>
             $product->product_price,
             $product->product_img_path,
           ],
-          $phone_card_html
+          $next_product_card_html
         );
         echo $next_product_card_html;
       }
@@ -70,6 +79,8 @@ declare(strict_types=1) ?>
     </div>
   </section>
   <?php
+  $about_html = file_get_contents("./html_components/about.html");
+  echo $about_html;
   $footer_html = file_get_contents("./html_components/footer.html");
   echo $footer_html;
   ?>
