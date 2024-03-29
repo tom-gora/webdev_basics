@@ -13,13 +13,17 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
   if (mysqli_num_rows($result) == 0) {
     header("Location:../index.php?error=nouser");
     exit();
-  } elseif (mysqli_num_rows($result) != 1) {
+  }
+  if (mysqli_num_rows($result) != 1) {
     header("Location: ../index.php?error=internalerr");
     exit();
   }
+  //verification above with neat guar clauses
+  // only init session after verification, much better approach than showed in class
   session_start();
   $row = mysqli_fetch_assoc($result);
   $_SESSION["user_id"] = $row["user_id"];
-  header("Location: profile.php");
+  header("Location: ../pages/profile.php");
+  mysqli_close($connection);
 }
 ?>
