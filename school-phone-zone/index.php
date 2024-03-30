@@ -20,6 +20,7 @@
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 py-24">
   <?php
   require_once "./scripts/products_functionality.php";
+  require_once "./google/login_conf.php";
 
   // how many bestsellers I want to display
   $best_sellers_count_to_display = 4;
@@ -30,6 +31,14 @@
   $phone_card_html = file_get_contents("./html_components/phone_card.html");
   $about_html = file_get_contents("./html_components/about.html");
   $footer_html = file_get_contents("./html_components/footer.html");
+
+  // inject google api url
+  $login_button_target = get_google_login_url();
+  $nav_html = str_replace(
+    ["GOOGLE_API_URL"],
+    ["window.location = '" . $login_button_target . "';"],
+    $nav_html
+  );
 
   // since we are on index, adjust the top sellers component with appropriate title
   $top_products_html = str_replace(

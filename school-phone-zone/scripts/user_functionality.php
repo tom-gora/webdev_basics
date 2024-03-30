@@ -13,9 +13,9 @@ class User
 class UserPassword
 {
   public string $user_id;
-  public string $user_password;
+  private string $user_password;
 
-  private function __expose_password()
+  public function __expose_password()
   {
     return $this->user_password;
   }
@@ -64,6 +64,19 @@ function get_user(int $user_id)
   return $fetched_user;
 }
 
+function add_user(User $user, string $user_password, int $user_code)
+{
+  require_once "db.php";
+  $connection = get_mysqli();
+  $hashed_password = md5($user_password);
+  $query = "INSERT INTO users (user_name, user_email, user_password, user_img, user_type, user_code) VALUES ('$user->user_name', '$user->user_email', '$hashed_password', '$user->user_img', '$user_type->user_type', $user_code)";
+  $result = mysqli_query($connection, $query);
+  if (!$result) {
+    die("Error adding user to database");
+  }
+  mysqli_close($connection);
+}
+
 function delete_user(int $user_id)
 {
   require_once "db.php";
@@ -87,9 +100,9 @@ function get_user_password(int $user_id)
   }
   $fetched_pass_obj = new UserPassword();
   $fetched_pass_obj->user_id = $user_id;
-  $fetched_pass_obj->user_password = mysqli_fetch_assoc($result)[
-    "user_password"
-  ];
+  // $fetched_pass_obj->user_password = mysqli_fetch_assoc($result)[
+  //   "user_password"
+  // ];
   mysqli_close($connection);
   return $fetched_pass_obj;
   // to get password object needs being initialized then private func called
