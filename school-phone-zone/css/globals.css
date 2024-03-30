@@ -1,0 +1,25 @@
+/* custom declarations for brand colors */
+:root {
+  --brand-color-blue: #0d72b9;
+  --brand-color-green: #3ab54b;
+  --brand-color-light-blue: color-mix(
+    in lab,
+    var(--brand-color-blue) 30%,
+    #fff 70%
+  );
+  --brand-color-light-green: color-mix(
+    in lab,
+    var(--brand-color-green) 30%,
+    #fff 70%
+  );
+  --brand-color-dark-blue: color-mix(
+    in lab,
+    var(--brand-color-blue) 70%,
+    #000 30%
+  );
+  --brand-color-dark-green: color-mix(
+    in lab,
+    var(--brand-color-green) 70%,
+    #000 30%
+  );
+}

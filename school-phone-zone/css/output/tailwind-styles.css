@@ -647,6 +647,10 @@ video {
   display: grid;
 }
 
+.contents {
+  display: contents;
+}
+
 .h-0 {
   height: 0px;
 }
@@ -704,22 +708,6 @@ video {
 .rotate-45 {
   --tw-rotate: 45deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-@keyframes fade-down {
-  0% {
-    opacity: 0;
-    transform: translateY(-2rem);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-down {
-  animation: fade-down 1s both;
 }
 
 .grid-cols-1 {
@@ -1004,14 +992,6 @@ video {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
-}
-
-.animate-duration-300 {
-  animation-duration: 300ms;
-}
-
-.animate-ease-out {
-  animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .backdrop\:bg-\[rgba\(0\2c _0\2c _0\2c _0\.6\)\]::backdrop {

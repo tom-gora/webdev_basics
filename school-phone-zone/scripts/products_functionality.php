@@ -24,7 +24,6 @@ function get_products()
     $product->product_img_path = $row["product_img_path"];
     array_push($products, $product);
   }
-  mysqli_close($connection);
   return $products;
 }
 
@@ -41,6 +40,17 @@ function get_product(int $product_id)
   $product->product_name = mysqli_fetch_assoc($result)["product_name"];
   $product->product_price = mysqli_fetch_assoc($result)["product_price"];
   $product->product_img_path = mysqli_fetch_assoc($result)["product_img_path"];
-  mysqli_close($connection);
   return $product;
 }
+
+function get_random_products(int $num_products)
+{
+  $products = get_products();
+  $random_products = [];
+  for ($i = 0; $i < $num_products; $i++) {
+    $random_index = rand(0, count($products) - 1);
+    array_push($random_products, $products[$random_index]);
+  }
+  return $random_products;
+}
+?>
