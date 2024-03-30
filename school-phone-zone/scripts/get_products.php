@@ -2,7 +2,7 @@
 class Product
 {
   public string $product_name;
-  public  int $product_price;
+  public int $product_price;
   public string $product_img_path;
 }
 
@@ -24,5 +24,23 @@ function get_products()
     $product->product_img_path = $row["product_img_path"];
     array_push($products, $product);
   }
+  mysqli_close($connection);
   return $products;
+}
+
+function get_product(int $product_id)
+{
+  require_once "db.php";
+  $connection = get_mysqli();
+  $query = "SELECT * FROM products WHERE product_id = '$product_id'";
+  $result = mysqli_query($connection, $query);
+  if (!$result) {
+    die("Error getting product from database");
+  }
+  $product = new Product();
+  $product->product_name = mysqli_fetch_assoc($result)["product_name"];
+  $product->product_price = mysqli_fetch_assoc($result)["product_price"];
+  $product->product_img_path = mysqli_fetch_assoc($result)["product_img_path"];
+  mysqli_close($connection);
+  return $product;
 }
