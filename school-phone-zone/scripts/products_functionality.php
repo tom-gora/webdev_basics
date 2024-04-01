@@ -6,6 +6,7 @@ class Product
   public string $product_img_path;
 }
 
+// get all phones as an array of objects
 function get_products()
 {
   require_once "db.php";
@@ -27,6 +28,7 @@ function get_products()
   return $products;
 }
 
+// get phone by product id
 function get_product(int $product_id)
 {
   require_once "db.php";
@@ -43,14 +45,11 @@ function get_product(int $product_id)
   return $product;
 }
 
+// get an array of randomly selected phones
 function get_random_products(int $num_products)
 {
   $products = get_products();
-  $random_products = [];
-  for ($i = 0; $i < $num_products; $i++) {
-    $random_index = rand(0, count($products) - 1);
-    array_push($random_products, $products[$random_index]);
-  }
-  return $random_products;
+  shuffle($products);
+  return array_slice($products, 0, $num_products);
 }
 ?>

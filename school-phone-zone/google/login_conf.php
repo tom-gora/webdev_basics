@@ -27,9 +27,7 @@ function get_google_login_url()
 
   $google_client->addScope("profile");
 
-  $google_client->setApplicationName("PhoneZone");
-
-  $google_client->getAccessToken();
+  $google_client->setApiFormatV2(true);
 
   return $google_client->createAuthUrl();
 }

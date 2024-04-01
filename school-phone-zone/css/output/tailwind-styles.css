@@ -752,6 +752,10 @@ video {
   width: 100vw;
 }
 
+.grow {
+  flex-grow: 1;
+}
+
 .translate-x-8 {
   --tw-translate-x: 2rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1002,11 +1006,6 @@ video {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
 }
 
 .pb-16 {
