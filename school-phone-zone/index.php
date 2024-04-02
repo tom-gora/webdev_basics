@@ -16,9 +16,9 @@
   <link rel="stylesheet" href="./css/globals.css">
 </head>
 
-
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 py-24">
   <?php
+  session_start();
   require_once "./scripts/products_functionality.php";
   require_once "./google/login_conf.php";
 
@@ -32,13 +32,36 @@
   $about_html = file_get_contents("./html_components/about.html");
   $footer_html = file_get_contents("./html_components/footer.html");
 
-  // inject google api url
+  // inject google api url and control what html to show for logged in and logged out users
   $login_button_target = get_google_login_url();
-  $nav_html = str_replace(
-    ["GOOGLE_API_URL"],
-    ["window.location = '" . $login_button_target . "';"],
-    $nav_html
-  );
+  if (!isset($_SESSION["user_id"])) {
+    $nav_html = str_replace(
+      [
+        "GOOGLE_API_URL",
+        "for-logged-out hidden",
+        "for-logged-out mb-auto mt-24 hidden",
+      ],
+      [
+        "window.location = '" . $login_button_target . "';",
+        "",
+        "mb-auto mt-24",
+      ],
+      $nav_html
+    );
+  } else {
+    require_once "./scripts/user_functionality.php";
+    $nav_html = str_replace(
+      ["for-logged-in hidden", "for-logged-in group hidden"],
+      ["", "group"],
+      $nav_html
+    );
+    $logged_in_mf = get_user($_SESSION["user_id"]);
+    $nav_html = str_replace(
+      ["PROFILE_USER_IMG"],
+      [$logged_in_mf->user_img],
+      $nav_html
+    );
+  }
 
   // since we are on index, adjust the top sellers component with appropriate title
   $top_products_html = str_replace(

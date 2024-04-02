@@ -23,6 +23,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
   session_start();
   $row = mysqli_fetch_assoc($result);
   $_SESSION["user_id"] = $row["user_id"];
+  $_SESSION["user_type"] = $row["user_type"];
   header("Location: ../pages/profile.php");
   mysqli_close($connection);
 }

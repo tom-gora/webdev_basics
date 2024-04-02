@@ -1,60 +1,3 @@
-<?php
-
-session_start();
-$user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
-
-if (!$user_id) {
-  header("location:../index.php?error=nologin");
-  exit();
-}
-
-//only establish connection after confirming session status
-require_once "../scripts/db.php";
-require_once "../scripts/user_functionality.php";
-$connection = get_mysqli();
-$query = "SELECT * FROM users WHERE user_id = '$user_id'";
-$result = mysqli_query($connection, $query);
-$row = mysqli_fetch_assoc($result);
-$logged_in_mf = new User();
-$logged_in_mf->user_id = $user_id;
-$logged_in_mf->user_email = $row["user_email"];
-$logged_in_mf->user_registration = new DateTime($row["user_registration"]);
-$logged_in_mf->user_firstname = $row["user_firstname"];
-$logged_in_mf->user_lastname = $row["user_lastname"];
-$logged_in_mf->user_img = $row["user_img"] ?: "default.jpg";
-echo "<script>console.log(" . $row["user_img"] . ")</script>";
-$logged_in_mf->user_type = $row["user_type"];
-$logged_in_mf->user_auth_method = $row["user_auth_method"];
-
-$formatted_date = $logged_in_mf->user_registration->format("d M y");
-
-$nav_html = file_get_contents("../html_components/navigation.html");
-$profile_header_html = file_get_contents(
-  "../html_components/profile_header.html"
-);
-
-$nav_html = str_replace(
-  ["not-for-logged-in", "res/logo-h.png"],
-  ["hidden", "../res/logo-h.png"],
-  $nav_html
-);
-
-$profile_header_html = str_replace(
-  [
-    "PROFILE_USER_NAME",
-    "PROFILE_USER_EMAIL",
-    "PROFILE_USER_REGISTRATION_DATE",
-    "PROFILE_USER_IMG",
-  ],
-  [
-    $logged_in_mf->user_firstname . " " . $logged_in_mf->user_lastname,
-    $logged_in_mf->user_email,
-    $formatted_date,
-    $logged_in_mf->user_img,
-  ],
-  $profile_header_html
-);
-?>
 
 
 <!-- source for box shadow snippets https://manuarora.in/boxshadows -->
@@ -81,8 +24,101 @@ $profile_header_html = str_replace(
 
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 py-24">
     <?php
+    session_start();
+    $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
+
+    if (!$user_id) {
+      header("location:../index.php?error=nologin");
+      exit();
+    }
+
+    //only establish connection after confirming session status
+    require_once "../scripts/db.php";
+    require_once "../scripts/user_functionality.php";
+    require_once "../google/login_conf.php";
+    $connection = get_mysqli();
+    $query = "SELECT * FROM users WHERE user_id = '$user_id'";
+    $result = mysqli_query($connection, $query);
+    $row = mysqli_fetch_assoc($result);
+    $logged_in_mf = new User();
+    $logged_in_mf->user_id = $user_id;
+    $logged_in_mf->user_email = $row["user_email"];
+    $logged_in_mf->user_registration = new DateTime($row["user_registration"]);
+    $logged_in_mf->user_firstname = $row["user_firstname"];
+    $logged_in_mf->user_lastname = $row["user_lastname"];
+    $logged_in_mf->user_img = $row["user_img"] ?: "default.jpg";
+    $logged_in_mf->user_type = $row["user_type"];
+    $logged_in_mf->user_auth_method = $row["user_auth_method"];
+
+    $formatted_date = $logged_in_mf->user_registration->format("d M y");
+
+    $nav_html = file_get_contents("../html_components/navigation.html");
+    $profile_header_html = file_get_contents(
+      "../html_components/profile_header.html"
+    );
+    $profile_cart_html = file_get_contents(
+      "../html_components/profile_cart.html"
+    );
+    $profile_order_history = file_get_contents(
+      "../html_components/profile_history.html"
+    );
+
+    $nav_html = str_replace(
+      ["res/logo-h.png", 'href="index.php"', "scripts/logout.php"],
+      ["../res/logo-h.png", 'href="../index.php"', "../scripts/logout.php"],
+      $nav_html
+    );
+
+    // inject google api url and control what html to show for logged in and logged out users
+    $login_button_target = get_google_login_url();
+    if (!isset($_SESSION["user_id"])) {
+      $nav_html = str_replace(
+        [
+          "GOOGLE_API_URL",
+          "for-logged-out hidden",
+          "for-logged-out mb-auto mt-24 hidden",
+        ],
+        [
+          "window.location = '" . $login_button_target . "';",
+          "",
+          "mb-auto mt-24",
+        ],
+        $nav_html
+      );
+    } else {
+      $nav_html = str_replace(
+        ["for-logged-in hidden", "for-logged-in group hidden"],
+        ["", "group"],
+        $nav_html
+      );
+      $nav_html = str_replace(
+        ["PROFILE_USER_IMG"],
+        [$logged_in_mf->user_img],
+        $nav_html
+      );
+    }
+
+    $profile_header_html = str_replace(
+      [
+        "PROFILE_USER_NAME",
+        "PROFILE_USER_EMAIL",
+        "PROFILE_USER_REGISTRATION_DATE",
+        "PROFILE_USER_IMG",
+      ],
+      [
+        $logged_in_mf->user_firstname . " " . $logged_in_mf->user_lastname,
+        $logged_in_mf->user_email,
+        $formatted_date,
+        $logged_in_mf->user_img,
+      ],
+      $profile_header_html
+    );
     echo $nav_html;
     echo $profile_header_html;
+    echo "<div class='w-10/12 pt-16 h-fit md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
+    echo $profile_cart_html;
+    echo $profile_order_history;
+    echo "</div>";
     ?>
   </body>
 </html>

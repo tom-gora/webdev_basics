@@ -98,7 +98,9 @@ function handle_google($code)
     if ($user_auth_method == 2) {
       session_start();
       $id = get_id_by_existing_email($email_to_check);
+      $type = get_user_type_by_id($id);
       $_SESSION["user_id"] = $id;
+      $_SESSION["user_type"] = $type;
       header("Location:../pages/profile.php");
     } else {
       // else (different method of registration) back to main page to display info
@@ -162,7 +164,9 @@ function handle_google($code)
     // after registration redirect to profile page
     session_start();
     $id = get_id_by_existing_email($email_to_check);
+    $type = get_user_type_by_id($id);
     $_SESSION["user_id"] = $id;
+    $_SESSION["user_type"] = $type;
     header("Location:../pages/profile.php");
   }
 }

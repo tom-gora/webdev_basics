@@ -4,6 +4,7 @@ const loginErrMsgBox = document.querySelector("#err-msg");
 const emailInput = document.querySelector('input[name="email"]');
 const loginDialogCloseBtn = document.querySelector("#login-dialog-close");
 const passInput = document.querySelector('input[name="password"]');
+const msgBox = document.querySelector("#msg-box");
 
 loginBtn.onclick = (e) => {
   e.preventDefault();
@@ -39,6 +40,12 @@ loginDialogCloseBtn.onclick = (e) => {
 
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");
+const stat = params.get("status");
+console.log(msgBox);
+if (stat === "loggedout") {
+  msgBox.innerText = "You have been logged out.";
+  msgBox.classList.remove("hidden");
+}
 switch (err) {
   case "nouser":
     console.log("nouser");
@@ -46,5 +53,27 @@ switch (err) {
     loginErrMsgBox.classList.remove("opacity-0");
     loginErrMsgBox.classList.add("opacity-1");
     loginDialog.showModal();
+    break;
+  case "nologin":
+    console.log("nologin");
+    loginErrMsgBox.innerText = "You need to login to see this page.";
+    loginErrMsgBox.classList.remove("opacity-0");
+    loginErrMsgBox.classList.add("opacity-1");
+    loginDialog.showModal();
+    break;
+  case "internalerr":
+    console.log("internalerr");
+    msgBox.innerText = "Something went wrong. Please try again later.";
+    msgBox.classList.remove("bg-[--brand-color-green]");
+    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("hidden");
+    break;
+  case "autherror":
+    console.log("autherror");
+    msgBox.innerText =
+      "Something went wrong. Please try a different login method.";
+    msgBox.classList.remove("bg-[--brand-color-green]");
+    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("hidden");
     break;
 }

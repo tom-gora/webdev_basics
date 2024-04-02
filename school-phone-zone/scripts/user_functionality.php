@@ -59,21 +59,22 @@ function get_user(int $user_id)
   if (!$result) {
     die("Error getting user from database");
   }
+  $user_data = mysqli_fetch_assoc($result);
+  if (!$user_data) {
+    die("User not found");
+  }
+
   $fetched_user = new User();
   $fetched_user->user_id = $user_id;
-  $fetched_user->user_email = mysqli_fetch_assoc($result)["user_email"];
-  $fetched_user->user_registration = mysqli_fetch_assoc($result)[
-    "user_registration"
-  ];
-  $fetched_user->user_firstname = mysqli_fetch_assoc($result)["user_firstname"];
-  $fetched_user->user_lastname = mysqli_fetch_assoc($result)["user_lastname"];
-  // with null check
-  $fetched_user->user_img =
-    mysqli_fetch_assoc($result)["user_img"] ?: "default.jpg";
-  $fetched_user->user_type = mysqli_fetch_assoc($result)["user_type"];
-  $fetched_user->user_auth_method = mysqli_fetch_assoc($result)[
-    "user_auth_method"
-  ];
+  $fetched_user->user_email = $user_data["user_email"];
+  $fetched_user->user_registration = $user_data["user_registration"]
+    ? new DateTime($user_data["user_registration"])
+    : null;
+  $fetched_user->user_firstname = $user_data["user_firstname"];
+  $fetched_user->user_lastname = $user_data["user_lastname"];
+  $fetched_user->user_img = $user_data["user_img"] ?: "default.jpg";
+  $fetched_user->user_type = $user_data["user_type"];
+  $fetched_user->user_auth_method = $user_data["user_auth_method"];
 
   mysqli_close($connection);
   return $fetched_user;
@@ -175,7 +176,19 @@ function get_id_by_existing_email(string $email)
     $row = mysqli_fetch_assoc($result);
     return $row["user_id"];
   }
+  return false;
+}
 
+function get_user_type_by_id(int $user_id)
+{
+  require_once "db.php";
+  $connection = get_mysqli();
+  $query = "SELECT user_type FROM users WHERE user_id = '$user_id'";
+  $result = mysqli_query($connection, $query);
+  if ($result) {
+    $row = mysqli_fetch_assoc($result);
+    return $row["user_type"];
+  }
   return false;
 }
 

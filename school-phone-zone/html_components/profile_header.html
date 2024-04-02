@@ -1,38 +1,46 @@
 <div
   class="relative mt-12 flex h-fit w-10/12 flex-col items-center justify-center gap-2 rounded-md bg-[--brand-color-blue] md:flex-row">
   <div
-    class="flex h-fit w-full max-w-[60%] flex-col items-end justify-end gap-2 self-end p-4 text-white sm:pr-16 md:w-fit">
+    class="flex h-fit w-full max-w-[60%] flex-col items-end justify-end gap-2 self-end p-4 text-white sm:pr-16 md:w-fit md:pr-2">
     <h3 class="mb-2 text-xl font-bold">Your info:</h3>
     <p>PROFILE_USER_NAME</p>
-    <p class="break-all">PROFILE_USER_EMAIL</p>
+    <p class="break-all">
+      <span class="font-bold">Email: &nbsp;</span>
+      PROFILE_USER_EMAIL
+    </p>
     <p class="mb-auto grow">
       <span class="font-bold">Registered on:&nbsp;</span>
       PROFILE_USER_REGISTRATION_DATE
     </p>
-    <p></p>
   </div>
-  <div class="absolute left-0 top-2 sm:left-12 md:static md:flex">
-    <img
-      class="m-6 animate-jump-in rounded-full shadow-[2px_-2px_0px_5px_var(--brand-color-green),_3px_-3px_0px_8px_white] animate-duration-300 animate-ease-out"
+  <div class="absolute left-2 top-2 sm:left-12 md:static md:flex md:w-28 md:justify-center m-4 animate-jump-in animate-duration-300 animate-ease-out">
+      <img
+      class="rounded-full border-[--brand-color-dark-blue] border-0 shadow-[_0_0_0_2px_white] hover:border-8 transition-all duration-300 origin-center ease-out"
       src="../res/user_img/PROFILE_USER_IMG"
       alt="User image" />
-  </div>
+    </div>
   <div
     class="flex h-full items-start justify-around gap-2 p-4 md:w-52 md:flex-col">
     <button
-      class="w-full grow justify-self-center rounded-md bg-[--brand-color-green] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-green] hover:font-semibold hover:text-[--brand-color-light-green]"
-      type="button">
-      Manage profile
+          class="w-full grow group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md border-b-4 border-l-2 border-[--brand-color-dark-green] bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:border-[--brand-color-dark-green] active:shadow-none">
+          <span
+            class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+          <span class="relative">Manage details</span>
+        </button>
     </button>
     <button
-      class="w-full grow justify-self-center rounded-md bg-[--brand-color-green] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-green] hover:font-semibold hover:text-[--brand-color-light-green] sm:line-clamp-1"
-      type="button">
-      Change password
+          class="w-full grow group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md border-b-4 border-l-2 border-[--brand-color-dark-green] bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:border-[--brand-color-dark-green] active:shadow-none">
+          <span
+            class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+          <span class="relative">Change password</span>
+        </button>
     </button>
     <button
-      class="w-full grow justify-self-center rounded-md bg-[--brand-color-green] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-green] hover:font-semibold hover:text-[--brand-color-light-green]"
-      type="button">
-      Delete account
+          class="w-full grow group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md border-b-4 border-l-2 border-red-500 bg-red-400 px-3.5 py-2 text-white shadow-md active:border-[--brand-color-dark-green] active:shadow-none">
+          <span
+            class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+          <span class="relative">Delete account</span>
+        </button>
     </button>
   </div>
 </div>
