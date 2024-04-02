@@ -19,7 +19,7 @@ switch ($handler_case) {
       exit();
     }
     $authorization_code = $_GET["code"];
-    get_token($authorization_code);
+    handle_google($authorization_code);
     break;
   case "github_handle_auth_code":
     $authorization_code = $_GET["code"];
@@ -34,11 +34,12 @@ switch ($handler_case) {
     break;
 }
 
-function get_token($code)
+function handle_google($code)
 {
   // reference used:
   // https://codeshack.io/implement-google-login-php/#process-curl-requests
   // TODO: handle google oauth
+  require_once "./user_functionality.php";
   $oauth_json_raw = getenv("GOOGLE_CLIENT_JSON");
   $oauth_obj = json_decode($oauth_json_raw, true);
   $query_params = [
@@ -75,5 +76,93 @@ function get_token($code)
   curl_close($ch);
   $profile = json_decode($response, true);
   //for quick show so sajjad can see data is received not hardcoded
-  echo "<script>console.log(" . json_encode($profile) . ")</script>";
+  $response = json_encode($profile);
+  echo "<script>console.log(" . $response . ")</script>";
+  $email_to_check = $profile["email"];
+  //if email present in db two options
+  if (check_if_email_exists($email_to_check)) {
+    // check if registered via google oauth
+    require_once "./db.php";
+    $connection = get_mysqli();
+    $query = "SELECT user_auth_method FROM users WHERE user_email = '$email_to_check'";
+    $result = mysqli_query($connection, $query);
+    // fail if query fails guard clause check
+    if (!$result) {
+      die("Error getting user auth method from database");
+      header("Location:../index.php?error=internalerr");
+      exit();
+    }
+    $row = mysqli_fetch_assoc($result);
+    $user_auth_method = $row["user_auth_method"];
+    // if user registered via google oauth proceed
+    if ($user_auth_method == 2) {
+      session_start();
+      $id = get_id_by_existing_email($email_to_check);
+      $_SESSION["user_id"] = $id;
+      header("Location:../pages/profile.php");
+    } else {
+      // else (different method of registration) back to main page to display info
+      header("Location:../index.php?error=emailtaken");
+    }
+    //the only remaining route is registration
+  } else {
+    $new_user = new User();
+    $user_img_url = $profile["picture"];
+    try {
+      $attempt_store_img = store_user_img($user_img_url);
+      // if failed storing image from api reponse assign default image
+      if ($attempt_store_img == false) {
+        $new_user->user_img = "default.jpg";
+      } else {
+        // else filename string was returned thus assign to user_img
+        $new_user->user_img = $attempt_store_img;
+      }
+    } catch (Exception) {
+      // if any other fails just assign a default image
+      $new_user->user_img = "default.jpg";
+    }
+    $new_user->user_id = -1;
+    $new_user->user_email = $email_to_check;
+    $new_user->user_registration = new DateTime(date("Y-m-d"));
+    $new_user->user_firstname = $profile["given_name"];
+    $new_user->user_lastname = $profile["family_name"];
+    $new_user->user_type = "user";
+    $new_user->user_auth_method = 2; // 2 for google
+
+    // with oauth store user with null password
+    add_user($new_user, "");
+    $stored_user_id = get_id_by_existing_email($email_to_check);
+    // after successfully adding grab next assigned ID (providing it worked else fail)
+    if ($stored_user_id == false) {
+      header("Location:../index.php?error=internalerr");
+      exit();
+    }
+
+    //if adding image under temp name worked and it is not a default image
+    // attempt to rename it with final user ID coming from the DB and their name
+    // (id in sync with the DB )
+    if ($new_user->user_img != "default.jpg") {
+      try {
+        $new_img_filename =
+          $stored_user_id .
+          "_" .
+          strtolower($new_user->user_firstname) .
+          "_" .
+          strtolower($new_user->user_lastname) .
+          ".jpg";
+        rename(
+          "../res/user_img/" . $new_user->user_img,
+          "../res/user_img/" . $new_img_filename
+        );
+        update_img_filename($new_img_filename, $stored_user_id);
+      } catch (Exception) {
+        header("Location:../index.php?error=errorimg");
+      }
+    }
+    // after registration redirect to profile page
+    session_start();
+    $id = get_id_by_existing_email($email_to_check);
+    $_SESSION["user_id"] = $id;
+    header("Location:../pages/profile.php");
+  }
 }

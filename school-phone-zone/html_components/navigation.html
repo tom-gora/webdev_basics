@@ -1,5 +1,5 @@
 <nav
-  class="fixed top-0 flex w-screen items-center justify-between bg-[--brand-color-light-blue] px-12 shadow-md">
+  class="fixed top-0 z-10 flex w-screen items-center justify-between bg-[--brand-color-light-blue] px-12 shadow-md">
   <div class="logo">
     <a href="index.php">
       <img src="res/logo-h.png" alt="Store Logo" width="200px" class="m-4" />
@@ -12,7 +12,8 @@
     <li class="text-xl transition hover:text-[--brand-color-dark-blue]">
       <a href="#">Products</a>
     </li>
-    <li class="text-xl transition hover:text-[--brand-color-dark-blue]">
+    <li
+      class="not-for-logged-in text-xl transition hover:text-[--brand-color-dark-blue]">
       <a id="login-btn">Login</a>
     </li>
     <li
@@ -22,7 +23,7 @@
   </ul>
   <dialog
     id="login-dialog"
-    class="mb-auto mt-24 flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+    class="not-for-logged-in mb-auto mt-24 flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
     <h2 class="text-center text-xl font-bold">Login</h2>
     <div
       id="err-msg"
