@@ -167,7 +167,7 @@ function handle_google($code)
           "../res/user_img/" . $new_user->user_img,
           "../res/user_img/" . $new_img_filename
         );
-        update_img_filename($new_img_filename, $stored_user_id);
+        rename_new_img($new_img_filename, $stored_user_id);
       } catch (Exception) {
         header("Location:../index.php?error=errorimg");
       }

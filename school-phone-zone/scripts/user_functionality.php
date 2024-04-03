@@ -17,17 +17,6 @@ class UserPassword
 
   public function __get_password()
   {
-    require_once "db.php";
-    $connection = get_mysqli();
-    $p = $this->user_id;
-    $query = "SELECT user_password FROM users WHERE user_id = '$p'";
-    $result = mysqli_query($connection, $query);
-    if ($result) {
-      $row = mysqli_fetch_assoc($result);
-      $this->user_password = $row["user_password"];
-    } else {
-      die("Error getting user password from database");
-    }
     return $this->user_password;
   }
   public function __set_password(?string $new_password)
@@ -147,20 +136,22 @@ function get_user_password(int $user_id)
   return $fetched_pass_obj;
 }
 
-function update_user_password(string $new_password, UserPassword $pass_obj)
+function update_user_password(UserPassword $pass_obj)
 {
-  $hashed_password = md5($new_password);
+  $new_password = $pass_obj->__get_password();
+  $upd_result = true;
   require_once "db.php";
   $connection = get_mysqli();
-  $query = "UPDATE users SET user_password = '{$hashed_password}' WHERE user_id = '$pass_obj->user_id'";
+  $query =
+    "UPDATE users SET user_password = '" .
+    md5($new_password) .
+    "' WHERE user_id = '$pass_obj->user_id'";
   $result = mysqli_query($connection, $query);
   if (!$result) {
-    die("Error updating user password in database");
-    header("Location:../pages/profile.php?error=internalerr");
+    $upd_result = false;
   }
   mysqli_close($connection);
-  header("Location:../pages/profile.php?success=passupdated");
-  exit();
+  return $upd_result;
 }
 
 function check_if_email_exists(string $email)
@@ -203,7 +194,68 @@ function get_user_type_by_id(int $user_id)
   return false;
 }
 
-function update_img_filename(string $new_img_filename, int $user_id)
+function update_user(User $new_data_user)
+{
+  require_once "db.php";
+  $connection = get_mysqli();
+  $id = $new_data_user->user_id;
+  $updated_user = get_user($id);
+  $udp_result = true;
+  if (
+    $updated_user->user_email != $new_data_user->user_email &&
+    $new_data_user->user_email != ""
+  ) {
+    $query = "UPDATE users SET user_email = '$new_data_user->user_email' WHERE user_id = '$id'";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+      $udp_result = false;
+    }
+  }
+  if (
+    $updated_user->user_firstname != $new_data_user->user_firstname &&
+    $new_data_user->user_firstname != ""
+  ) {
+    $query = "UPDATE users SET user_firstname = '$new_data_user->user_firstname' WHERE user_id = '$id'";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+      $udp_result = false;
+    }
+  }
+  if (
+    $updated_user->user_lastname != $new_data_user->user_lastname &&
+    $new_data_user->user_lastname != ""
+  ) {
+    $query = "UPDATE users SET user_lastname = '$new_data_user->user_lastname' WHERE user_id = '$id'";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+      $udp_result = false;
+    }
+  }
+  if (
+    $updated_user->user_type != $new_data_user->user_type &&
+    $new_data_user->user_type != ""
+  ) {
+    $query = "UPDATE users SET user_type = '$new_data_user->user_type' WHERE user_id = '$id'";
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+      $udp_result = false;
+    }
+  }
+  return $udp_result;
+}
+
+function update_user_img(User $processed_user, $image_data)
+{
+  require_once "db.php";
+  $connection = get_mysqli();
+  $id = $processed_user->user_id;
+  $udp_result = true;
+  $image_data = base64_encode($image_data);
+
+  return $udp_result;
+}
+
+function rename_new_img(string $new_img_filename, int $user_id)
 {
   require_once "db.php";
   $connection = get_mysqli();

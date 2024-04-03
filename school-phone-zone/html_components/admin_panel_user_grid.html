@@ -61,58 +61,107 @@
   id="edit-dialog"
   class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
   <h2 class="text-center text-xl font-bold">Edit details</h2>
-  <p id="text-sm edit-confirmation-box" class="py-4"></p>
+  <p id="edit-confirmation-box" class="py-4 text-sm"></p>
   <form
-    class="flex flex-col gap-4"
-    action="#"
+    class="flex flex-col gap-4 rounded-md bg-[--brand-color-light-green] px-2 py-4"
+    action="../scripts/admin_functionality.php"
     method="POST"
     enctype="multipart/form-data">
-    <label for="edit-user-email">
-      Email:
+    <input type="hidden" name="edit-user-id" value="" />
+    <label class="grid grid-cols-4" for="edit-user-email">
+      <span class="col-span-1 mr-4">Email:</span>
       <input
+        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         type="email"
         id="edit-user-email"
         name="edit-user-email"
         required />
     </label>
-    <label for="edit-user-first-name">
-      First Name:
+    <label class="grid grid-cols-4" for="edit-user-first-name">
+      <span class="col-span-1 mr-4">First Name:</span>
       <input
+        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         type="text"
         id="edit-user-first-name"
         name="edit-user-first-name"
         required />
     </label>
-    <label for="edit-user-last-name">
-      Last Name:
+    <label class="grid grid-cols-4" for="edit-user-last-name">
+      <span class="col-span-1 mr-4">Last Name:</span>
       <input
+        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         type="text"
         id="edit-user-last-name"
         name="edit-user-last-name"
         required />
     </label>
-    <label for="edit-user-password">
-      Password:
+    <label class="grid grid-cols-4" for="edit-user-password">
+      <span class="col-span-1 mr-4">Password:</span>
       <input
+        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         type="password"
         id="edit-user-password"
         placeholder="Enter new password"
         name="edit-user-password" />
     </label>
-    <label for="edit-user-image">
-      Image:
-      <input type="file" id="edit-user-image" name="edit-user-image" />
+    <label
+      for="edit-user-image"
+      class="relative isolate flex aspect-square w-fit cursor-pointer flex-col items-center justify-center self-center rounded-xl border-4 border-dashed border-[--brand-color-dark-blue] bg-[--brand-color-light-blue] p-4 text-center">
+      <input
+        id="edit-user-image"
+        name="edit-user-image"
+        type="file"
+        class="hidden"
+        accept="image/*" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="mx-auto mb-4 h-8 w-8 text-slate-600">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+      </svg>
+      <div
+        id="label-bg"
+        class="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-25"></div>
+      <h5 class="mb-2 text-xl font-bold tracking-tight text-slate-600">
+        Change picture
+      </h5>
+      <p
+        id="user-img-filename"
+        class="z-50 py-4 font-bold text-[--brand-color-blue]"></p>
     </label>
-    <label for="edit-user-type">
-      User Type:
-      <select id="edit-user-type" name="edit-user-type" required>
+    <label class="grid grid-cols-4" for="edit-user-type">
+      <span class="col-span-1 mr-4">User Type:</span>
+      <select
+        id="edit-user-type"
+        name="edit-user-type"
+        required
+        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black">
         <option value="admin">Admin</option>
         <option value="user">User</option>
       </select>
     </label>
-    <div class="flex gap-2">
-      <button type="submit">Save Changes</button>
-      <button type="button" onclick="closeEditUserDialog()">Cancel</button>
+    <div class="flex flex-wrap justify-around gap-2">
+      <button
+        type="submit"
+        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
+        <span
+          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+        <span class="relative">Confirm changes</span>
+      </button>
+      <button
+        id="edit-dialog-close"
+        type="button"
+        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none">
+        <span
+          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+        <span class="relative">Calcel</span>
+      </button>
     </div>
   </form>
 </dialog>

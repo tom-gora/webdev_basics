@@ -11,9 +11,11 @@ const delDialogConfirmationBox = delDialog.querySelector(
 
 const editButtons = document.querySelectorAll(".edit-btn");
 const editDialog = document.querySelector("#edit-dialog");
+const editDialogCancelBtn = editDialog.querySelector("#edit-dialog-close");
 const editDialogConfimationBox = editDialog.querySelector(
   "#edit-confirmation-box"
 );
+const idInput = editDialog.querySelector("input[name='edit-user-id']");
 const emailInput = editDialog.querySelector("input[name='edit-user-email']");
 const firstNameInput = editDialog.querySelector(
   "input[name='edit-user-first-name']"
@@ -25,6 +27,9 @@ const passwordInput = editDialog.querySelector(
   "input[name='edit-user-password']"
 );
 const imageInput = editDialog.querySelector("input[name='edit-user-image']");
+const imgageLabelBg = editDialog.querySelector("#label-bg");
+const imageFileName = editDialog.querySelector("#user-img-filename");
+
 const roleSelect = editDialog.querySelector("select[name='edit-user-type']");
 
 const params = new URLSearchParams(window.location.search);
@@ -33,6 +38,10 @@ const stat = params.get("status");
 switch (stat) {
   case "userdeleted":
     msgBox.innerText = "User has been deleted.";
+    msgBox.classList.remove("hidden");
+    break;
+  case "userupdated":
+    msgBox.innerText = "User has been updated.";
     msgBox.classList.remove("hidden");
     break;
 }
@@ -46,6 +55,12 @@ switch (err) {
   //
   case "deletedisallowed":
     msgBox.innerText = "You are not allowed to delete this user.";
+    msgBox.classList.remove("bg-[--brand-color-green]");
+    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("hidden");
+    break;
+  case "editdisallowed":
+    msgBox.innerText = "You are not allowed to edit this user.";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
@@ -79,6 +94,31 @@ delButtons.forEach((delButton) => {
   });
 });
 
+imageInput.addEventListener("change", () => {
+  if (imageInput.files[0] && imageInput.files[0].name) {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const file = imageInput.files[0];
+      const fileUrl = e.target.result;
+      const fileName = file.name;
+
+      imageFileName.innerText = fileName;
+      imgageLabelBg.style.backgroundImage = `url(${fileUrl})`;
+    };
+    reader.readAsDataURL(imageInput.files[0]);
+  }
+});
+
+editDialog.addEventListener("close", () => {
+  imageFileName.innerText = "";
+});
+
+editDialogCancelBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  editDialog.close();
+});
+
 editButtons.forEach((editButton) => {
   editButton.addEventListener("click", () => {
     const id = editButton.dataset.userId;
@@ -88,6 +128,9 @@ editButtons.forEach((editButton) => {
     const img = editButton.dataset.userImg;
     const role = editButton.dataset.userType;
 
+    idInput.value = id;
+    editDialogConfimationBox.innerText = `You are editing details of ${firstName} ${lastName}.`;
+    imgageLabelBg.style.backgroundImage = `url("../../res/user_img/${img}"`;
     emailInput.value = email;
     firstNameInput.value = firstName;
     lastNameInput.value = lastName;
