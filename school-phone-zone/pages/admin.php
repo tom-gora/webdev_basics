@@ -42,6 +42,8 @@ $users_grid_html = file_get_contents(
   "../html_components/admin_panel_user_grid.html"
 );
 $user_card_html = file_get_contents("../html_components/admin_user_card.html");
+$footer_html = file_get_contents("../html_components/footer.html");
+
 $users = get_users_array();
 $users_cards_html_stringbuilder = "";
 foreach ($users as $user) {
@@ -78,7 +80,7 @@ foreach ($users as $user) {
   //
   //WARN:
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // ASSESSMENT: this is accomplishing task 3 in my version
+  // ASSESSMENT: this is accomplishing task 3 in my implementation on the front end by hiding buttons (additional prevention)
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //
   if ($_SESSION["user_type"] != "owner" && $user->user_type != "user") {
@@ -115,6 +117,7 @@ $users_grid_html = str_replace(
 
 echo $nav_html;
 echo $users_grid_html;
+echo $footer_html;
 ?>
 
   </body>

@@ -20,7 +20,7 @@
 </head>
 
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 py-24">
+<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 pt-24">
     <?php
     session_start();
     $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
@@ -60,6 +60,7 @@
     $profile_order_history = file_get_contents(
       "../html_components/profile_history.html"
     );
+    $footer_html = file_get_contents("../html_components/footer.html");
 
     $nav_html = str_replace(
       ["res/logo-h.png", 'href="index.php"', "scripts/logout.php"],
@@ -124,6 +125,7 @@
     echo $profile_cart_html;
     echo $profile_order_history;
     echo "</div>";
+    echo $footer_html;
     ?>
   </body>
 </html>
