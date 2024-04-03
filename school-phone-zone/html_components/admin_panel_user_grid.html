@@ -28,11 +28,11 @@
 
 <dialog
   id="del-dialog"
-  class="for-logged-out flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+  class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
   <h2 class="text-center text-xl font-bold">Delete user</h2>
-  <p id="confirmation-box" class="py-4"></p>
+  <p id="text-sm del-confirmation-box" class="py-4"></p>
   <form action="../scripts/admin_functionality.php" method="POST">
-    <input type="hidden" name="user-id" value="delete_user" />
+    <input type="hidden" name="del-user-id" value="delete_user" />
     <div class="flex flex-col gap-4">
       <button
         type="submit"
@@ -54,5 +54,65 @@
     <p class="p-2 text-center text-sm text-red-400">
       Caution! This action is permanent.
     </p>
+  </form>
+</dialog>
+
+<dialog
+  id="edit-dialog"
+  class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+  <h2 class="text-center text-xl font-bold">Edit details</h2>
+  <p id="text-sm edit-confirmation-box" class="py-4"></p>
+  <form
+    class="flex flex-col gap-4"
+    action="#"
+    method="POST"
+    enctype="multipart/form-data">
+    <label for="edit-user-email">
+      Email:
+      <input
+        type="email"
+        id="edit-user-email"
+        name="edit-user-email"
+        required />
+    </label>
+    <label for="edit-user-first-name">
+      First Name:
+      <input
+        type="text"
+        id="edit-user-first-name"
+        name="edit-user-first-name"
+        required />
+    </label>
+    <label for="edit-user-last-name">
+      Last Name:
+      <input
+        type="text"
+        id="edit-user-last-name"
+        name="edit-user-last-name"
+        required />
+    </label>
+    <label for="edit-user-password">
+      Password:
+      <input
+        type="password"
+        id="edit-user-password"
+        placeholder="Enter new password"
+        name="edit-user-password" />
+    </label>
+    <label for="edit-user-image">
+      Image:
+      <input type="file" id="edit-user-image" name="edit-user-image" />
+    </label>
+    <label for="edit-user-type">
+      User Type:
+      <select id="edit-user-type" name="edit-user-type" required>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+      </select>
+    </label>
+    <div class="flex gap-2">
+      <button type="submit">Save Changes</button>
+      <button type="button" onclick="closeEditUserDialog()">Cancel</button>
+    </div>
   </form>
 </dialog>

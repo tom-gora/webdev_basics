@@ -10,14 +10,14 @@ if (!$user_id || $user_role == "user") {
 require_once "./db.php";
 require_once "./user_functionality.php";
 
-if (isset($_POST["user-id"])) {
-  $id_to_delete = $_POST["user-id"];
+if (isset($_POST["del-user-id"])) {
+  $id_to_delete = $_POST["del-user-id"];
   $user_to_delete_type = get_user_type_by_id($id_to_delete);
   //
   //WARN:
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // ASSESSMENT: this is securing task 3 requirement on the server side
-  // even if someone could somehow html post correct data to this script
+  // even if someone could somehow i.e. curl correct data to this script
   // it will be ignored based on required conditions.
   // Only the owner can delete non-regular users
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

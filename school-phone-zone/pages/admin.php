@@ -48,6 +48,7 @@ $users = get_users_array();
 $users_cards_html_stringbuilder = "";
 foreach ($users as $user) {
   $formatted_date = $user->user_registration->format("d/m/Y");
+  //  $pass_obj = get_user_password($user->user_id);
   $auth_as_string;
   switch ($user->user_auth_method) {
     case "1":
@@ -68,6 +69,10 @@ foreach ($users as $user) {
       "USER_REGISTRATION",
       "USER_ROLE",
       "USER_AUTH_METHOD",
+      "USER_FIRST_NAME",
+      "USER_LAST_NAME",
+      "USER_IMG",
+      "USER_TYPE",
     ],
     [
       $user->user_id,
@@ -76,6 +81,10 @@ foreach ($users as $user) {
       $formatted_date,
       ucfirst($user->user_type),
       $auth_as_string,
+      $user->user_firstname,
+      $user->user_lastname,
+      $user->user_img,
+      $user->user_type,
     ],
     $user_card_html
   );

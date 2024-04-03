@@ -14,8 +14,20 @@ class UserPassword
 {
   public string $user_id;
   private ?string $user_password;
+
   public function __get_password()
   {
+    require_once "db.php";
+    $connection = get_mysqli();
+    $p = $this->user_id;
+    $query = "SELECT user_password FROM users WHERE user_id = '$p'";
+    $result = mysqli_query($connection, $query);
+    if ($result) {
+      $row = mysqli_fetch_assoc($result);
+      $this->user_password = $row["user_password"];
+    } else {
+      die("Error getting user password from database");
+    }
     return $this->user_password;
   }
   public function __set_password(?string $new_password)
@@ -128,12 +140,11 @@ function get_user_password(int $user_id)
   }
   $fetched_pass_obj = new UserPassword();
   $fetched_pass_obj->user_id = $user_id;
-  // $fetched_pass_obj->user_password = mysqli_fetch_assoc($result)[
-  //   "user_password"
-  // ];
+  $fetched_pass_obj->__set_password(
+    mysqli_fetch_assoc($result)["user_password"]
+  );
   mysqli_close($connection);
   return $fetched_pass_obj;
-  // to get password object needs being initialized then private func called
 }
 
 function update_user_password(string $new_password, UserPassword $pass_obj)
