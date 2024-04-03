@@ -2,17 +2,19 @@
   <h1 class="mb-28 text-center text-3xl font-bold">Admin Panel</h1>
   <div class="grid grid-cols-2">
     <div
-      class="fixed mb-24 mt-[-5rem] flex flex-col items-start justify-start gap-3 rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4">
+      class="fixed mb-24 mt-[-5rem] flex flex-col items-start justify-start gap-[14px] rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4">
+      <p class="font-bold text-black">ID:</p>
       <p class="font-bold text-black">Name:</p>
-      <p class="font-bold text-black sm:ps-8">Email:</p>
+      <p class="font-bold text-black sm:ps-6">Email:</p>
       <p class="font-bold text-black sm:ps-28">Joined:</p>
       <p class="font-bold text-black sm:ps-2">Role:</p>
-      <p class="font-bold text-black sm:ps-0">Auth:</p>
+      <p class="font-bold text-black sm:ps-2">Auth:</p>
     </div>
     <div
       class="fixed left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
+      <p class="font-bold text-black">ID:</p>
       <p class="font-bold text-black">Name:</p>
-      <p class="font-bold text-black sm:ps-8">Email:</p>
+      <p class="font-bold text-black sm:ps-6">Email:</p>
       <p class="font-bold text-black sm:ps-28">Joined:</p>
       <p class="font-bold text-black sm:ps-2">Role:</p>
       <p class="font-bold text-black sm:ps-2">Auth:</p>
@@ -23,3 +25,34 @@
     ADMIN_USERS_CARDS
   </div>
 </div>
+
+<dialog
+  id="del-dialog"
+  class="for-logged-out flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+  <h2 class="text-center text-xl font-bold">Delete user</h2>
+  <p id="confirmation-box" class="py-4"></p>
+  <form action="../scripts/admin_functionality.php" method="POST">
+    <input type="hidden" name="user-id" value="delete_user" />
+    <div class="flex flex-col gap-4">
+      <button
+        type="submit"
+        id="del-dialog-confirm-btn"
+        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:shadow-none">
+        <span
+          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+        <span class="relative">Confirm and delete</span>
+      </button>
+      <!-- button animation source: https://devdojo.com/tailwindcss/buttons -->
+      <button
+        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none"
+        id="del-dialog-close">
+        <span
+          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+        <span class="relative">Cancel</span>
+      </button>
+    </div>
+    <p class="p-2 text-center text-sm text-red-400">
+      Caution! This action is permanent.
+    </p>
+  </form>
+</dialog>

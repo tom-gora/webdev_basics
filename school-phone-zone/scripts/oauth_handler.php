@@ -74,11 +74,22 @@ function handle_google($code)
   ]);
   $response = curl_exec($ch);
   curl_close($ch);
-  $profile = json_decode($response, true);
+  $google_profile_data = json_decode($response, true);
   //for quick show so sajjad can see data is received not hardcoded
-  $response = json_encode($profile);
+  $response = json_encode($google_profile_data);
   echo "<script>console.log(" . $response . ")</script>";
-  $email_to_check = $profile["email"];
+
+  //
+  //WARN:
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ASSESSMENT: this is one place where task 4 is handled for google oauth2 case
+  // it takes care of several routes. Email taken, but with different auth method,
+  // email not taken at all and thus registration of new user, or email taken
+  // but already authenticated with google, then log this user in successfully
+  // details in comments for each section of code
+  // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //
+  $email_to_check = $google_profile_data["email"];
   //if email present in db two options
   if (check_if_email_exists($email_to_check)) {
     // check if registered via google oauth
@@ -109,7 +120,7 @@ function handle_google($code)
     //the only remaining route is registration
   } else {
     $new_user = new User();
-    $user_img_url = $profile["picture"];
+    $user_img_url = $google_profile_data["picture"];
     try {
       $attempt_store_img = store_user_img($user_img_url);
       // if failed storing image from api reponse assign default image
@@ -126,8 +137,8 @@ function handle_google($code)
     $new_user->user_id = -1;
     $new_user->user_email = $email_to_check;
     $new_user->user_registration = new DateTime(date("Y-m-d"));
-    $new_user->user_firstname = $profile["given_name"];
-    $new_user->user_lastname = $profile["family_name"];
+    $new_user->user_firstname = $google_profile_data["given_name"];
+    $new_user->user_lastname = $google_profile_data["family_name"];
     $new_user->user_type = "user";
     $new_user->user_auth_method = 2; // 2 for google
 

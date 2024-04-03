@@ -41,37 +41,38 @@ loginDialogCloseBtn.onclick = (e) => {
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");
 const stat = params.get("status");
-console.log(msgBox);
 if (stat === "loggedout") {
   msgBox.innerText = "You have been logged out.";
   msgBox.classList.remove("hidden");
 }
 switch (err) {
   case "nouser":
-    console.log("nouser");
     loginErrMsgBox.innerText = "No user with that email and password.";
     loginErrMsgBox.classList.remove("opacity-0");
     loginErrMsgBox.classList.add("opacity-1");
     loginDialog.showModal();
     break;
   case "nologin":
-    console.log("nologin");
     loginErrMsgBox.innerText = "You need to login to see this page.";
     loginErrMsgBox.classList.remove("opacity-0");
     loginErrMsgBox.classList.add("opacity-1");
     loginDialog.showModal();
     break;
   case "internalerr":
-    console.log("internalerr");
     msgBox.innerText = "Something went wrong. Please try again later.";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
     break;
   case "autherror":
-    console.log("autherror");
     msgBox.innerText =
       "Something went wrong. Please try a different login method.";
+    msgBox.classList.remove("bg-[--brand-color-green]");
+    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("hidden");
+    break;
+  case "noadmin":
+    msgBox.innerText = "You have no permissions to access this page.";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");

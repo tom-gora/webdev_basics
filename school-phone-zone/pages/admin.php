@@ -62,6 +62,7 @@ foreach ($users as $user) {
   }
   $next_user_card_html = str_replace(
     [
+      "USER_ID",
       "USER_NAME",
       "USER_EMAIL",
       "USER_REGISTRATION",
@@ -69,6 +70,7 @@ foreach ($users as $user) {
       "USER_AUTH_METHOD",
     ],
     [
+      $user->user_id,
       $user->user_firstname . " " . $user->user_lastname,
       $user->user_email,
       $formatted_date,
@@ -85,8 +87,8 @@ foreach ($users as $user) {
   //
   if ($_SESSION["user_type"] != "owner" && $user->user_type != "user") {
     $next_user_card_html = str_replace(
-      ["del-btn", "edit-btn"],
-      ["hidden", "hidden"],
+      ["del-btn", "edit-btn", "forbidden hidden"],
+      ["hidden", "hidden", "mr-2"],
       $next_user_card_html
     );
   }
@@ -119,6 +121,6 @@ echo $nav_html;
 echo $users_grid_html;
 echo $footer_html;
 ?>
-
+    <script type="text/javascript" src="../js/admin.js"></script>
   </body>
 </html>

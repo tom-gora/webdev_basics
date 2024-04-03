@@ -1,18 +1,26 @@
 <div
   class="me-8 ms-24 flex min-h-32 snap-center flex-col items-start justify-start gap-4 rounded-md border border-gray-300 p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-0">
+  <p class="w-8 max-w-24 pe-2 text-lg font-semibold">USER_ID</p>
   <p class="w-80 max-w-24 pe-2 text-lg font-semibold">USER_NAME</p>
   <p class="w-[10.75rem] break-all pe-2 text-sm text-gray-600">USER_EMAIL</p>
   <p class="pe-2 text-sm text-gray-600">USER_REGISTRATION</p>
   <p class="pe-8 text-sm text-gray-600">USER_ROLE</p>
-  <p class="text-sm text-gray-600">USER_AUTH_METHOD</p>
+  <p class="pe-2 text-sm text-gray-600">USER_AUTH_METHOD</p>
   <div class="flex grow justify-end gap-4 sm:flex-col sm:items-end">
+    <div class="forbidden hidden h-10 w-10 cursor-not-allowed self-center">
+      <img src="../res/forbidden.svg" alt="Not allowed" />
+    </div>
     <button
+      data-user-id="USER_ID"
+      data-user-name="USER_NAME"
       class="edit-btn w-24 rounded-md bg-[--brand-color-green] px-4 py-2 text-white hover:bg-[--brand-color-dark-green]">
-      edit
+      Edit
     </button>
     <button
+      data-user-id="USER_ID"
+      data-user-name="USER_NAME"
       class="del-btn w-24 rounded-md bg-red-400 px-4 py-2 text-white hover:bg-red-500">
-      delete
+      Delete
     </button>
   </div>
 </div>
