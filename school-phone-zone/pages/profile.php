@@ -1,5 +1,3 @@
-
-
 <!-- source for box shadow snippets https://manuarora.in/boxshadows -->
 <!-- animations from https://www.tailwindcss-animated.com/ -->
 <!doctype html>
@@ -86,6 +84,13 @@
         $nav_html
       );
     } else {
+      if (isset($_SESSION["user_type"]) && $_SESSION["user_type"] != "user") {
+        $profile_header_html = str_replace(
+          ["role hidden", "PROFILE_USER_ROLE", "inline-flex hidden"],
+          ["", ucfirst($_SESSION["user_type"]), "inline-flex"],
+          $profile_header_html
+        );
+      }
       $nav_html = str_replace(
         ["for-logged-in hidden", "for-logged-in group hidden"],
         ["", "group"],
@@ -115,7 +120,7 @@
     );
     echo $nav_html;
     echo $profile_header_html;
-    echo "<div class='w-10/12 pt-16 h-fit md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
+    echo "<div class='w-10/12 py-8 h-fit md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
     echo $profile_cart_html;
     echo $profile_order_history;
     echo "</div>";
