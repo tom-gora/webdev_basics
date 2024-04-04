@@ -96,8 +96,8 @@ foreach ($users as $user) {
   //
   if ($_SESSION["user_type"] != "owner" && $user->user_type != "user") {
     $next_user_card_html = str_replace(
-      ["del-btn", "edit-btn", "forbidden hidden"],
-      ["hidden", "hidden", "mr-2"],
+      ["del-btn", "edit-btn", "forbidden flex hidden"],
+      ["hidden", "hidden", "flex mr-2"],
       $next_user_card_html
     );
   }

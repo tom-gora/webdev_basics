@@ -122,7 +122,7 @@
     );
     echo $nav_html;
     echo $profile_header_html;
-    echo "<div class='w-10/12 py-8 h-fit md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
+    echo "<div class='w-10/12 py-8 h-max grow md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
     echo $profile_cart_html;
     echo $profile_order_history;
     echo "</div>";
