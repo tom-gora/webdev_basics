@@ -20,7 +20,7 @@
 </head>
 
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 pt-24">
+<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
     <?php
     session_start();
     $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
@@ -34,6 +34,7 @@
     require_once "../scripts/db.php";
     require_once "../scripts/user_functionality.php";
     require_once "../google/login_conf.php";
+    require_once "../github/login_conf.php";
     $connection = get_mysqli();
     $query = "SELECT * FROM users WHERE user_id = '$user_id'";
     $result = mysqli_query($connection, $query);

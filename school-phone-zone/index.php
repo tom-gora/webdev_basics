@@ -16,11 +16,12 @@
   <link rel="stylesheet" href="./css/globals.css">
 </head>
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 py-24">
+<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
   <?php
   session_start();
   require_once "./scripts/products_functionality.php";
   require_once "./google/login_conf.php";
+  require_once "./github/login_conf.php";
 
   // how many bestsellers I want to display
   $best_sellers_count_to_display = 4;
@@ -33,16 +34,22 @@
   $footer_html = file_get_contents("./html_components/footer.html");
 
   // inject google api url and control what html to show for logged in and logged out users
-  $login_button_target = get_google_login_url();
+  $google_login_button_target = get_google_login_url();
+  $github_login_button_target = get_github_auth_url();
+  $github_login_button_target =
+    $github_login_button_target . "&scope=user:email";
+
   if (!isset($_SESSION["user_id"])) {
     $nav_html = str_replace(
       [
         "GOOGLE_API_URL",
+        "GITHUB_API_URL",
         "for-logged-out hidden",
         "for-logged-out mb-auto mt-24 hidden",
       ],
       [
-        "window.location = '" . $login_button_target . "';",
+        "window.location = '" . $google_login_button_target . "';",
+        "window.location = '" . $github_login_button_target . "';",
         "",
         "mb-auto mt-24",
       ],

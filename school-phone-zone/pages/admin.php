@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="../css/globals.css" />
   </head>
 
-  <body class="h-screen items-center bg-gray-100 py-24">
+  <body class="h-screen items-center bg-gray-100 md:pt-24">
 <?php
 session_start();
 $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;

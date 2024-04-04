@@ -2,13 +2,12 @@
 $handler_case = "";
 if (
   isset($_GET["code"]) &&
+  isset($_GET["scope"]) &&
   str_contains($_GET["scope"], "www.googleapis.com")
 ) {
   $handler_case = "google_handle_auth_code";
-} elseif (isset($_GET["code"]) && str_contains($_GET["scope"], "github.com")) {
-  $handler_case = "github_handle_auth_code";
 } else {
-  $handler_case = "handle_auth_error";
+  $handler_case = "github_handle_auth_code";
 }
 
 switch ($handler_case) {
@@ -22,16 +21,12 @@ switch ($handler_case) {
     handle_google($authorization_code);
     break;
   case "github_handle_auth_code":
-    $authorization_code = $_GET["code"];
-    break;
-  case "handle_auth_error":
-    header("Location:../index.php?error=autherror");
-    exit();
+    handle_github();
     break;
   default:
+    echo "No authorization code found";
     header("Location:../index.php?error=autherror");
     exit();
-    break;
 }
 
 function handle_google($code)
@@ -168,6 +163,189 @@ function handle_google($code)
           "../res/user_img/" . $new_img_filename
         );
         rename_new_img($new_img_filename, $stored_user_id);
+
+        $new_img_path = "../res/user_img/" . $new_img_filename;
+
+        $command = "convert $new_img_path -gravity center -crop 1:1^ -resize 96x96 $new_img_path";
+        exec($command);
+      } catch (Exception) {
+        header("Location:../index.php?error=errorimg");
+      }
+    }
+    // after registration redirect to profile page
+    session_start();
+    $id = get_id_by_existing_email($email_to_check);
+    $type = get_user_type_by_id($id);
+    $_SESSION["user_id"] = $id;
+    $_SESSION["user_type"] = $type;
+    header("Location:../pages/profile.php");
+  }
+}
+
+//
+//WARN:
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ASSESSMENT: this is the place where task 1 is done, handling it
+// in similar way to google. curl until user data is back then handle
+// the internal account based on that
+
+function handle_github()
+{
+  require_once "./user_functionality.php";
+  require_once "../github/login_conf.php";
+  $oauth_json_raw = getenv("GITHUB_CLIENT_JSON");
+  $oauth_obj = json_decode($oauth_json_raw, true);
+  $code = $_GET["code"];
+  $state = $_GET["state"];
+  $_SESSION["oauth2state"] = $state;
+  $query_params = [
+    "client_id" => $oauth_obj["web"]["client_id"],
+    "client_secret" => $oauth_obj["web"]["client_secret"],
+    "redirect_uri" => $oauth_obj["web"]["redirect_uri"],
+    "state" => $_SESSION["oauth2state"],
+    "code" => $code,
+  ];
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, "https://github.com/login/oauth/access_token");
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($query_params));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
+  $response = curl_exec($ch);
+  curl_close($ch);
+  $response_obj = json_decode($response, true);
+  if (
+    !isset($response_obj["access_token"]) ||
+    empty($response_obj["access_token"])
+  ) {
+    echo "No access token found";
+    header(
+      "Location:../index.php?error=autherror"
+      // <--- this is where it exits
+    );
+    exit();
+  }
+
+  $ch = curl_init();
+
+  curl_setopt($ch, CURLOPT_URL, "https://api.github.com/user");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Authorization: Bearer " . $response_obj["access_token"],
+    "Accept: application/vnd.github+json",
+    "User-Agent: PhoneZone School Demo",
+  ]);
+  $response = curl_exec($ch);
+  // var_dump($response);
+  curl_close($ch);
+  $github_profile_data = json_decode($response, true);
+  //for quick show so sajjad can see data is received not hardcoded
+  $response = json_encode($github_profile_data);
+  echo "<script>console.log(" . $response . ")</script>";
+  // var_dump($github_profile_data);
+
+  $email_to_check = $github_profile_data["email"];
+  //if email present in db two options
+  if (check_if_email_exists($email_to_check)) {
+    // check if registered via google oauth
+    require_once "./db.php";
+    $connection = get_mysqli();
+    $query = "SELECT user_auth_method FROM users WHERE user_email = '$email_to_check'";
+    $result = mysqli_query($connection, $query);
+    // fail if query fails guard clause check
+    if (!$result) {
+      die("Error getting user auth method from database");
+      header("Location:../index.php?error=internalerr");
+      exit();
+    }
+    $row = mysqli_fetch_assoc($result);
+    $user_auth_method = $row["user_auth_method"];
+    // if user registered via google oauth proceed
+    if ($user_auth_method == 3) {
+      session_start();
+      $id = get_id_by_existing_email($email_to_check);
+      $type = get_user_type_by_id($id);
+      $_SESSION["user_id"] = $id;
+      $_SESSION["user_type"] = $type;
+      header("Location:../pages/profile.php");
+    } else {
+      // else (different method of registration) back to main page to display info
+      header("Location:../index.php?error=emailtaken");
+    }
+    //the only remaining route is registration
+  } else {
+    $new_user = new User();
+    $name_to_process;
+    //fallback if no "name"
+    if (isset($github_profile_data["name"])) {
+      $name_to_process = $github_profile_data["name"];
+    } else {
+      $name_to_process = $github_profile_data["login"] . " GitHubUser";
+    }
+
+    //fallback if name has one word only
+    if (!str_contains($name_to_process, " ")) {
+      $name_to_process = $name_to_process . " GitHubUser";
+    }
+
+    //had to explode stuff at least once when using PHP :D
+    // reference:
+    // https://i.pinimg.com/736x/85/ec/ff/85ecffae40d2ff81eb4ec63d2e61ab3d.jpg
+    $name_to_process = explode(" ", $name_to_process);
+
+    $user_img_url = $github_profile_data["avatar_url"];
+    try {
+      $attempt_store_img = store_user_img($user_img_url);
+      // if failed storing image from api reponse assign default image
+      if ($attempt_store_img == false) {
+        $new_user->user_img = "default.jpg";
+      } else {
+        // else filename string was returned thus assign to user_img
+        $new_user->user_img = $attempt_store_img;
+      }
+    } catch (Exception) {
+      // if any other fails just assign a default image
+      $new_user->user_img = "default.jpg";
+    }
+    $new_user->user_id = -1;
+    $new_user->user_email = $email_to_check;
+    $new_user->user_registration = new DateTime(date("Y-m-d"));
+    $new_user->user_firstname = $name_to_process[0];
+    $new_user->user_lastname = $name_to_process[count($name_to_process) - 1];
+    $new_user->user_type = "user";
+    $new_user->user_auth_method = 3; // 3 for github
+
+    // with oauth store user with null password
+    add_user($new_user, "");
+    $stored_user_id = get_id_by_existing_email($email_to_check);
+    // after successfully adding grab next assigned ID (providing it worked else fail)
+    if ($stored_user_id == false) {
+      header("Location:../index.php?error=internalerr");
+      exit();
+    }
+
+    //if adding image under temp name worked and it is not a default image
+    // attempt to rename it with final user ID coming from the DB and their name
+    // (id in sync with the DB )
+    if ($new_user->user_img != "default.jpg") {
+      try {
+        $new_img_filename =
+          $stored_user_id .
+          "_" .
+          strtolower($new_user->user_firstname) .
+          "_" .
+          strtolower($new_user->user_lastname) .
+          ".jpg";
+        rename(
+          "../res/user_img/" . $new_user->user_img,
+          "../res/user_img/" . $new_img_filename
+        );
+        rename_new_img($new_img_filename, $stored_user_id);
+
+        $new_img_path = "../res/user_img/" . $new_img_filename;
+
+        $command = "convert $new_img_path -gravity center -crop 1:1^ -resize 96x96 $new_img_path";
+        exec($command);
       } catch (Exception) {
         header("Location:../index.php?error=errorimg");
       }
