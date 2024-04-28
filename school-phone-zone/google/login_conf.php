@@ -1,33 +1,25 @@
 <?php
+// using https://github.com/thephpleague/oauth2-github
+
 //abstracted to a function to not expose details
+
+require "vendor/autoload.php";
+
 function get_google_login_url()
 {
-  require_once "vendor/autoload.php";
-
-  $oauth_json_raw = getenv("GOOGLE_CLIENT_JSON");
+  $oauth_json_raw = base64_decode(getenv("GOOGLE_CLIENT_JSON"));
   $oauth_obj = json_decode($oauth_json_raw, true);
+  $provider = new League\OAuth2\Client\Provider\Google([
+    "clientId" => $oauth_obj["web"]["client_id"],
+    "clientSecret" => $oauth_obj["web"]["client_secret"],
+    "redirectUri" => $oauth_obj["web"]["redirect_uris"][0],
+    "accessType" => "online",
+    "scopes" => ["email", "profile"],
+  ]);
+  $url = $provider->getAuthorizationUrl();
+  $url = preg_replace("/([&?])state=[^&]*(&|$)/", "&state&", $url);
+  $url = str_replace("openid%20", "", $url);
+  $url = $url . "&approval_prompt=auto";
 
-  //Make object of Google API Client for call Google API
-  $google_client = new Google_Client();
-
-  //Set the OAuth 2.0 Client ID
-  $google_client->setClientId($oauth_obj["web"]["client_id"]);
-
-  //Set the OAuth 2.0 Client Secret key
-  $google_client->setClientSecret($oauth_obj["web"]["client_secret"]);
-
-  //Set the OAuth 2.0 Redirect URI
-  $google_client->setRedirectUri($oauth_obj["web"]["redirect_uris"][0]);
-  $google_client->setRedirectUri(
-    "http://localhost:9000/scripts/oauth_handler.php"
-  );
-
-  // to get the email and profile
-  $google_client->addScope("email");
-
-  $google_client->addScope("profile");
-
-  $google_client->setApiFormatV2(true);
-
-  return $google_client->createAuthUrl();
+  return $url;
 }

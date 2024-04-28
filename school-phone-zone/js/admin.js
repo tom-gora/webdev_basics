@@ -127,15 +127,28 @@ editButtons.forEach((editButton) => {
     const email = editButton.dataset.userEmail;
     const img = editButton.dataset.userImg;
     const role = editButton.dataset.userType;
-
     idInput.value = id;
     editDialogConfimationBox.innerText = `You are editing details of ${firstName} ${lastName}.`;
-    imgageLabelBg.style.backgroundImage = `url("../../res/user_img/${img}"`;
+    imgageLabelBg.style.backgroundImage = `url("../res/user_img/${img}"`;
     emailInput.value = email;
     firstNameInput.value = firstName;
     lastNameInput.value = lastName;
-    // imageInput.value = img;
-    roleSelect.value = role;
+    // roleSelect.value = role;
+    // nope. had to actually print the select object and manually search where
+    // the value of this type of input is set, because simple .value is not a key
+    // of dom object of type select. Stack overflow knows shit.
+    // console.log(roleSelect);
+    switch (role) {
+      case "admin":
+        roleSelect.options.selectedIndex = 0;
+        break;
+      case "user":
+        roleSelect.options.selectedIndex = 1;
+        break;
+      case "owner":
+        roleSelect.options.selectedIndex = 2;
+        break;
+    }
     editDialog.showModal();
   });
 });

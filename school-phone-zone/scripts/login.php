@@ -1,6 +1,8 @@
 <?php
 
 require_once "./db.php";
+require_once "./utils.php";
+
 $connection = get_mysqli();
 
 if (isset($_POST["email"]) && isset($_POST["password"])) {

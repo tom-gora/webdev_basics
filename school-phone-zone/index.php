@@ -7,6 +7,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PhoneZone</title>
+  <link rel="icon" type="image/png" href="../phonezone/res/favicon.png" />
   <link href="css/output/tailwind-styles.css" rel="stylesheet" />
   <!--NOTE: Logo font used is: Suez One-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +20,10 @@
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
   <?php
   session_start();
+  //if (!isset($_SESSION["teacher_access"])) {
+  //  header("Location:./teacher-gate.php");
+  //}
+
   require_once "./scripts/products_functionality.php";
   require_once "./google/login_conf.php";
   require_once "./github/login_conf.php";
@@ -46,12 +51,14 @@
         "GITHUB_API_URL",
         "for-logged-out hidden",
         "for-logged-out mb-auto mt-24 hidden",
+        "res/user_img/PROFILE_USER_IMG",
       ],
       [
         "window.location = '" . $google_login_button_target . "';",
         "window.location = '" . $github_login_button_target . "';",
         "",
         "mb-auto mt-24",
+        "",
       ],
       $nav_html
     );

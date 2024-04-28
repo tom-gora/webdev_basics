@@ -106,6 +106,7 @@
     </label>
     <label
       for="edit-user-image"
+      style="max-width: 170px"
       class="relative isolate flex aspect-square w-fit cursor-pointer flex-col items-center justify-center self-center rounded-xl border-4 border-dashed border-[--brand-color-dark-blue] bg-[--brand-color-light-blue] p-4 text-center">
       <input
         id="edit-user-image"
@@ -133,6 +134,7 @@
       </h5>
       <p
         id="user-img-filename"
+        style="word-break: break-all"
         class="z-50 py-4 font-bold text-[--brand-color-blue]"></p>
     </label>
     <label class="grid grid-cols-4" for="edit-user-type">
@@ -144,6 +146,7 @@
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black">
         <option value="admin">Admin</option>
         <option value="user">User</option>
+        <option value="owner">Owner</option>
       </select>
     </label>
     <div class="flex flex-wrap justify-around gap-2">

@@ -24,15 +24,33 @@ class UserPassword
     $this->user_password = $new_password;
   }
 }
+
+require_once "utils.php";
+require_once "db.php";
+$internal_err_params = ["error" => "internalerr"];
+
+//  FN: _______________________________________________________________________
+// function getting users as array
+
 function get_users_array()
 {
-  require_once "db.php";
+  global $internal_err_params;
   $connection = get_mysqli();
   $query = "SELECT * FROM users";
-  $result = mysqli_query($connection, $query);
-  if (!$result) {
-    die("Error getting users from database");
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    mysqli_close($connection);
+    $err_msg_params = ["error_msg" => "err_retrieving_user_list_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
   }
+  $result = mysqli_stmt_execute($statement);
+  if (!$result) {
+    db_tidy_up($statement, $connection);
+    $err_msg_params = ["error_msg" => "err_retrieving_user_list_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  $result = mysqli_stmt_get_result($statement);
+  db_tidy_up($statement, $connection);
   $users = [];
   while ($row = mysqli_fetch_assoc($result)) {
     $user = new User();
@@ -47,23 +65,52 @@ function get_users_array()
     $user->user_auth_method = $row["user_auth_method"];
     array_push($users, $user);
   }
-  mysqli_close($connection);
   return $users;
 }
 
+//  FN: _______________________________________________________________________
+// function getting user by passed ID
+
 function get_user(int $user_id)
 {
-  require_once "db.php";
+  // taking advantage of strong type implication in parameter but still wrote
+  // extra validation util function because why not?
+  if (validate_id($user_id) == false) {
+    redirect_with_query("../index.php", [
+      "error" => "fatalinvalidid",
+      "error_msg" => "err_user_get_invalid_id",
+    ]);
+  }
+
+  global $internal_err_params;
   $connection = get_mysqli();
-  $query = "SELECT * FROM users WHERE user_id = '$user_id'";
-  $result = mysqli_query($connection, $query);
+  $query = "SELECT * FROM users WHERE user_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    mysqli_close($connection);
+    $err_msg_params = ["error_msg" => "err_retrieving_user_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  mysqli_stmt_bind_param($statement, "i", $user_id);
+  $result = mysqli_stmt_execute($statement);
   if (!$result) {
-    die("Error getting user from database");
+    db_tidy_up($statement, $connection);
+    $err_msg_params = ["error_msg" => "err_retrieving_user_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  $result = mysqli_stmt_get_result($statement);
+  if (!$result) {
+    db_tidy_up($statement, $connection);
+    $err_msg_params = ["error_msg" => "err_retrieving_user_03"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
   }
   $user_data = mysqli_fetch_assoc($result);
   if (!$user_data) {
-    die("User not found");
+    db_tidy_up($statement, $connection);
+    $err_msg_params = ["error_msg" => "err_retrieving_user_04"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
   }
+  db_tidy_up($statement, $connection);
 
   $fetched_user = new User();
   $fetched_user->user_id = $user_id;
@@ -77,207 +124,437 @@ function get_user(int $user_id)
   $fetched_user->user_type = $user_data["user_type"];
   $fetched_user->user_auth_method = $user_data["user_auth_method"];
 
-  mysqli_close($connection);
   return $fetched_user;
 }
 
+//_____________________________________________________________________________
+//writing:
+//  FN: _______________________________________________________________________
+// function adding a user to a db
+
 function add_user(User $user, ?string $user_password)
 {
-  require_once "db.php";
+  global $internal_err_params;
   $connection = get_mysqli();
   $pass_insert = null;
-  if ($user_password != "") {
-    $pass_insert = md5($user_password);
-  }
+  $user_password == ""
+    ? ($pass_insert = null)
+    : ($pass_insert = md5($user_password));
   $formatted_date = $user->user_registration->format("Y-m-d");
-  $query = "INSERT INTO users (user_email, user_registration, user_firstname, user_lastname, user_password, user_img, user_type, user_auth_method ) VALUES (
-  '$user->user_email', 
-  '$formatted_date',
-  '$user->user_firstname', 
-  '$user->user_lastname', 
-  '$pass_insert',
-  '$user->user_img', 
-  '$user->user_type', 
-  '$user->user_auth_method')";
-  $result = mysqli_query($connection, $query);
-  if (!$result) {
-    die("Error adding user to database");
+  $query =
+    "INSERT INTO users (user_email, user_registration, user_firstname, user_lastname, user_password, user_img, user_type, user_auth_method ) VALUES (?,?,?,?,?,?,?,?)";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    mysqli_close($connection);
+    $err_msg_params = ["error_msg" => "err_adding_user_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
   }
-  mysqli_close($connection);
+  mysqli_stmt_bind_param(
+    $statement,
+    "ssssssss",
+    $user->user_email,
+    $formatted_date,
+    $user->user_firstname,
+    $user->user_lastname,
+    $pass_insert,
+    $user->user_img,
+    $user->user_type,
+    $user->user_auth_method
+  );
+  $result = mysqli_stmt_execute($statement);
+  if (!$result) {
+    db_tidy_up($statement, $connection);
+    $err_msg_params = ["error_msg" => "err_adding_user_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  db_tidy_up($statement, $connection);
 }
+
+//  FN: _______________________________________________________________________
+// function storing user avatar image
+
+function store_user_img($user_img_url)
+{
+  $random_int = rand(1000000000, 9999999999);
+  //using pretty large random number to avoid collision but better check if file exists
+  //and generate a new rand if it does
+  while (file_exists("../res/user_img/" . $random_int . ".jpg")) {
+    $random_int = rand(1000000000, 9999999999);
+  }
+
+  $user_img_new_path = "../res/user_img/" . $random_int . ".jpg";
+  $img_data = file_get_contents($user_img_url);
+  //if script received no uploaded temp path return false to handle
+  if (!$img_data) {
+    return false;
+  }
+  // prep the image data to store
+  $img_data = base64_encode($img_data);
+  $img_data = str_replace("data:image/jpeg;base64,", "", $img_data);
+  $img_data = str_replace(" ", "+", $img_data);
+  try {
+    // store the data using write permissions
+    $new_file = fopen($user_img_new_path, "w+");
+    fwrite($new_file, base64_decode($img_data));
+    fclose($new_file);
+  } catch (Exception) {
+    // also return false if error on write operation
+    return false;
+  }
+  // if all good return ther new random generated new filename
+  return $random_int . ".jpg";
+}
+
+//_____________________________________________________________________________
+//updating:
+
+//  FN: _______________________________________________________________________
+// function to update user password using obj with private prop, a setter
+// and optionally allowing to write hashed or not hashed string to a db
+
+function update_user_password(
+  UserPassword $pass_obj,
+  bool $to_hash_or_not_to_hash_hehe
+) {
+  $new_password = $to_hash_or_not_to_hash_hehe
+    ? md5($pass_obj->__get_password())
+    : $pass_obj->__get_password();
+  $upd_result = true;
+  $connection = get_mysqli();
+  $query = "UPDATE users SET user_password = ? WHERE user_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  $upd_result = $statement ? $upd_result : false;
+  mysqli_stmt_bind_param($statement, "si", $new_password, $pass_obj->user_id);
+  $result = mysqli_stmt_execute($statement);
+  db_tidy_up($statement, $connection);
+  $upd_result = $result ? $upd_result : false;
+  return $upd_result;
+}
+
+//  FN: _______________________________________________________________________
+// function updating all user data other than password
+
+function update_user(User $new_data_user)
+{
+  global $internal_err_params;
+  $connection = get_mysqli();
+  $updated_user = get_user($new_data_user->user_id);
+  $udp_result = true;
+  $specific_results = [
+    "email_r" => true,
+    "firstname_r" => true,
+    "lastname_r" => true,
+    "type_r" => true,
+    "img_r" => true,
+  ];
+  if (
+    $updated_user->user_email != $new_data_user->user_email &&
+    $new_data_user->user_email != "" &&
+    $updated_user->user_email != null
+  ) {
+    $query = "UPDATE users SET user_email = ? WHERE user_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    $specific_results["email_r"] = $statement
+      ? $specific_results["email_r"]
+      : false;
+    mysqli_stmt_bind_param(
+      $statement,
+      "si",
+      $new_data_user->user_email,
+      $new_data_user->user_id
+    );
+    $result = mysqli_stmt_execute($statement);
+    $specific_results["email_r"] = $result
+      ? $specific_results["email_r"]
+      : false;
+  }
+
+  if (
+    $updated_user->user_firstname != $new_data_user->user_firstname &&
+    $new_data_user->user_firstname != "" &&
+    $updated_user->user_firstname != null
+  ) {
+    $query = "UPDATE users SET user_firstname = ? WHERE user_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    $specific_results["firstname_r"] = $statement
+      ? $specific_results["firstname_r"]
+      : false;
+    mysqli_stmt_bind_param(
+      $statement,
+      "si",
+      $new_data_user->user_firstname,
+      $new_data_user->user_id
+    );
+    $result = mysqli_stmt_execute($statement);
+    $specific_results["firstname_r"] = $result
+      ? $specific_results["firstname_r"]
+      : false;
+  }
+
+  if (
+    $updated_user->user_lastname != $new_data_user->user_lastname &&
+    $new_data_user->user_lastname != "" &&
+    $updated_user->user_lastname != null
+  ) {
+    $query = "UPDATE users SET user_lastname = ? WHERE user_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    $specific_results["lastname_r"] = $statement
+      ? $specific_results["lastname_r"]
+      : false;
+    mysqli_stmt_bind_param(
+      $statement,
+      "si",
+      $new_data_user->user_lastname,
+      $new_data_user->user_id
+    );
+    $result = mysqli_stmt_execute($statement);
+    $specific_results["lastname_r"] = $result
+      ? $specific_results["lastname_r"]
+      : false;
+  }
+
+  if (
+    $updated_user->user_type != $new_data_user->user_type &&
+    $new_data_user->user_type != "" &&
+    $updated_user->user_type != null
+  ) {
+    $page_role_to_enum_format = strtolower($new_data_user->user_type);
+    $query = "UPDATE users SET user_type = ? WHERE user_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    $specific_results["type_r"] = $statement
+      ? $specific_results["type_r"]
+      : false;
+    mysqli_stmt_bind_param(
+      $statement,
+      "si",
+      $page_role_to_enum_format,
+      $new_data_user->user_id
+    );
+    $result = mysqli_stmt_execute($statement);
+    $specific_results["type_r"] = $result ? $specific_results["type_r"] : false;
+  }
+
+  if (
+    $updated_user->user_img != $new_data_user->user_img &&
+    $new_data_user->user_img != "" &&
+    $updated_user->user_img != null
+  ) {
+    $query = "UPDATE users SET user_img = ? WHERE user_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    $specific_results["img_r"] = $statement
+      ? $specific_results["img_r"]
+      : false;
+    mysqli_stmt_bind_param(
+      $statement,
+      "si",
+      $new_data_user->user_img,
+      $new_data_user->user_id
+    );
+    $result = mysqli_stmt_execute($statement);
+    $specific_results["img_r"] = $result ? $specific_results["img_r"] : false;
+  }
+  // check result bools then set the master outcome bool
+  foreach ($specific_results as $value) {
+    if ($value == false) {
+      $udp_result = false;
+      break;
+    }
+  }
+  // If anything failed undo everythign by writing OG data to the database
+  // to avoid partial updates
+  if ($udp_result == false) {
+    $query =
+      "UPDATE users SET user_email = ?, user_firstname = ?, user_lastname = ?, user_type = ?, user_img = ? WHERE user_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    mysqli_stmt_bind_param(
+      $statement,
+      "sssssi",
+      $updated_user->user_email,
+      $updated_user->user_firstname,
+      $updated_user->user_lastname,
+      $updated_user->user_type,
+      $updated_user->user_img,
+      $updated_user->user_id
+    );
+    $result = mysqli_stmt_execute($statement);
+    if (!$result) {
+      db_tidy_up($statement, $connection);
+      $err_msg_params = ["error_msg" => "err_user_upd_partial_upd_possible"];
+      redirect_with_query(
+        "../index.php",
+        $internal_err_params,
+        $err_msg_params
+      );
+    }
+  }
+  db_tidy_up($statement, $connection);
+  return $udp_result;
+}
+
+//_____________________________________________________________________________
+//deleting:
+
+//  FN: _______________________________________________________________________
+// function deleting user froma db by ID
 
 function delete_user(int $user_id)
 {
-  require_once "db.php";
-  $connection = get_mysqli();
-  $query = "DELETE FROM users WHERE user_id = '$user_id'";
-  $result = mysqli_query($connection, $query);
-  if (!$result) {
-    die("Error deleting user from database");
+  if (validate_id($user_id) == false) {
+    redirect_with_query("../index.php", [
+      "error" => "fatalinvalidid",
+      "error_msg" => "err_user_del_invalid_id",
+    ]);
   }
-  mysqli_close($connection);
+
+  global $internal_err_params;
+  $connection = get_mysqli();
+  $query = "DELETE FROM users WHERE user_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    mysqli_close($connection);
+    $err_msg_params = ["error_msg" => "err_user_del_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  mysqli_stmt_bind_param($statement, "i", $user_id);
+  $result = mysqli_stmt_execute($statement);
+  db_tidy_up($statement, $connection);
+  if (!$result) {
+    $err_msg_params = ["error_msg" => "err_user_del_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
 }
+
+//_____________________________________________________________________________
+//retrieval:
+
+//  FN: _______________________________________________________________________
+// function retrieving private prop password from userpassword object using
+// a getter by a passed in ID
 
 function get_user_password(int $user_id)
 {
-  require_once "db.php";
+  global $internal_err_params;
+  if (validate_id($user_id) == false) {
+    redirect_with_query("../index.php", [
+      "error" => "fatalinvalidid",
+      "error_msg" => "err_user_get_pass_invalid_id",
+    ]);
+  }
+
   $connection = get_mysqli();
   $query = "SELECT user_password FROM users WHERE user_id = '$user_id'";
-  $result = mysqli_query($connection, $query);
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    $err_msg_params = ["error_msg" => "err_user_pass_get_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  $result = mysqli_stmt_execute($statement);
   if (!$result) {
-    die("Error getting user password from database");
+    $err_msg_params = ["error_msg" => "err_user_pass_get_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  $result = mysqli_stmt_get_result($statement);
+  db_tidy_up($statement, $connection);
+
+  if (!$result) {
+    $err_msg_params = ["error_msg" => "err_user_pass_get_03"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
   }
   $fetched_pass_obj = new UserPassword();
   $fetched_pass_obj->user_id = $user_id;
   $fetched_pass_obj->__set_password(
     mysqli_fetch_assoc($result)["user_password"]
   );
-  mysqli_close($connection);
   return $fetched_pass_obj;
 }
 
-function update_user_password(UserPassword $pass_obj)
-{
-  $new_password = $pass_obj->__get_password();
-  $upd_result = true;
-  require_once "db.php";
-  $connection = get_mysqli();
-  $query =
-    "UPDATE users SET user_password = '" .
-    md5($new_password) .
-    "' WHERE user_id = '$pass_obj->user_id'";
-  $result = mysqli_query($connection, $query);
-  if (!$result) {
-    $upd_result = false;
-  }
-  mysqli_close($connection);
-  return $upd_result;
-}
-
-function check_if_email_exists(string $email)
-{
-  require_once "db.php";
-  $connection = get_mysqli();
-  $query = "SELECT * FROM users WHERE user_email = '$email'";
-  $result = mysqli_query($connection, $query);
-  if (mysqli_num_rows($result) > 0) {
-    mysqli_close($connection);
-    return true;
-  }
-  mysqli_close($connection);
-  return false;
-}
+//  FN: _______________________________________________________________________
+// function retrieving user ID by passed in email addr string
 
 function get_id_by_existing_email(string $email)
 {
-  require_once "db.php";
+  global $internal_err_params;
   $connection = get_mysqli();
-  $query = "SELECT user_id FROM users WHERE user_email = '$email'";
-  $result = mysqli_query($connection, $query);
+  $query = "SELECT user_id FROM users WHERE user_email = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    $err_msg_params = ["error_msg" => "err_user_get_id_by_email_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  mysqli_stmt_bind_param($statement, "s", $email);
+  $result = mysqli_stmt_execute($statement);
+  if (!$result) {
+    $err_msg_params = ["error_msg" => "err_user_get_id_by_email_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  $result = mysqli_stmt_get_result($statement);
+  db_tidy_up($statement, $connection);
   if ($result) {
-    $row = mysqli_fetch_assoc($result);
-    return $row["user_id"];
+    return mysqli_fetch_assoc($result)["user_id"] ?? false;
   }
   return false;
 }
+
+//  FN: _______________________________________________________________________
+// function getting the user's type/role by ID
 
 function get_user_type_by_id(int $user_id)
 {
-  require_once "db.php";
+  global $internal_err_params;
+  if (validate_id($user_id) == false) {
+    redirect_with_query("../index.php", [
+      "error" => "fatalinvalidid",
+      "error_msg" => "err_user_get_type_invalid_id",
+    ]);
+  }
+
   $connection = get_mysqli();
-  $query = "SELECT user_type FROM users WHERE user_id = '$user_id'";
-  $result = mysqli_query($connection, $query);
+  $query = "SELECT user_type FROM users WHERE user_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    $err_msg_params = ["error_msg" => "err_user_get_type_by_id_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  mysqli_stmt_bind_param($statement, "i", $user_id);
+  $result = mysqli_stmt_execute($statement);
+  if (!$result) {
+    $err_msg_params = ["error_msg" => "err_user_get_type_by_id_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  $result = mysqli_stmt_get_result($statement);
+  db_tidy_up($statement, $connection);
   if ($result) {
-    $row = mysqli_fetch_assoc($result);
-    return $row["user_type"];
+    return mysqli_fetch_assoc($result)["user_type"] ?? false;
   }
   return false;
 }
 
-function update_user(User $new_data_user)
-{
-  require_once "db.php";
-  $connection = get_mysqli();
-  $id = $new_data_user->user_id;
-  $updated_user = get_user($id);
-  $udp_result = true;
-  if (
-    $updated_user->user_email != $new_data_user->user_email &&
-    $new_data_user->user_email != ""
-  ) {
-    $query = "UPDATE users SET user_email = '$new_data_user->user_email' WHERE user_id = '$id'";
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-      $udp_result = false;
-    }
-  }
-  if (
-    $updated_user->user_firstname != $new_data_user->user_firstname &&
-    $new_data_user->user_firstname != ""
-  ) {
-    $query = "UPDATE users SET user_firstname = '$new_data_user->user_firstname' WHERE user_id = '$id'";
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-      $udp_result = false;
-    }
-  }
-  if (
-    $updated_user->user_lastname != $new_data_user->user_lastname &&
-    $new_data_user->user_lastname != ""
-  ) {
-    $query = "UPDATE users SET user_lastname = '$new_data_user->user_lastname' WHERE user_id = '$id'";
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-      $udp_result = false;
-    }
-  }
-  if (
-    $updated_user->user_type != $new_data_user->user_type &&
-    $new_data_user->user_type != ""
-  ) {
-    $query = "UPDATE users SET user_type = '$new_data_user->user_type' WHERE user_id = '$id'";
-    $result = mysqli_query($connection, $query);
-    if (!$result) {
-      $udp_result = false;
-    }
-  }
-  return $udp_result;
-}
+//_____________________________________________________________________________
+//checks:
 
-function update_user_img(User $processed_user, $image_data)
-{
-  require_once "db.php";
-  $connection = get_mysqli();
-  $id = $processed_user->user_id;
-  $udp_result = true;
-  $image_data = base64_encode($image_data);
+//  FN: _______________________________________________________________________
+// function checking if email address exists in the db
 
-  return $udp_result;
-}
-
-function rename_new_img(string $new_img_filename, int $user_id)
+function check_if_email_exists(string $email)
 {
-  require_once "db.php";
+  global $internal_err_params;
   $connection = get_mysqli();
-  $query = "UPDATE users SET user_img = '$new_img_filename' WHERE user_id = '$user_id'";
-  $result = mysqli_query($connection, $query);
+  $query = "SELECT * FROM users WHERE user_email = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    $err_msg_params = ["error_msg" => "err_user_check_email_01"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  }
+  mysqli_stmt_bind_param($statement, "s", $email);
+  $result = mysqli_stmt_execute($statement);
   if (!$result) {
-    die("Error updating user img filename in database");
+    $err_msg_params = ["error_msg" => "err_user_check_email_02"];
+    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
   }
-  mysqli_close($connection);
-}
-
-function store_user_img($user_img_url)
-{
-  $random_int = rand(1000000000, 9999999999);
-  $user_img_temp_path = "../res/user_img/" . $random_int . "_temp.jpg";
-  $img_data = file_get_contents($user_img_url);
-  if ($img_data == false) {
-    return false;
+  if (mysqli_stmt_num_rows($statement) > 0) {
+    db_tidy_up($statement, $connection);
+    return true;
   }
-  $img_data = base64_encode($img_data);
-  $img_data = str_replace("data:image/jpeg;base64,", "", $img_data);
-  $img_data = str_replace(" ", "+", $img_data);
-  file_put_contents($user_img_temp_path, base64_decode($img_data));
-  return $random_int . "_temp.jpg";
+  db_tidy_up($statement, $connection);
+  return false;
 }

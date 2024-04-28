@@ -1,14 +1,16 @@
 <?php
+
 $handler_case = "";
 if (
   isset($_GET["code"]) &&
   isset($_GET["scope"]) &&
-  str_contains($_GET["scope"], "www.googleapis.com")
+  str_contains($_GET["scope"], "googleapis")
 ) {
   $handler_case = "google_handle_auth_code";
 } else {
   $handler_case = "github_handle_auth_code";
 }
+file_put_contents("php://stderr", print_r($handler_case . "\n", true));
 
 switch ($handler_case) {
   case "google_handle_auth_code":
@@ -35,15 +37,26 @@ function handle_google($code)
   // https://codeshack.io/implement-google-login-php/#process-curl-requests
   // TODO: handle google oauth
   require_once "./user_functionality.php";
-  $oauth_json_raw = getenv("GOOGLE_CLIENT_JSON");
+  $base64_encoded_json = getenv("GOOGLE_CLIENT_JSON");
+  $oauth_json_raw = base64_decode($base64_encoded_json);
   $oauth_obj = json_decode($oauth_json_raw, true);
+
+  echo "<br>client id: <br>";
+  echo $oauth_obj["web"]["client_id"] . "<br>";
+  echo "client secret: <br>";
+  echo $oauth_obj["web"]["client_secret"] . "<br>";
+  echo "redirect url: <br>";
+  echo $oauth_obj["web"]["redirect_uris"][0] . "<br>";
   $query_params = [
     "code" => $code,
     "client_id" => $oauth_obj["web"]["client_id"],
     "client_secret" => $oauth_obj["web"]["client_secret"],
-    "redirect_uri" => "http://localhost:9000/scripts/oauth_handler.php",
+    "redirect_uri" => $oauth_obj["web"]["redirect_uris"][0],
     "grant_type" => "authorization_code",
   ];
+  echo "<br>";
+  echo "query params: <br>";
+  print_r($query_params);
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, "https://accounts.google.com/o/oauth2/token");
   curl_setopt($ch, CURLOPT_POST, true);
@@ -51,9 +64,19 @@ function handle_google($code)
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $response = curl_exec($ch);
   curl_close($ch);
+  echo "<br>";
+  echo "Curl error: " . curl_error($ch);
   $response = json_decode($response, true);
+
+  echo "<br>code<br>";
+  echo $code;
+  echo "<br>response: <br>";
+  print_r($response);
   if (!isset($response["access_token"]) || empty($response["access_token"])) {
-    header("Location:../index.php?error=autherror");
+    // echo "Error: Access token not found";
+    // echo "Response: ";
+    // print_r($response, true);
+    // header("Location:../index.php?error=autherror2");
     exit();
   }
 
@@ -151,21 +174,7 @@ function handle_google($code)
     // (id in sync with the DB )
     if ($new_user->user_img != "default.jpg") {
       try {
-        $new_img_filename =
-          $stored_user_id .
-          "_" .
-          strtolower($new_user->user_firstname) .
-          "_" .
-          strtolower($new_user->user_lastname) .
-          ".jpg";
-        rename(
-          "../res/user_img/" . $new_user->user_img,
-          "../res/user_img/" . $new_img_filename
-        );
-        rename_new_img($new_img_filename, $stored_user_id);
-
-        $new_img_path = "../res/user_img/" . $new_img_filename;
-
+        $new_img_path = "../res/user_img/" . $new_user->user_img;
         $command = "convert $new_img_path -gravity center -crop 1:1^ -resize 96x96 $new_img_path";
         exec($command);
       } catch (Exception) {
@@ -193,7 +202,7 @@ function handle_github()
 {
   require_once "./user_functionality.php";
   require_once "../github/login_conf.php";
-  $oauth_json_raw = getenv("GITHUB_CLIENT_JSON");
+  $oauth_json_raw = base64_decode(getenv("GITHUB_CLIENT_JSON"));
   $oauth_obj = json_decode($oauth_json_raw, true);
   $code = $_GET["code"];
   $state = $_GET["state"];
@@ -329,21 +338,7 @@ function handle_github()
     // (id in sync with the DB )
     if ($new_user->user_img != "default.jpg") {
       try {
-        $new_img_filename =
-          $stored_user_id .
-          "_" .
-          strtolower($new_user->user_firstname) .
-          "_" .
-          strtolower($new_user->user_lastname) .
-          ".jpg";
-        rename(
-          "../res/user_img/" . $new_user->user_img,
-          "../res/user_img/" . $new_img_filename
-        );
-        rename_new_img($new_img_filename, $stored_user_id);
-
-        $new_img_path = "../res/user_img/" . $new_img_filename;
-
+        $new_img_path = "../res/user_img/" . $new_user->user_img;
         $command = "convert $new_img_path -gravity center -crop 1:1^ -resize 96x96 $new_img_path";
         exec($command);
       } catch (Exception) {
