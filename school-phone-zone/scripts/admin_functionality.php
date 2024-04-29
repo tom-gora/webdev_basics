@@ -24,6 +24,12 @@ if (isset($_POST["del-user-id"])) {
   handle_user_operations("edit");
 }
 
+//  FN: _______________________________________________________________________
+// function handling operations on users performed by admin
+// conditionally acting on requested action - delete, or edit
+// TODO: 1 build adding functionality, maybe extract actions into separate functions?
+// TODO: 2 further functionalities for managing products
+
 function handle_user_operations(string $operation_type)
 {
   if ($operation_type == "delete") {
@@ -43,7 +49,6 @@ function handle_user_operations(string $operation_type)
       redirect_with_query("../pages/admin.php", [
         "error" => "deleteuserdisallowed",
       ]);
-      exit();
     }
     delete_user($id_to_delete);
     redirect_with_query("../pages/admin.php", ["status" => "userdeleted"]);
@@ -190,6 +195,7 @@ function handle_user_operations(string $operation_type)
           );
         }
       }
+      db_tidy_up($connection, $statement);
       redirect_with_query("../pages/admin.php", ["status" => $result_param]);
     } elseif (!$res_data && $res_pass) {
       $result_param = "user_edit_data_failed_pass_ok";
@@ -200,6 +206,7 @@ function handle_user_operations(string $operation_type)
     }
 
     if ($result_param != "userupdated") {
+      db_tidy_up($connection, $statement);
       redirect_with_query(
         "../pages/admin.php",
         ["error" => "internalerr"],

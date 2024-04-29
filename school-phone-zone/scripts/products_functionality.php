@@ -1,4 +1,6 @@
 <?php
+require_once "db.php";
+require_once "utils.php";
 class Product
 {
   public string $product_name;
@@ -6,18 +8,31 @@ class Product
   public string $product_img_path;
 }
 
-// get all phones as an array of objects
+//  FN: _______________________________________________________________________
+// function getting all products as array
+
 function get_products()
 {
-  require_once "db.php";
   $products = [];
   $connection = get_mysqli();
   $query = "SELECT * FROM products";
-  $result = mysqli_query($connection, $query);
-  if (!$result) {
-    die("Error getting products from database");
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      ["err_message" => "err_getting_products_01"]
+    );
   }
-
+  mysqli_stmt_execute($statement);
+  $result = mysqli_stmt_get_result($statement);
+  if (!$result) {
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      ["err_message" => "err_getting_products_02"]
+    );
+  }
   while ($row = mysqli_fetch_assoc($result)) {
     $product = new Product();
     $product->product_name = $row["product_name"];
@@ -28,15 +43,30 @@ function get_products()
   return $products;
 }
 
-// get phone by product id
+//  FN: _______________________________________________________________________
+// function getting a product by id
+
 function get_product(int $product_id)
 {
-  require_once "db.php";
   $connection = get_mysqli();
-  $query = "SELECT * FROM products WHERE product_id = '$product_id'";
-  $result = mysqli_query($connection, $query);
+  $query = "SELECT * FROM products WHERE product_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      ["err_message" => "err_getting_product_01"]
+    );
+  }
+  mysqli_stmt_bind_param($statement, "i", $product_id);
+  mysqli_stmt_execute($statement);
+  $result = mysqli_stmt_get_result($statement);
   if (!$result) {
-    die("Error getting product from database");
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      ["err_message" => "err_getting_product_02"]
+    );
   }
   $product = new Product();
   $product->product_name = mysqli_fetch_assoc($result)["product_name"];
@@ -45,7 +75,9 @@ function get_product(int $product_id)
   return $product;
 }
 
-// get an array of randomly selected phones
+//  FN: _______________________________________________________________________
+// function getting array of required lenght of randomly shuffled products
+
 function get_random_products(int $num_products)
 {
   $products = get_products();

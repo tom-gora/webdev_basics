@@ -1,52 +1,53 @@
 <?php
 
-$handler_case = "";
+require_once "utils.php";
+require_once "db.php";
 if (
   isset($_GET["code"]) &&
+  !empty($_GET["code"]) &&
   isset($_GET["scope"]) &&
   str_contains($_GET["scope"], "googleapis")
 ) {
-  $handler_case = "google_handle_auth_code";
+  handle_google($_GET["code"]);
+} elseif (
+  // HACK:
+  // rudimentary idiot check for github because github api does not return
+  // anything specific in the "code" response. Just "code" and "state" strings
+  // both random and unreliable. So I just make sure the code is there and
+  // in general response differs from google's.
+  // 1) If more oauth added then more vague conditions might be required...
+  // 2) To be determined still if I can make the GH api return
+  // strictly GH identifiable json... stupid microsoft :/
+  isset($_GET["code"]) &&
+  !empty($_GET["code"]) &&
+  isset($_GET["state"]) &&
+  !isset($_GET["scope"])
+) {
+  handle_github();
 } else {
-  $handler_case = "github_handle_auth_code";
+  redirect_with_query(
+    "../index.php",
+    ["error" => "autherror"],
+    ["err_message" => "no_auth_code_received"]
+  );
 }
-file_put_contents("php://stderr", print_r($handler_case . "\n", true));
 
-switch ($handler_case) {
-  case "google_handle_auth_code":
-    if (!isset($_GET["code"]) || empty($_GET["code"])) {
-      echo "No authorization code found";
-      header("Location:../index.php?error=autherror");
-      exit();
-    }
-    $authorization_code = $_GET["code"];
-    handle_google($authorization_code);
-    break;
-  case "github_handle_auth_code":
-    handle_github();
-    break;
-  default:
-    echo "No authorization code found";
-    header("Location:../index.php?error=autherror");
-    exit();
-}
+//  FN: _______________________________________________________________________
+// handler for google oauth
+// 1)get code/token/user-data .then check if registered by email query
+// 2)if regged and via  oauth then start session,
+// else inform user email already in use for a different login method
+// 3)if all conditions checked and failed else register as new user
 
 function handle_google($code)
 {
   // reference used:
   // https://codeshack.io/implement-google-login-php/#process-curl-requests
-  // TODO: handle google oauth
-  require_once "./user_functionality.php";
+  require_once "user_functionality.php";
   $base64_encoded_json = getenv("GOOGLE_CLIENT_JSON");
   $oauth_json_raw = base64_decode($base64_encoded_json);
   $oauth_obj = json_decode($oauth_json_raw, true);
 
-  echo "<br>client id: <br>";
-  echo $oauth_obj["web"]["client_id"] . "<br>";
-  echo "client secret: <br>";
-  echo $oauth_obj["web"]["client_secret"] . "<br>";
-  echo "redirect url: <br>";
-  echo $oauth_obj["web"]["redirect_uris"][0] . "<br>";
   $query_params = [
     "code" => $code,
     "client_id" => $oauth_obj["web"]["client_id"],
@@ -54,9 +55,7 @@ function handle_google($code)
     "redirect_uri" => $oauth_obj["web"]["redirect_uris"][0],
     "grant_type" => "authorization_code",
   ];
-  echo "<br>";
-  echo "query params: <br>";
-  print_r($query_params);
+
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, "https://accounts.google.com/o/oauth2/token");
   curl_setopt($ch, CURLOPT_POST, true);
@@ -64,20 +63,14 @@ function handle_google($code)
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   $response = curl_exec($ch);
   curl_close($ch);
-  echo "<br>";
-  echo "Curl error: " . curl_error($ch);
   $response = json_decode($response, true);
 
-  echo "<br>code<br>";
-  echo $code;
-  echo "<br>response: <br>";
-  print_r($response);
   if (!isset($response["access_token"]) || empty($response["access_token"])) {
-    // echo "Error: Access token not found";
-    // echo "Response: ";
-    // print_r($response, true);
-    // header("Location:../index.php?error=autherror2");
-    exit();
+    redirect_with_query(
+      "index.php",
+      ["error" => "autherror"],
+      ["err_message" => "google_no_access_token_received"]
+    );
   }
 
   $ch = curl_init();
@@ -93,9 +86,7 @@ function handle_google($code)
   $response = curl_exec($ch);
   curl_close($ch);
   $google_profile_data = json_decode($response, true);
-  //for quick show so sajjad can see data is received not hardcoded
   $response = json_encode($google_profile_data);
-  echo "<script>console.log(" . $response . ")</script>";
 
   //
   //WARN:
@@ -111,19 +102,32 @@ function handle_google($code)
   //if email present in db two options
   if (check_if_email_exists($email_to_check)) {
     // check if registered via google oauth
-    require_once "./db.php";
     $connection = get_mysqli();
-    $query = "SELECT user_auth_method FROM users WHERE user_email = '$email_to_check'";
-    $result = mysqli_query($connection, $query);
+    $query = "SELECT user_auth_method FROM users WHERE user_email = ?";
+    $statement = $connection->prepare($query);
+    if (!$statement) {
+      mysqli_close($connection);
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "oauth_google_fail_db_check_01"]
+      );
+    }
+    mysqli_stmt_bind_param($statement, "s", $email_to_check);
+    mysqli_stmt_execute($statement);
+    $result = mysqli_stmt_get_result($statement);
     // fail if query fails guard clause check
     if (!$result) {
-      die("Error getting user auth method from database");
-      header("Location:../index.php?error=internalerr");
-      exit();
+      db_tidy_up($connection, $statement);
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "oauth_google_fail_db_check_02"]
+      );
     }
-    $row = mysqli_fetch_assoc($result);
-    $user_auth_method = $row["user_auth_method"];
-    // if user registered via google oauth proceed
+    $user_auth_method = mysqli_fetch_assoc($result)["user_auth_method"];
+    db_tidy_up($connection, $statement);
+    // if user in db and registered via google oauth proceed
     if ($user_auth_method == 2) {
       session_start();
       $id = get_id_by_existing_email($email_to_check);
@@ -133,7 +137,7 @@ function handle_google($code)
       header("Location:../pages/profile.php");
     } else {
       // else (different method of registration) back to main page to display info
-      header("Location:../index.php?error=emailtaken");
+      redirect_with_query("../index.php", ["error" => "emailtaken"]);
     }
     //the only remaining route is registration
   } else {
@@ -165,10 +169,12 @@ function handle_google($code)
     $stored_user_id = get_id_by_existing_email($email_to_check);
     // after successfully adding grab next assigned ID (providing it worked else fail)
     if ($stored_user_id == false) {
-      header("Location:../index.php?error=internalerr");
-      exit();
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "oauth_google_unable_id_fetch_user_not_registered"]
+      );
     }
-
     //if adding image under temp name worked and it is not a default image
     // attempt to rename it with final user ID coming from the DB and their name
     // (id in sync with the DB )
@@ -178,14 +184,17 @@ function handle_google($code)
         $command = "convert $new_img_path -gravity center -crop 1:1^ -resize 96x96 $new_img_path";
         exec($command);
       } catch (Exception) {
-        header("Location:../index.php?error=errorimg");
+        redirect_with_query(
+          "../index.php",
+          ["error" => "errorimg"],
+          ["err_message" => "oauth_google_fail_img_resize"]
+        );
       }
     }
     // after registration redirect to profile page
     session_start();
-    $id = get_id_by_existing_email($email_to_check);
-    $type = get_user_type_by_id($id);
-    $_SESSION["user_id"] = $id;
+    $type = get_user_type_by_id($stored_user_id);
+    $_SESSION["user_id"] = $stored_user_id;
     $_SESSION["user_type"] = $type;
     header("Location:../pages/profile.php");
   }
@@ -198,9 +207,16 @@ function handle_google($code)
 // in similar way to google. curl until user data is back then handle
 // the internal account based on that
 
+//  FN: _______________________________________________________________________
+// handler for github oauth
+// 1)get code/token/user-data .then check if registered by email query
+// 2)if regged and via  oauth then start session,
+// else inform user email already in use for a different login method
+// 3)if all conditions checked and failed else register as new user
+
 function handle_github()
 {
-  require_once "./user_functionality.php";
+  require_once "user_functionality.php";
   require_once "../github/login_conf.php";
   $oauth_json_raw = base64_decode(getenv("GITHUB_CLIENT_JSON"));
   $oauth_obj = json_decode($oauth_json_raw, true);
@@ -227,16 +243,14 @@ function handle_github()
     !isset($response_obj["access_token"]) ||
     empty($response_obj["access_token"])
   ) {
-    echo "No access token found";
-    header(
-      "Location:../index.php?error=autherror"
-      // <--- this is where it exits
+    redirect_with_query(
+      "index.php",
+      ["error" => "autherror"],
+      ["err_message" => "github_no_access_token_received"]
     );
-    exit();
   }
 
   $ch = curl_init();
-
   curl_setopt($ch, CURLOPT_URL, "https://api.github.com/user");
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -248,28 +262,33 @@ function handle_github()
   // var_dump($response);
   curl_close($ch);
   $github_profile_data = json_decode($response, true);
-  //for quick show so sajjad can see data is received not hardcoded
   $response = json_encode($github_profile_data);
-  echo "<script>console.log(" . $response . ")</script>";
-  // var_dump($github_profile_data);
-
   $email_to_check = $github_profile_data["email"];
-  //if email present in db two options
   if (check_if_email_exists($email_to_check)) {
-    // check if registered via google oauth
-    require_once "./db.php";
     $connection = get_mysqli();
-    $query = "SELECT user_auth_method FROM users WHERE user_email = '$email_to_check'";
-    $result = mysqli_query($connection, $query);
-    // fail if query fails guard clause check
-    if (!$result) {
-      die("Error getting user auth method from database");
-      header("Location:../index.php?error=internalerr");
-      exit();
+    $query = "SELECT user_auth_method FROM users WHERE user_email = ?";
+    $statement = $connection->prepare($query);
+    if (!$statement) {
+      mysqli_close($connection);
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "oauth_google_fail_db_check_01"]
+      );
     }
-    $row = mysqli_fetch_assoc($result);
-    $user_auth_method = $row["user_auth_method"];
-    // if user registered via google oauth proceed
+    mysqli_stmt_bind_param($statement, "s", $email_to_check);
+    mysqli_stmt_execute($statement);
+    $result = mysqli_stmt_get_result($statement);
+    if (!$result) {
+      db_tidy_up($connection, $statement);
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "oauth_google_fail_db_check_02"]
+      );
+    }
+    $user_auth_method = mysqli_fetch_assoc($result)["user_auth_method"];
+    db_tidy_up($connection, $statement);
     if ($user_auth_method == 3) {
       session_start();
       $id = get_id_by_existing_email($email_to_check);
@@ -278,8 +297,7 @@ function handle_github()
       $_SESSION["user_type"] = $type;
       header("Location:../pages/profile.php");
     } else {
-      // else (different method of registration) back to main page to display info
-      header("Location:../index.php?error=emailtaken");
+      redirect_with_query("../index.php", ["error" => "emailtaken"]);
     }
     //the only remaining route is registration
   } else {
@@ -329,8 +347,11 @@ function handle_github()
     $stored_user_id = get_id_by_existing_email($email_to_check);
     // after successfully adding grab next assigned ID (providing it worked else fail)
     if ($stored_user_id == false) {
-      header("Location:../index.php?error=internalerr");
-      exit();
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "oauth_github_unable_id_fetch_user_not_registered"]
+      );
     }
 
     //if adding image under temp name worked and it is not a default image
@@ -342,14 +363,17 @@ function handle_github()
         $command = "convert $new_img_path -gravity center -crop 1:1^ -resize 96x96 $new_img_path";
         exec($command);
       } catch (Exception) {
-        header("Location:../index.php?error=errorimg");
+        redirect_with_query(
+          "../index.php",
+          ["error" => "errorimg"],
+          ["err_message" => "oauth_github_fail_img_resize"]
+        );
       }
     }
     // after registration redirect to profile page
     session_start();
-    $id = get_id_by_existing_email($email_to_check);
-    $type = get_user_type_by_id($id);
-    $_SESSION["user_id"] = $id;
+    $type = get_user_type_by_id($stored_user_id);
+    $_SESSION["user_id"] = $stored_user_id;
     $_SESSION["user_type"] = $type;
     header("Location:../pages/profile.php");
   }

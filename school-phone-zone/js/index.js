@@ -139,8 +139,4 @@ switch (err) {
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
     break;
-  default:
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
-    msgBox.classList.remove("hidden");
 }
