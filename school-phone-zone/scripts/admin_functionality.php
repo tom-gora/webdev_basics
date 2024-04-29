@@ -143,12 +143,8 @@ function handle_user_operations(string $operation_type)
       db_tidy_up($connection, $statement);
       redirect_with_query(
         "../pages/admin.php",
-        [
-          "error" => "internalerr",
-        ],
-        [
-          "error_msg" => "err_updating_pass_02",
-        ]
+        ["error" => "internalerr"],
+        ["error_msg" => "err_updating_pass_02"]
       );
     }
     $current_password = $current_password_result->fetch_assoc()[

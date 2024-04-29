@@ -34,6 +34,11 @@ if (!$user_id || $user_role == "user") {
       crossorigin="anonymous"
       referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../css/globals.css" />
+    <style>
+        .email-admin { transition: 200ms; font-weight: bold;}
+        .email-admin:hover,
+        .email-admin:focus { color: #0D72B9; }
+    </style>
   </head>
 
   <body class="h-screen items-center bg-gray-100 pt-20">

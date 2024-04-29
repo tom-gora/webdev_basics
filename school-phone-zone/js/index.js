@@ -99,7 +99,7 @@ if (err_msg) {
       default:
         msg = "Unknown error. Please";
     }
-    msgBox.innerHTML = `<p>${msg} <a class="email-admin" style="font-weight:bold;" 
+    msgBox.innerHTML = `<p>${msg} <a class="email-admin"
           href="mailto:goratomasz@outlook.com?subject=PHONEZONE%20:%20Error%20report%20from%20user%20${encodeURIComponent(current_id)}&body=---%0AError%20code:%0A${encodeURIComponent(err_msg)}%0AOccurred%20at:%0A${encodeURIComponent(current_timestamp)}%0A---%0A%0A⚠️%20Do%20not%20delete%20the%20error%20code%20above!%20⚠️">contact the administrator</a>.</p>`;
   })();
 }

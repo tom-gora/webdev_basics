@@ -35,6 +35,44 @@ const roleSelect = editDialog.querySelector("select[name='edit-user-type']");
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");
 const stat = params.get("status");
+const err_msg = params.get("err_msg");
+let current_id = null;
+if (err_msg) {
+  // if specific error message is passed then professionally
+  // grab the message and user id and prepare simple mail body
+  // just ready to send at a click of a button
+  const current_timestamp = new Date().toLocaleString();
+  async function get_id() {
+    try {
+      const data = new FormData();
+      data.append("client_request", "get_id");
+      const response = await fetch("scripts/utils.php", {
+        method: "POST",
+        body: data
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.text();
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }
+  }
+  (async () => {
+    current_id = await get_id();
+    let msg;
+    switch (err) {
+      case "internalerr":
+        msg = "Something went wrong. Please";
+        break;
+      default:
+        msg = "Unknown error. Please";
+    }
+    msgBox.innerHTML = `<p>${msg} <a class="email-admin"
+          href="mailto:goratomasz@outlook.com?subject=PHONEZONE%20:%20Error%20report%20from%20user%20${encodeURIComponent(current_id)}&body=---%0AError%20code:%0A${encodeURIComponent(err_msg)}%0AOccurred%20at:%0A${encodeURIComponent(current_timestamp)}%0A---%0A%0A⚠️%20Do%20not%20delete%20the%20error%20code%20above!%20⚠️">contact the administrator</a>.</p>`;
+  })();
+}
 switch (stat) {
   case "userdeleted":
     msgBox.innerText = "User has been deleted.";
@@ -61,6 +99,15 @@ switch (err) {
     break;
   case "editdisallowed":
     msgBox.innerText = "You are not allowed to edit this user.";
+    msgBox.classList.remove("bg-[--brand-color-green]");
+    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("hidden");
+    break;
+  case "internalerr":
+    msgBox.innerHTML =
+      "<p>Something went wrong. Please <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+    msgBox.classList.remove("animate-delay-[3000]");
+    msgBox.style.animationDelay = "8000ms";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
