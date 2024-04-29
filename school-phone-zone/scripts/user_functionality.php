@@ -27,27 +27,33 @@ class UserPassword
 
 require_once "utils.php";
 require_once "db.php";
-$internal_err_params = ["error" => "internalerr"];
 
 //  FN: _______________________________________________________________________
 // function getting users as array
 
 function get_users_array()
 {
-  global $internal_err_params;
   $connection = get_mysqli();
   $query = "SELECT * FROM users";
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     mysqli_close($connection);
     $err_msg_params = ["error_msg" => "err_retrieving_user_list_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_execute($statement);
   if (!$result) {
     db_tidy_up($statement, $connection);
     $err_msg_params = ["error_msg" => "err_retrieving_user_list_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_get_result($statement);
   db_tidy_up($statement, $connection);
@@ -82,33 +88,48 @@ function get_user(int $user_id)
     ]);
   }
 
-  global $internal_err_params;
   $connection = get_mysqli();
   $query = "SELECT * FROM users WHERE user_id = ?";
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     mysqli_close($connection);
     $err_msg_params = ["error_msg" => "err_retrieving_user_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   mysqli_stmt_bind_param($statement, "i", $user_id);
   $result = mysqli_stmt_execute($statement);
   if (!$result) {
     db_tidy_up($statement, $connection);
     $err_msg_params = ["error_msg" => "err_retrieving_user_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_get_result($statement);
   if (!$result) {
     db_tidy_up($statement, $connection);
     $err_msg_params = ["error_msg" => "err_retrieving_user_03"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $user_data = mysqli_fetch_assoc($result);
   if (!$user_data) {
     db_tidy_up($statement, $connection);
     $err_msg_params = ["error_msg" => "err_retrieving_user_04"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   db_tidy_up($statement, $connection);
 
@@ -134,7 +155,6 @@ function get_user(int $user_id)
 
 function add_user(User $user, ?string $user_password)
 {
-  global $internal_err_params;
   $connection = get_mysqli();
   $pass_insert = null;
   $user_password == ""
@@ -147,7 +167,11 @@ function add_user(User $user, ?string $user_password)
   if (!$statement) {
     mysqli_close($connection);
     $err_msg_params = ["error_msg" => "err_adding_user_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   mysqli_stmt_bind_param(
     $statement,
@@ -161,11 +185,29 @@ function add_user(User $user, ?string $user_password)
     $user->user_type,
     $user->user_auth_method
   );
-  $result = mysqli_stmt_execute($statement);
-  if (!$result) {
-    db_tidy_up($statement, $connection);
-    $err_msg_params = ["error_msg" => "err_adding_user_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+  try {
+    mysqli_stmt_execute($statement);
+  } catch (mysqli_sql_exception $e) {
+    // Handle the exception here
+    $error_message = $e->getMessage();
+    if (strpos($error_message, "limit_reached") !== false) {
+      // Handle the limit reached error
+      $err_msg_params = ["err_msg" => "user_limit_reached"];
+      redirect_with_query(
+        "../index.php",
+        ["error" => "users_constraint"],
+        $err_msg_params
+      );
+    } else {
+      // Handle other exceptions
+      db_tidy_up($statement, $connection);
+      $err_msg_params = ["error_msg" => "err_adding_user_02"];
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        $err_msg_params
+      );
+    }
   }
   db_tidy_up($statement, $connection);
 }
@@ -236,7 +278,6 @@ function update_user_password(
 
 function update_user(User $new_data_user)
 {
-  global $internal_err_params;
   $connection = get_mysqli();
   $updated_user = get_user($new_data_user->user_id);
   $udp_result = true;
@@ -382,7 +423,7 @@ function update_user(User $new_data_user)
       $err_msg_params = ["error_msg" => "err_user_upd_partial_upd_possible"];
       redirect_with_query(
         "../index.php",
-        $internal_err_params,
+        ["error" => "internalerr"],
         $err_msg_params
       );
     }
@@ -406,21 +447,28 @@ function delete_user(int $user_id)
     ]);
   }
 
-  global $internal_err_params;
   $connection = get_mysqli();
   $query = "DELETE FROM users WHERE user_id = ?";
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     mysqli_close($connection);
     $err_msg_params = ["error_msg" => "err_user_del_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   mysqli_stmt_bind_param($statement, "i", $user_id);
   $result = mysqli_stmt_execute($statement);
   db_tidy_up($statement, $connection);
   if (!$result) {
     $err_msg_params = ["error_msg" => "err_user_del_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
 }
 
@@ -433,7 +481,6 @@ function delete_user(int $user_id)
 
 function get_user_password(int $user_id)
 {
-  global $internal_err_params;
   if (validate_id($user_id) == false) {
     redirect_with_query("../index.php", [
       "error" => "fatalinvalidid",
@@ -446,19 +493,31 @@ function get_user_password(int $user_id)
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     $err_msg_params = ["error_msg" => "err_user_pass_get_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_execute($statement);
   if (!$result) {
     $err_msg_params = ["error_msg" => "err_user_pass_get_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_get_result($statement);
   db_tidy_up($statement, $connection);
 
   if (!$result) {
     $err_msg_params = ["error_msg" => "err_user_pass_get_03"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $fetched_pass_obj = new UserPassword();
   $fetched_pass_obj->user_id = $user_id;
@@ -473,19 +532,26 @@ function get_user_password(int $user_id)
 
 function get_id_by_existing_email(string $email)
 {
-  global $internal_err_params;
   $connection = get_mysqli();
   $query = "SELECT user_id FROM users WHERE user_email = ?";
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     $err_msg_params = ["error_msg" => "err_user_get_id_by_email_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   mysqli_stmt_bind_param($statement, "s", $email);
   $result = mysqli_stmt_execute($statement);
   if (!$result) {
     $err_msg_params = ["error_msg" => "err_user_get_id_by_email_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_get_result($statement);
   db_tidy_up($statement, $connection);
@@ -500,7 +566,6 @@ function get_id_by_existing_email(string $email)
 
 function get_user_type_by_id(int $user_id)
 {
-  global $internal_err_params;
   if (validate_id($user_id) == false) {
     redirect_with_query("../index.php", [
       "error" => "fatalinvalidid",
@@ -513,13 +578,21 @@ function get_user_type_by_id(int $user_id)
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     $err_msg_params = ["error_msg" => "err_user_get_type_by_id_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   mysqli_stmt_bind_param($statement, "i", $user_id);
   $result = mysqli_stmt_execute($statement);
   if (!$result) {
     $err_msg_params = ["error_msg" => "err_user_get_type_by_id_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   $result = mysqli_stmt_get_result($statement);
   db_tidy_up($statement, $connection);
@@ -537,21 +610,29 @@ function get_user_type_by_id(int $user_id)
 
 function check_if_email_exists(string $email)
 {
-  global $internal_err_params;
   $connection = get_mysqli();
   $query = "SELECT * FROM users WHERE user_email = ?";
   $statement = mysqli_prepare($connection, $query);
   if (!$statement) {
     $err_msg_params = ["error_msg" => "err_user_check_email_01"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
   mysqli_stmt_bind_param($statement, "s", $email);
   $result = mysqli_stmt_execute($statement);
   if (!$result) {
     $err_msg_params = ["error_msg" => "err_user_check_email_02"];
-    redirect_with_query("../index.php", $internal_err_params, $err_msg_params);
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
   }
-  if (mysqli_stmt_num_rows($statement) > 0) {
+  $result = mysqli_stmt_get_result($statement);
+  if (mysqli_num_rows($result) > 0) {
     db_tidy_up($statement, $connection);
     return true;
   }

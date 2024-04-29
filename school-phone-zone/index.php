@@ -15,6 +15,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="./css/globals.css">
+<style>
+    .email-admin { transition: 200ms; font-weight: bold;}
+    .email-admin:hover,
+    .email-admin:focus { color: #7171F8; }
+</style>
 </head>
 
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">

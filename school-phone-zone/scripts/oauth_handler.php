@@ -118,7 +118,7 @@ function handle_google($code)
     $result = mysqli_stmt_get_result($statement);
     // fail if query fails guard clause check
     if (!$result) {
-      db_tidy_up($connection, $statement);
+      db_tidy_up($statement, $connection);
       redirect_with_query(
         "../index.php",
         ["error" => "internalerr"],
@@ -126,7 +126,7 @@ function handle_google($code)
       );
     }
     $user_auth_method = mysqli_fetch_assoc($result)["user_auth_method"];
-    db_tidy_up($connection, $statement);
+    db_tidy_up($statement, $connection);
     // if user in db and registered via google oauth proceed
     if ($user_auth_method == 2) {
       session_start();
@@ -280,7 +280,7 @@ function handle_github()
     mysqli_stmt_execute($statement);
     $result = mysqli_stmt_get_result($statement);
     if (!$result) {
-      db_tidy_up($connection, $statement);
+      db_tidy_up($statement, $connection);
       redirect_with_query(
         "../index.php",
         ["error" => "internalerr"],
@@ -288,7 +288,7 @@ function handle_github()
       );
     }
     $user_auth_method = mysqli_fetch_assoc($result)["user_auth_method"];
-    db_tidy_up($connection, $statement);
+    db_tidy_up($statement, $connection);
     if ($user_auth_method == 3) {
       session_start();
       $id = get_id_by_existing_email($email_to_check);

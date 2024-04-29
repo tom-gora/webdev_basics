@@ -82,16 +82,24 @@ if (err_msg) {
     let msg;
     switch (err) {
       case "internalerr":
-        msg = "Something went wrong.";
+        msg = "Something went wrong. Please";
         break;
       case "fatalinvalidid":
-        msg = "Failed processing user ID.";
+        msg = "Failed processing user ID. Please";
+        break;
+      case "users_constraint":
+        msg =
+          "<p>This is a demo system.<br>Limit of registered users has been reached.<br>If you have an account consider removing it to add a new one.<br>Otherwise";
+        msgBox.classList.remove("animate-delay-[3000]");
+        msgBox.style.animationDelay = "8000ms";
+        msgBox.classList.remove("bg-[--brand-color-green]");
+        msgBox.classList.add("bg-red-400");
+        msgBox.classList.remove("hidden");
         break;
       default:
-        msg = "Unknown error.";
+        msg = "Unknown error. Please";
     }
-    msgBox.innerHTML = `<p>${msg} Please 
-        <a style="font-weight:bold;" 
+    msgBox.innerHTML = `<p>${msg} <a class="email-admin" style="font-weight:bold;" 
           href="mailto:goratomasz@outlook.com?subject=PHONEZONE%20:%20Error%20report%20from%20user%20${encodeURIComponent(current_id)}&body=---%0AError%20code:%0A${encodeURIComponent(err_msg)}%0AOccurred%20at:%0A${encodeURIComponent(current_timestamp)}%0A---%0A%0A⚠️%20Do%20not%20delete%20the%20error%20code%20above!%20⚠️">contact the administrator</a>.</p>`;
   })();
 }
@@ -101,21 +109,29 @@ switch (err) {
   // generic handlers for extra coverage if no specific msg passed
   case "fatalinvalidid":
     msgBox.innerHTML =
-      "<p>Failed processing user ID. Please <a style='font-weight:bold;' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+      "<p>Failed processing user ID. Please <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+    msgBox.classList.remove("animate-delay-[3000]");
+    // HACK: changing animation via toggling classes don't work so forcing longer
+    // delay directly with JS to allow for re3ading longer message and clicking link
+    msgBox.style.animationDelay = "8000ms";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
     break;
   case "internalerr":
     msgBox.innerHTML =
-      "<p>Something went wrong. Please <a style='font-weight:bold;' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+      "<p>Something went wrong. Please <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+    msgBox.classList.remove("animate-delay-[3000]");
+    msgBox.style.animationDelay = "8000ms";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
     break;
   case "autherror":
     msgBox.innerHTML =
-      "<p>Something went wrong. Please try a different login method <br>or <a style='font-weight:bold;' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+      "<p>Something went wrong. Please try a different login method <br>or <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
+    msgBox.classList.remove("animate-delay-[3000]");
+    msgBox.style.animationDelay = "8000ms";
     msgBox.classList.remove("bg-[--brand-color-green]");
     msgBox.classList.add("bg-red-400");
     msgBox.classList.remove("hidden");
