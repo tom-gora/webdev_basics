@@ -1,5 +1,5 @@
 <div
-  class="relative mt-12 flex h-fit w-10/12 flex-col items-center justify-center gap-2 rounded-md bg-[--brand-color-blue] md:flex-row">
+  class="relative mt-24 flex h-fit w-11/12 flex-col items-center justify-center gap-2 rounded-md bg-[--brand-color-blue] md:mt-12 md:w-10/12 md:flex-row">
   <div
     class="flex h-fit w-full max-w-[60%] flex-col items-end gap-2 self-end p-4 text-white sm:pr-16 md:w-fit md:self-center md:pr-2">
     <h3 class="mb-2 text-xl font-bold">Your info:</h3>
@@ -18,14 +18,14 @@
     </p>
   </div>
   <div
-    class="absolute left-2 top-2 m-4 animate-jump-in animate-duration-300 animate-ease-out sm:left-12 md:static md:flex md:w-28 md:justify-center">
+    class="absolute left-2 top-2 m-4 grid aspect-square max-w-28 animate-jump-in items-center overflow-hidden rounded-full animate-duration-300 animate-ease-out sm:left-12 md:static md:flex md:w-28 md:justify-center">
     <img
-      class="origin-center rounded-full border-0 border-[--brand-color-dark-blue] shadow-[_0_0_0_2px_white] transition-all duration-300 ease-out hover:border-8"
+      class="h-[108px] w-[108px] rounded-full border-4 border-[--brand-color-light-blue] transition-all duration-300 ease-out hover:origin-center hover:scale-[1.1]"
       src="../res/user_img/PROFILE_USER_IMG"
       alt="User image" />
   </div>
   <div
-    class="flex h-min items-start justify-around gap-2 p-4 md:w-52 md:flex-col">
+    class="flex h-min w-full items-start justify-around gap-2 p-2 md:w-52 md:flex-col">
     <button
       id="edit-profile-btn"
       class="group relative m-1 inline-flex w-full grow cursor-pointer items-center justify-center overflow-hidden rounded-md border-b-4 border-l-2 border-[--brand-color-dark-green] bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:border-[--brand-color-dark-green] active:shadow-none">

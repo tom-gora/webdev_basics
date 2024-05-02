@@ -74,10 +74,83 @@ $html_containing_form = file_get_contents(
 $temp_dom = new DOMDocument();
 @$temp_dom->loadHTML($html_containing_form);
 $edit_form = $temp_dom->getElementById("edit-dialog");
-// $edit_form = $edit_form->getElementsByTagName("form")[0];
-// $role_input = $temp_dom->getElementById("role-input");
-// $edit_form->removeChild($role_input);
 @$del_form = $temp_dom->getElementById("del-dialog");
+
+$edit_form = $temp_dom->saveHTML($edit_form);
+$del_form = $temp_dom->saveHTML($del_form);
+$edit_form = str_replace(
+  [
+    "Edit details</h2>",
+    'name="edit-user-id" value=""',
+    'name="edit-user-email"',
+    'name="edit-user-first-name"',
+    'name="edit-user-last-name"',
+    'name="edit-user-password"',
+    'id="label-bg"',
+  ],
+  [
+    "Edit your details</h2>",
+    'name="edit-user-id" value="' . $logged_in_mf->user_id . '"',
+    'name="edit-user-email" value="' . $logged_in_mf->user_email . '"',
+    'name="edit-user-first-name" value="' . $logged_in_mf->user_firstname . '"',
+    'name="edit-user-last-name" value="' . $logged_in_mf->user_lastname . '"',
+    'name="edit-user-password" value=""',
+    'id="label-bg" style="background-image: url(../res/user_img/' .
+    $logged_in_mf->user_img .
+    '); background-size: cover; background-position: center;"',
+  ],
+  $edit_form
+);
+// WOW I will always remeber how I fucking came up with this solution
+// just by reading docs for select element and flipping the AI off HARD
+// I fucking KNEW this could be done on the server without bloody JS!!!!!!!
+
+// WARN: ASSESSMENT:
+// This is a fancy addition. Not only I preselect role in the form on the server
+// for the user, but also modify options, so that user cannot do shit and sees
+// shit, admin can demote themselves, but not ascend to ownershit and the owner
+// can play fucking 11-D chess made of strings and branes if he wants XD
+switch ($logged_in_mf->user_type) {
+  case "user":
+    $edit_form = str_replace(
+      [
+        '<option value="owner">Owner</option>',
+        '<option value="admin">Admin</option',
+        '<option value="user">User</option>',
+        'id="role-input" class="',
+      ],
+      [
+        "",
+        "",
+        '<option value="user" selected>User</option>',
+        'id="role-input" class="hidden ',
+      ],
+      $edit_form
+    );
+    break;
+  case "admin":
+    $edit_form = str_replace(
+      [
+        '<option value="owner">Owner</option>',
+        '<option value="admin">Admin</option',
+      ],
+      ["", '<option value="admin" selected>Admin</option>'],
+      $edit_form
+    );
+    break;
+  case "owner":
+    $edit_form = str_replace(
+      ['<option value="owner">Owner</option>'],
+      ['<option value="owner" selected>Owner</option>'],
+      $edit_form
+    );
+    break;
+}
+$del_form = str_replace(
+  'name="del-user-id" value="delete_user',
+  'name="del-user-id" value="' . $user_id,
+  $del_form
+);
 $profile_cart_html = file_get_contents("../html_components/profile_cart.html");
 $profile_order_history = file_get_contents(
   "../html_components/profile_history.html"
@@ -147,14 +220,6 @@ echo $profile_cart_html;
 echo $profile_order_history;
 echo "</div>";
 echo $footer_html;
-// name="del-user-id" value="2">
-$edit_form = $temp_dom->saveHTML($edit_form);
-$del_form = $temp_dom->saveHTML($del_form);
-$del_form = str_replace(
-  'name="del-user-id" value="delete_user',
-  'name="del-user-id" value="' . $user_id,
-  $del_form
-);
 echo $edit_form;
 echo $del_form;
 ?>

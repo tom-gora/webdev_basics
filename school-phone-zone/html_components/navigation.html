@@ -1,5 +1,5 @@
 <!-- button source https://tailwindcomponents.com/component/animated-hamburger-menu-icon -->
-<div class="fixed bottom-4 right-4 z-50 md:hidden">
+<div class="fixed bottom-4 right-6 z-50 md:hidden">
   <button id="mobile-toggle" class="group relative">
     <div
       class="relative flex h-[50px] w-[50px] transform items-center justify-center overflow-hidden rounded-full bg-[--brand-color-green] shadow-md transition-all duration-200">
@@ -33,25 +33,26 @@
   </button>
 </div>
 
-<div
-  id="mobile-store-logo"
-  class="relative min-h-16 w-screen rounded-md bg-[--brand-color-light-blue] py-2 md:hidden">
-  <img
-    src="res/logo-h.png"
-    class="absolute bottom-0 right-8 top-0 my-auto h-12 transition-all duration-300"
-    alt="Store logo" />
-</div>
-
 <nav
   id="navigation"
-  class="fixed right-[-100%] z-10 flex h-dvh flex-col items-center justify-between bg-[--brand-color-light-blue] px-4 py-8 transition-all duration-300 md:fixed md:right-auto md:top-0 md:h-auto md:w-screen md:flex-row md:px-12 md:pb-0 md:pt-0 md:shadow-md md:duration-0">
+  class="fixed right-[-100%] top-0 z-10 flex h-dvh w-screen flex-col items-end justify-end bg-[--brand-color-light-blue] px-12 py-40 transition-all duration-300 md:fixed md:right-auto md:top-0 md:h-auto md:w-screen md:flex-row md:items-center md:justify-between md:py-0 md:shadow-md md:duration-0">
+  <div
+    id="mobile-store-logo"
+    class="absolute left-[-200%] right-0 top-0 z-50 mx-auto h-20 w-full bg-[--brand-color-light-blue] pt-4 md:hidden">
+    <img
+      src="res/logo-h.png"
+      style="left: 0px; right: 0px"
+      class="absolute top-4 mx-auto my-auto h-14 transition-all duration-300"
+      alt="Store logo" />
+  </div>
+
   <div class="logo hidden md:block">
     <a href="index.php">
       <img src="res/logo-h.png" alt="Store Logo" width="200px" class="m-4" />
     </a>
   </div>
   <ul
-    class="flex cursor-pointer flex-col gap-12 font-bold text-[--brand-color-blue] transition md:flex-row md:gap-8">
+    class="flex scale-125 cursor-pointer flex-col items-end gap-12 font-bold text-[--brand-color-blue] transition md:scale-100 md:flex-row md:items-baseline md:gap-8">
     <li class="text-xl transition hover:text-[--brand-color-dark-blue]">
       <a href="index.php">Home</a>
     </li>
@@ -64,7 +65,7 @@
       <a href="pages/profile.php">
         Your profile
         <img
-          class="inline h-6 w-6 rounded-full border-4 border-[--brand-color-blue] group-hover:border-[--brand-color-dark-blue]"
+          class="ml-2 inline aspect-square w-8 rounded-full border-4 border-[--brand-color-blue] group-hover:border-[--brand-color-dark-blue]"
           src="res/user_img/PROFILE_USER_IMG"
           alt="Profile Image Miniature" />
       </a>
@@ -84,11 +85,11 @@
   </ul>
   <dialog
     id="login-dialog"
-    class="for-logged-out mb-auto mt-24 hidden flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
-    <h2 class="text-center text-xl font-bold">Login</h2>
+    class="for-logged-out mb-auto mt-4 hidden flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 pb-2 pt-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24">
+    <h2 class="mb-2 text-center text-xl font-bold">Login</h2>
     <div
       id="err-msg"
-      class="my-4 w-full rounded-md bg-red-300 py-1 text-center font-bold text-red-900 opacity-0">
+      class="mb-4 hidden w-full rounded-md bg-red-300 py-1 text-center font-bold text-red-900">
       &nbsp;
     </div>
     <form autofocus action="scripts/login.php" method="POST">
@@ -246,12 +247,17 @@
   const navigation = document.querySelector("#navigation");
   const hamburgerIcon = document.querySelector(".hamburger-content");
   const closeIcon = document.querySelector(".close-content");
+  const mobileLogoBox = document.querySelector("#mobile-store-logo");
   const mobileLogo = document.querySelector("#mobile-store-logo img");
+  const mobileLogoBoxW = mobileLogoBox.offsetWidth;
+  const mobileLogoW = mobileLogo.offsetWidth;
 
   toggle.addEventListener("click", () => {
     navigation.style.right = navigation.style.right === "0px" ? "-100%" : "0px";
-    mobileLogo.classList.toggle("right-8");
-    mobileLogo.classList.toggle("right-52");
+    mobileLogo.style.right =
+      mobileLogo.style.right === "0px"
+        ? `-${mobileLogoW + mobileLogoBoxW + 48}px`
+        : "0px";
     hamburgerIcon.classList.toggle("hidden");
     closeIcon.classList.toggle("hidden");
   });

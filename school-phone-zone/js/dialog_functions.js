@@ -15,9 +15,18 @@ export const clearEditForm = (editForm) => {
   editForm
     .querySelector("button[type='submit']")
     .querySelector("span[class='relative']").innerText = "Confirm changes";
+  const imgLabelText = editForm
+    .querySelector("label[for='edit-user-image']")
+    .querySelector("h5");
+  imgLabelText.innerText = "Change picture";
+  imgLabelText.classList.remove("hidden");
   editForm
     .querySelector("label[for='edit-user-image']")
-    .querySelector("h5").innerText = "Change picture";
+    .querySelector("svg")
+    .classList.remove("hidden");
+  editForm.querySelector("input[name='edit-user-image']").value = "";
+  editForm.querySelector("#label-bg").classList.add("opacity-25");
+
   editForm.querySelector(
     "select[name='edit-user-type']"
   ).options.selectedIndex = 0;
@@ -58,6 +67,12 @@ export const prefillFormForEdit = (
     case "owner":
       roleSelect.options.selectedIndex = 2;
       break;
+  }
+};
+
+export const resetFormForEdit = (labels, defaultRawHtmlArray) => {
+  for (let i = 0; i < labels.length; i++) {
+    labels[i].innerHTML = defaultRawHtmlArray[i];
   }
 };
 

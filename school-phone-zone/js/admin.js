@@ -14,7 +14,14 @@ const editDialogCancelBtn = editDialog.querySelector("#edit-dialog-close");
 const delDialogCancelBtn = document.querySelector("#del-dialog-close");
 // other modified elements
 const imageInput = editDialog.querySelector("input[name='edit-user-image']");
-const imageFileName = editDialog.querySelector("#user-img-filename");
+const imageInputLabel = editDialog.querySelector(
+  "label[for='edit-user-image']"
+);
+const imageLabelBg = editDialog.querySelector("#label-bg");
+const imageLabelDesc = editDialog.querySelector("#user-img-description");
+const imageLabelSvg = editDialog.querySelector(
+  "label[for='edit-user-image'] svg"
+);
 const delInput = delDialog.querySelector("input[value='delete_user']");
 const delDialogConfirmationBox = delDialog.querySelector(
   "#del-confirmation-box"
@@ -120,12 +127,13 @@ imageInput.addEventListener("change", () => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      const file = imageInput.files[0];
       const fileUrl = e.target.result;
-      const fileName = file.name;
 
-      imageFileName.innerText = fileName;
-      imgageLabelBg.style.backgroundImage = `url(${fileUrl})`;
+      imageLabelDesc.classList.add("hidden");
+      imageInputLabel.classList.remove("grid-rows-2");
+      imageLabelSvg.classList.add("hidden");
+      imageLabelBg.style.backgroundImage = `url(${fileUrl})`;
+      imageLabelBg.classList.remove("opacity-25");
     };
     reader.readAsDataURL(imageInput.files[0]);
   }
@@ -133,7 +141,6 @@ imageInput.addEventListener("change", () => {
 
 editDialog.addEventListener("close", () => {
   dialogFunctions.clearEditForm(editDialog);
-  imageFileName.innerText = "";
 });
 
 editDialogCancelBtn.addEventListener("click", (e) => {

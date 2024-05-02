@@ -33,8 +33,7 @@ emailInput.onfocus = () => {
 
 //reset login dialog state on close
 loginDialog.onclose = () => {
-  loginErrMsgBox.classList.remove("opacity-1");
-  loginErrMsgBox.classList.add("opacity-0");
+  loginErrMsgBox.classList.add("hidden");
   emailInput.setAttribute("autocomplete", "off");
 };
 
@@ -145,14 +144,12 @@ switch (err) {
   // info level error reporting
   case "nouser":
     loginErrMsgBox.innerText = "No user with that email and password.";
-    loginErrMsgBox.classList.remove("opacity-0");
-    loginErrMsgBox.classList.add("opacity-1");
+    loginErrMsgBox.classList.toggle("hidden");
     loginDialog.showModal();
     break;
   case "nologin":
     loginErrMsgBox.innerText = "You need to login to see this page.";
-    loginErrMsgBox.classList.remove("opacity-0");
-    loginErrMsgBox.classList.add("opacity-1");
+    loginErrMsgBox.classList.toggle("hidden");
     loginDialog.showModal();
     break;
   case "noadmin":

@@ -42,7 +42,7 @@ if (!$user_id || $user_role == "user") {
     </style>
   </head>
 
-  <body class="h-screen items-center bg-gray-100 pt-20">
+  <body class="h-screen items-center bg-gray-100">
     <?php
     //only establish connection after confirming session status
     require_once "../scripts/db.php";

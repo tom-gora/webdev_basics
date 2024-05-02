@@ -429,7 +429,8 @@ function update_user(User $new_data_user)
       );
     }
   }
-  db_tidy_up($statement, $connection);
+  $statement ? mysqli_stmt_close($statement) : null;
+  $connection ? mysqli_close($connection) : null;
   return $udp_result;
 }
 

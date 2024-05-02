@@ -56,14 +56,14 @@
         "GOOGLE_API_URL",
         "GITHUB_API_URL",
         "for-logged-out hidden",
-        "for-logged-out mb-auto mt-24 hidden",
+        "for-logged-out mb-auto mt-4 hidden",
         "res/user_img/PROFILE_USER_IMG",
       ],
       [
         "window.location = '" . $google_login_button_target . "';",
         "window.location = '" . $github_login_button_target . "';",
         "",
-        "mb-auto mt-24",
+        "mb-auto mt-4",
         "",
       ],
       $nav_html

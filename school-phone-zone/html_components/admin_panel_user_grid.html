@@ -1,4 +1,4 @@
-<div class="container mx-auto mb-24 py-8">
+<div class="container mx-auto mb-24 mt-24 py-8 md:mt-4">
   <h1 class="text-center text-3xl font-bold">Admin Panel</h1>
   <div class="m-4 mx-auto flex h-fit w-full items-center justify-around px-4">
     <button
@@ -25,7 +25,7 @@
   </div>
   <div class="grid grid-cols-2">
     <div
-      class="fixed mb-24 mt-[-5rem] flex flex-col items-start justify-start gap-[14px] rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4">
+      class="fixed mb-24 flex flex-col items-start justify-start gap-[14px] rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
       <p class="font-bold text-black">ID:</p>
       <p class="font-bold text-black">Name:</p>
       <p class="font-bold text-black sm:ps-6">Email:</p>
@@ -51,7 +51,7 @@
 
 <dialog
   id="del-dialog"
-  class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+  class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24">
   <h2 class="text-center text-xl font-bold">Delete user</h2>
   <p id="del-confirmation-box" class="py-4 text-sm"></p>
   <form action="../scripts/admin_functionality.php" method="POST">
@@ -82,11 +82,11 @@
 
 <dialog
   id="edit-dialog"
-  class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
+  class="mt-4 flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-4 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 md:px-8">
   <h2 class="text-center text-xl font-bold">Edit details</h2>
   <p id="edit-confirmation-box" class="py-4 text-center text-sm"></p>
   <form
-    class="flex flex-col gap-4 rounded-md bg-[--brand-color-light-green] px-2 py-4"
+    class="flex flex-col gap-4 rounded-md px-2 py-4"
     action="../scripts/admin_functionality.php"
     autocomplete="off"
     readonly
@@ -94,8 +94,8 @@
     method="POST"
     enctype="multipart/form-data">
     <input type="hidden" name="edit-user-id" value="" />
-    <label class="grid grid-cols-4" for="edit-user-email">
-      <span class="col-span-1 mr-4">Email:</span>
+    <label class="grid grid-cols-5" for="edit-user-email">
+      <span class="col-span-2 mr-4">Email:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         autocomplete="off"
@@ -107,8 +107,8 @@
         name="edit-user-email"
         required />
     </label>
-    <label class="grid grid-cols-4" for="edit-user-first-name">
-      <span class="col-span-1 mr-4">First Name:</span>
+    <label class="grid grid-cols-5" for="edit-user-first-name">
+      <span class="col-span-2 mr-4">First Name:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         placeholder="First Name"
@@ -117,8 +117,8 @@
         name="edit-user-first-name"
         required />
     </label>
-    <label class="grid grid-cols-4" for="edit-user-last-name">
-      <span class="col-span-1 mr-4">Last Name:</span>
+    <label class="grid grid-cols-5" for="edit-user-last-name">
+      <span class="col-span-2 mr-4">Last Name:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         placeholder="Last Name"
@@ -127,8 +127,8 @@
         name="edit-user-last-name"
         required />
     </label>
-    <label class="grid grid-cols-4" for="edit-user-password">
-      <span class="col-span-1 mr-4">Password:</span>
+    <label class="grid grid-cols-5" for="edit-user-password">
+      <span class="col-span-2 mr-4">Password:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         type="password"
@@ -138,8 +138,7 @@
     </label>
     <label
       for="edit-user-image"
-      style="max-width: 170px"
-      class="relative isolate flex aspect-square w-fit cursor-pointer flex-col items-center justify-center self-center rounded-xl border-4 border-dashed border-[--brand-color-dark-blue] bg-[--brand-color-light-blue] p-4 text-center">
+      class="relative isolate ml-12 grid aspect-square w-28 cursor-pointer grid-rows-2 items-center self-center overflow-hidden rounded-xl border-2 border-[--brand-color-dark-blue] bg-gray-200 p-4 text-center md:ml-10 md:w-[150px]">
       <input
         id="edit-user-image"
         name="edit-user-image"
@@ -152,7 +151,7 @@
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        class="mx-auto mb-4 h-8 w-8 text-slate-600">
+        class="m-auto h-6 w-6 text-[--brand-color-dark-blue]">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -161,16 +160,14 @@
       <div
         id="label-bg"
         class="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-25"></div>
-      <h5 class="mb-2 text-xl font-bold tracking-tight text-slate-600">
+      <h5
+        id="user-img-description"
+        class="mb-2 text-xl font-semibold tracking-tight text-[--brand-color-dark-blue]">
         Change picture
       </h5>
-      <p
-        id="user-img-filename"
-        style="word-break: break-all"
-        class="z-50 py-4 font-bold text-[--brand-color-blue]"></p>
     </label>
-    <label id="role-input" class="grid grid-cols-4" for="edit-user-type">
-      <span class="col-span-1 mr-4">User Role:</span>
+    <label id="role-input" class="grid grid-cols-5" for="edit-user-type">
+      <span class="col-span-2 mr-4">User Role:</span>
       <select
         id="edit-user-type"
         name="edit-user-type"
@@ -195,7 +192,7 @@
         class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none">
         <span
           class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
-        <span class="relative">Calcel</span>
+        <span class="relative">Cancel</span>
       </button>
     </div>
   </form>

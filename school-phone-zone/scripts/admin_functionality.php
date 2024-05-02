@@ -90,6 +90,7 @@ function handle_user_operations(string $operation_type)
     //
 
     if (
+      $is_request_from_admin &&
       $edited_user->user_type != "user" &&
       $_SESSION["user_type"] != "owner"
     ) {
@@ -208,13 +209,18 @@ function handle_user_operations(string $operation_type)
           // if failed to delete old file log it and continue
           error_log(
             "Error deleting old image file.\nConsider manually deleting redundant file: " .
-              $old_file_path,
-            3
+              $old_file_path
           );
         }
       }
       db_tidy_up($statement, $connection);
-      redirect_with_query("../pages/admin.php", ["status" => $result_param]);
+      if ($is_request_from_admin) {
+        redirect_with_query("../pages/admin.php", ["status" => "userupdated"]);
+      } else {
+        redirect_with_query("../pages/profile.php", [
+          "status" => "userupdated",
+        ]);
+      }
     } elseif (!$res_data && $res_pass) {
       $result_param = "user_edit_data_failed_pass_ok";
     } elseif ($res_data && !$res_pass) {
