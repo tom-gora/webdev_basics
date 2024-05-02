@@ -49,9 +49,15 @@ const stat = params.get("status");
 const err_msg = params.get("err_msg");
 let current_id = null;
 //status handling currently only for logout
-if (stat === "loggedout") {
-  msgBox.innerText = "You have been logged out.";
-  msgBox.classList.remove("hidden");
+switch (stat) {
+  case "userdeleted":
+    msgBox.innerText = "Your account has been deleted. Goodbye!";
+    msgBox.classList.remove("hidden");
+    break;
+  case "loggedout":
+    msgBox.innerText = "You have been logged out.";
+    msgBox.classList.remove("hidden");
+    break;
 }
 
 // full error handling with contact link and error message passed into email

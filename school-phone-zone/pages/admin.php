@@ -3,6 +3,7 @@
 <?php
 // this is logged in content exclusively so first grab the user data
 // plus make sure no regular user is trying to access this page
+define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();
 $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
 $user_role = isset($_SESSION["user_type"]) ? $_SESSION["user_type"] : null;
@@ -118,14 +119,17 @@ if (!$user_id || $user_role == "user") {
       // allowing for editing admin/owner unless owner is logged in by hiding it
       // for everyone else
       if ($_SESSION["user_type"] != "owner" && $user->user_type != "user") {
-        $next_user_card_html = str_replace(
+        $users_grid_html = str_replace(
           [
-            "del-btn",
-            "edit-btn",
-            "forbidden flex hidden",
-            '<option value="user">Owner</option>',
+            '<option value="admin">Admin</option>',
+            '<option value="owner">Owner</option>',
           ],
-          ["hidden", "hidden", "flex mr-2", ""],
+          ["", ""],
+          $users_grid_html
+        );
+        $next_user_card_html = str_replace(
+          ["del-btn", "edit-btn", "forbidden flex hidden"],
+          ["hidden", "hidden", "flex mr-2"],
           $next_user_card_html
         );
       }
@@ -177,6 +181,6 @@ if (!$user_id || $user_role == "user") {
     echo $footer_html;
     ?>
 
-<script type="text/javascript" src="../js/admin.js"?>"></script>
+<script type="module" src="../js/admin.js"></script>
   </body>
 </html>

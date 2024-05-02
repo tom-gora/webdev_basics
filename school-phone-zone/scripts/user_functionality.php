@@ -1,4 +1,8 @@
 <?php
+require_once "utils.php";
+require_once "db.php";
+ban_script_access();
+
 class User
 {
   public int $user_id;
@@ -24,9 +28,6 @@ class UserPassword
     $this->user_password = $new_password;
   }
 }
-
-require_once "utils.php";
-require_once "db.php";
 
 //  FN: _______________________________________________________________________
 // function getting users as array
@@ -438,7 +439,7 @@ function update_user(User $new_data_user)
 //  FN: _______________________________________________________________________
 // function deleting user froma db by ID
 
-function delete_user(int $user_id)
+function delete_user(int $user_id, string $user_img)
 {
   if (validate_id($user_id) == false) {
     redirect_with_query("../index.php", [
@@ -470,8 +471,25 @@ function delete_user(int $user_id)
       $err_msg_params
     );
   }
+  if ($user_img != "default.jpg") {
+    clearDeletedUserImage($user_img);
+  }
 }
 
+function clearDeletedUserImage(string $user_img)
+{
+  $path = "../res/user_img/" . $user_img;
+  try {
+    unlink($path);
+  } catch (Exception) {
+    // if failed to delete old file log it and continue
+    error_log(
+      "Error deleting old image file.\nConsider manually deleting redundant file: " .
+        $path,
+      3
+    );
+  }
+}
 //_____________________________________________________________________________
 //retrieval:
 
@@ -598,6 +616,47 @@ function get_user_type_by_id(int $user_id)
   db_tidy_up($statement, $connection);
   if ($result) {
     return mysqli_fetch_assoc($result)["user_type"] ?? false;
+  }
+  return false;
+}
+
+//  FN: _______________________________________________________________________
+// function getting the user's avatar img by ID
+
+function get_user_img_by_id(int $user_id)
+{
+  if (validate_id($user_id) == false) {
+    redirect_with_query("../index.php", [
+      "error" => "fatalinvalidid",
+      "error_msg" => "err_user_get_type_invalid_id",
+    ]);
+  }
+
+  $connection = get_mysqli();
+  $query = "SELECT user_img FROM users WHERE user_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    $err_msg_params = ["error_msg" => "err_user_get_img_by_id_01"];
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
+  }
+  mysqli_stmt_bind_param($statement, "i", $user_id);
+  $result = mysqli_stmt_execute($statement);
+  if (!$result) {
+    $err_msg_params = ["error_msg" => "err_user_get_img_by_id_02"];
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
+  }
+  $result = mysqli_stmt_get_result($statement);
+  db_tidy_up($statement, $connection);
+  if ($result) {
+    return mysqli_fetch_assoc($result)["user_img"] ?? false;
   }
   return false;
 }

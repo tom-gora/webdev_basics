@@ -1,7 +1,8 @@
 <?php
-
+define("ALLOW_REQUIRED_SCRIPTS", true);
 require_once "utils.php";
 require_once "db.php";
+ban_script_access();
 if (
   isset($_GET["code"]) &&
   !empty($_GET["code"]) &&

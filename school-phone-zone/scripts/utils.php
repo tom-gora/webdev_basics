@@ -1,4 +1,20 @@
 <?php
+//  FN: _______________________________________________________________________
+// quickly ban access to script if accessed in any way that is not a client POST
+// request but crucially still allowing the script to work when included
+
+function ban_script_access()
+{
+  $markup_message = "<h3>Access to this resource is not allowed.</h2><br><br>";
+  $markup_button =
+    "<button onclick=\"window.location.href='../index.php';\">Return to Homepage</button>";
+  if (!defined("ALLOW_REQUIRED_SCRIPTS")) {
+    $_SERVER["REQUEST_METHOD"] == "POST"
+      ? null
+      : exit($markup_message . $markup_button);
+  }
+}
+ban_script_access();
 
 // handle client requests
 
@@ -13,17 +29,21 @@ if (isset($_POST["client_request"]) && $_POST["client_request"] == "get_id") {
     echo "no_id";
   }
 }
-// --------------------------------------------------------
-// functions storing internal app abstractions
 
 //  FN: _______________________________________________________________________
-// log something directly into PHP / Apache logs
+// return curretly logged in user's role
 
-function put_value_into_apache_logs(string $descritpiton, $value)
-{
-  echo $descritpiton . "\n";
-  file_put_contents("php://stderr", print_r($value . "\n", true));
+if (isset($_POST["client_request"]) && $_POST["client_request"] == "get_role") {
+  session_start();
+  if (isset($_SESSION["user_type"])) {
+    echo $_SESSION["user_type"];
+  } else {
+    echo "no_role";
+  }
 }
+
+// --------------------------------------------------------
+// functions storing internal app abstractions
 
 //  FN: _______________________________________________________________________
 // make sure user ID processed is within range of stored users

@@ -1,0 +1,113 @@
+// functions
+export const clearEditForm = (editForm) => {
+  editForm
+    .querySelector("input[type='hidden']")
+    .setAttribute("name", "edit-user-id");
+  editForm.querySelector("input[name='edit-user-id']").value = "";
+  editForm.querySelector("#edit-confirmation-box").innerText = "";
+  editForm.querySelector("#label-bg").style.backgroundImage = "";
+  const emailInput = editForm.querySelector("input[name='edit-user-email']");
+  emailInput.value = "";
+  emailInput.setAttribute("readonly", "");
+  editForm.querySelector("input[name='edit-user-first-name']").value = "";
+  editForm.querySelector("input[name='edit-user-last-name']").value = "";
+  editForm.querySelector("input[name='edit-user-password']").value = "";
+  editForm
+    .querySelector("button[type='submit']")
+    .querySelector("span[class='relative']").innerText = "Confirm changes";
+  editForm
+    .querySelector("label[for='edit-user-image']")
+    .querySelector("h5").innerText = "Change picture";
+  editForm.querySelector(
+    "select[name='edit-user-type']"
+  ).options.selectedIndex = 0;
+  editForm.querySelector("h2").innerText = "Edit details";
+};
+
+export const prefillFormForEdit = (
+  editForm,
+  id,
+  firstName,
+  lastName,
+  email,
+  img,
+  role
+) => {
+  editForm.querySelector("input[name='edit-user-id']").value = id;
+  editForm.querySelector("#edit-confirmation-box").innerHTML =
+    `You are editing details of <strong>${firstName} ${lastName}</strong>.`;
+  editForm.querySelector("#label-bg").style.backgroundImage =
+    `url("../res/user_img/${img}"`;
+  editForm.querySelector("input[name='edit-user-email']").value = email;
+  editForm.querySelector("input[name='edit-user-first-name']").value =
+    firstName;
+  editForm.querySelector("input[name='edit-user-last-name']").value = lastName;
+  // roleSelect.value = role;
+  // nope. had to actually print the select object and manually search where
+  // the value of this type of input is set, because simple .value is not a key
+  // of dom object of type select. Stack overflow knows shit.
+  // console.log(roleSelect);
+  const roleSelect = editForm.querySelector("select[name='edit-user-type']");
+  switch (role) {
+    case "user":
+      roleSelect.options.selectedIndex = 0;
+      break;
+    case "admin":
+      roleSelect.options.selectedIndex = 1;
+      break;
+    case "owner":
+      roleSelect.options.selectedIndex = 2;
+      break;
+  }
+};
+
+export const setFormForAddition = (editForm) => {
+  editForm
+    .querySelector("input[type='hidden']")
+    .setAttribute("name", "add-user");
+  const formTypeInput = editForm.querySelector("input[name='edit-user-id']");
+  formTypeInput !== null ? (formTypeInput.value = "") : null;
+  editForm.querySelector("h2").innerText = "Add a new user.";
+  editForm
+    .querySelector("label[for='edit-user-image']")
+    .querySelector("h5").innerText = "Select picture";
+  editForm
+    .querySelector("button[type='submit']")
+    .querySelector("span[class='relative']").innerText = "Add user";
+};
+
+export async function get_id() {
+  try {
+    const data = new FormData();
+    data.append("client_request", "get_id");
+    const response = await fetch("scripts/utils.php", {
+      method: "POST",
+      body: data
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.text();
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+}
+
+export async function get_role() {
+  try {
+    const data = new FormData();
+    data.append("client_request", "get_role");
+    const response = await fetch("../scripts/utils.php", {
+      method: "POST",
+      body: data
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.text();
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+}

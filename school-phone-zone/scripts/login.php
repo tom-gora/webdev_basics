@@ -1,7 +1,8 @@
 <?php
-
-require_once "./db.php";
-require_once "./utils.php";
+define("ALLOW_REQUIRED_SCRIPTS", true);
+require_once "db.php";
+require_once "utils.php";
+ban_script_access();
 
 $connection = get_mysqli();
 

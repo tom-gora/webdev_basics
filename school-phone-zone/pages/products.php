@@ -20,6 +20,7 @@
 
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-[5.5rem]">
 <?php
+define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();
 
 // bring in the php scripts

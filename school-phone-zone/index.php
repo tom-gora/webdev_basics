@@ -24,6 +24,7 @@
 
 <body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
   <?php
+  define("ALLOW_REQUIRED_SCRIPTS", true);
   session_start();
   //if (!isset($_SESSION["teacher_access"])) {
   //  header("Location:./teacher-gate.php");

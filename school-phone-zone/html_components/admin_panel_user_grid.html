@@ -16,6 +16,7 @@
   </div>
   <div class="mb-10 flex justify-end">
     <button
+      id="add-user-btn"
       class="group relative mr-2 inline-flex h-min w-fit cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
       <span
         class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
@@ -83,10 +84,13 @@
   id="edit-dialog"
   class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)]">
   <h2 class="text-center text-xl font-bold">Edit details</h2>
-  <p id="edit-confirmation-box" class="py-4 text-sm"></p>
+  <p id="edit-confirmation-box" class="py-4 text-center text-sm"></p>
   <form
     class="flex flex-col gap-4 rounded-md bg-[--brand-color-light-green] px-2 py-4"
     action="../scripts/admin_functionality.php"
+    autocomplete="off"
+    readonly
+    onfocus="this.removeAttribute('readonly');"
     method="POST"
     enctype="multipart/form-data">
     <input type="hidden" name="edit-user-id" value="" />
@@ -94,6 +98,10 @@
       <span class="col-span-1 mr-4">Email:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        autocomplete="off"
+        readonly
+        onfocus="this.removeAttribute('readonly');"
+        placeholder="Email"
         type="email"
         id="edit-user-email"
         name="edit-user-email"
@@ -103,6 +111,7 @@
       <span class="col-span-1 mr-4">First Name:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        placeholder="First Name"
         type="text"
         id="edit-user-first-name"
         name="edit-user-first-name"
@@ -112,6 +121,7 @@
       <span class="col-span-1 mr-4">Last Name:</span>
       <input
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        placeholder="Last Name"
         type="text"
         id="edit-user-last-name"
         name="edit-user-last-name"
@@ -159,15 +169,15 @@
         style="word-break: break-all"
         class="z-50 py-4 font-bold text-[--brand-color-blue]"></p>
     </label>
-    <label class="grid grid-cols-4" for="edit-user-type">
-      <span class="col-span-1 mr-4">User Type:</span>
+    <label id="role-input" class="grid grid-cols-4" for="edit-user-type">
+      <span class="col-span-1 mr-4">User Role:</span>
       <select
         id="edit-user-type"
         name="edit-user-type"
         required
         class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black">
-        <option value="admin">Admin</option>
         <option value="user">User</option>
+        <option value="admin">Admin</option>
         <option value="owner">Owner</option>
       </select>
     </label>

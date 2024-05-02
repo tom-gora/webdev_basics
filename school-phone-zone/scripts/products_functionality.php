@@ -1,6 +1,7 @@
 <?php
 require_once "db.php";
 require_once "utils.php";
+ban_script_access();
 class Product
 {
   public string $product_name;

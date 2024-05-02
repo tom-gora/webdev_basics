@@ -2,6 +2,7 @@
 <!-- animations from https://www.tailwindcss-animated.com/ -->
 <?php
 // this is logged in content exclusively so first grab the user data
+define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();
 $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
 
@@ -67,6 +68,16 @@ $nav_html = file_get_contents("../html_components/navigation.html");
 $profile_header_html = file_get_contents(
   "../html_components/profile_header.html"
 );
+$html_containing_form = file_get_contents(
+  "../html_components/admin_panel_user_grid.html"
+);
+$temp_dom = new DOMDocument();
+@$temp_dom->loadHTML($html_containing_form);
+$edit_form = $temp_dom->getElementById("edit-dialog");
+// $edit_form = $edit_form->getElementsByTagName("form")[0];
+// $role_input = $temp_dom->getElementById("role-input");
+// $edit_form->removeChild($role_input);
+@$del_form = $temp_dom->getElementById("del-dialog");
 $profile_cart_html = file_get_contents("../html_components/profile_cart.html");
 $profile_order_history = file_get_contents(
   "../html_components/profile_history.html"
@@ -136,6 +147,17 @@ echo $profile_cart_html;
 echo $profile_order_history;
 echo "</div>";
 echo $footer_html;
+// name="del-user-id" value="2">
+$edit_form = $temp_dom->saveHTML($edit_form);
+$del_form = $temp_dom->saveHTML($del_form);
+$del_form = str_replace(
+  'name="del-user-id" value="delete_user',
+  'name="del-user-id" value="' . $user_id,
+  $del_form
+);
+echo $edit_form;
+echo $del_form;
 ?>
+<script type="module" src="../js/profile.js"></script>
   </body>
 </html>
