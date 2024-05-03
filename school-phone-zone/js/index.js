@@ -1,46 +1,5 @@
-const loginBtn = document.querySelector("#login-btn");
-const loginDialog = document.querySelector("#login-dialog");
-const loginErrMsgBox = document.querySelector("#err-msg");
-const emailInput = document.querySelector('input[name="email"]');
-const loginDialogCloseBtn = document.querySelector("#login-dialog-close");
-const passInput = document.querySelector('input[name="password"]');
+console.log("hello world");
 const msgBox = document.querySelector("#msg-box");
-
-// animate in the login dialog on btn click
-loginBtn.onclick = (e) => {
-  e.preventDefault();
-  loginDialog.showModal();
-  loginDialog.classList.add(
-    "animate-fade-down",
-    "animate-duration-300",
-    "animate-ease-out"
-  );
-};
-
-// src: https://www.stefanjudis.com/blog/a-look-at-the-dialog-elements-super-powers/
-// close dialog with a click outside of its boundaries
-loginDialog.onclick = (e) => {
-  if (e.target.nodeName === "DIALOG") {
-    loginDialog.close();
-  }
-};
-
-//preventing autocomplete suggestions from showing up before input is focused
-//because they obscure entire modal content
-emailInput.onfocus = () => {
-  emailInput.setAttribute("autocomplete", "email");
-};
-
-//reset login dialog state on close
-loginDialog.onclose = () => {
-  loginErrMsgBox.classList.add("hidden");
-  emailInput.setAttribute("autocomplete", "off");
-};
-
-loginDialogCloseBtn.onclick = (e) => {
-  e.preventDefault();
-  loginDialog.close();
-};
 
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");
@@ -50,7 +9,7 @@ let current_id = null;
 //status handling currently only for logout
 switch (stat) {
   case "userdeleted":
-    msgBox.innerText = "Your account has been deleted. Goodbye!";
+    msgBox.innerHTML = "Your account has been deleted.<br>Goodbye!";
     msgBox.classList.remove("hidden");
     break;
   case "loggedout":

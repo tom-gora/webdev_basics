@@ -7,7 +7,7 @@ function ban_script_access()
 {
   $markup_message = "<h3>Access to this resource is not allowed.</h2><br><br>";
   $markup_button =
-    "<button onclick=\"window.location.href='../index.php';\">Return to Homepage</button>";
+    "<button type='button' onclick=\"window.location.href='../index.php';\">Return to Homepage</button>";
   if (!defined("ALLOW_REQUIRED_SCRIPTS")) {
     $_SERVER["REQUEST_METHOD"] == "POST"
       ? null

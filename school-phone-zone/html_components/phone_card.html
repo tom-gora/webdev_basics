@@ -1,20 +1,18 @@
 <div
-  class="relative flex h-96 w-56 grow flex-col items-center gap-2 overflow-hidden rounded-lg bg-white px-2 py-4 align-bottom"
->
+  class="relative flex h-96 w-56 grow flex-col items-center gap-2 overflow-hidden rounded-lg bg-white px-2 py-4 align-bottom">
   <div class="promo-sticker h-0">PROMO</div>
   <img
     src="res/phones/PRODUCT_IMG_PATH"
     alt="Picture of PRODUCT_NAME"
     width="80%"
-    class="overflow-hidden transition-all hover:scale-105"
-  />
+    class="overflow-hidden transition-all hover:scale-105 motion-reduce:transition-none motion-reduce:duration-500 motion-reduce:hover:scale-100" />
   <p class="mt-[auto] text-center">PRODUCT_NAME</p>
   <p class="justify-self-end text-center align-bottom font-bold">
     £PRODUCT_PRICE
   </p>
   <button
-    class="justify-self-center rounded-md bg-[--brand-color-green] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-blue] hover:font-semibold hover:text-[--brand-color-light-blue]"
-  >
+    type="button"
+    class="justify-self-center rounded-md bg-[--brand-color-green] px-4 py-2 text-white transition-all hover:bg-[--brand-color-dark-blue] hover:font-semibold hover:text-[--brand-color-light-blue] motion-reduce:hover:font-normal">
     Add to Cart
   </button>
 </div>
