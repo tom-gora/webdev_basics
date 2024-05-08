@@ -15,19 +15,13 @@ if (!$user_id || $user_role == "user") {
 
 <!-- begin markup -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PhoneZone - Admin Panel</title>
     <link rel="icon" type="image/png" href="../res/favicon.png" />
     <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
-    <!--NOTE: Logo font used is: Suez One-->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap"
-      rel="stylesheet" />
     <link rel="stylesheet" href="../css/globals.css" />
     <style>
         .email-admin { transition: 200ms; font-weight: bold;}
@@ -36,7 +30,7 @@ if (!$user_id || $user_role == "user") {
     </style>
   </head>
 
-  <body class="h-screen items-center bg-gray-100">
+  <body class="h-screen items-center bg-[--background-light]">
     <?php
     //only establish connection after confirming session status
     require_once "../scripts/db.php";
@@ -148,8 +142,8 @@ if (!$user_id || $user_role == "user") {
     $nav_html = str_replace(
       [
         "res/user_img/PROFILE_USER_IMG",
-        "for-logged-in hidden",
-        "for-logged-in group hidden",
+        "for-logged-in nav-link hidden",
+        "for-logged-in nav-link group hidden",
         "res/logo-h.png",
         'href="index.php"',
         "pages/products.php",
@@ -158,8 +152,8 @@ if (!$user_id || $user_role == "user") {
       ],
       [
         "../res/user_img/" . $row["user_img"],
-        "",
-        "group",
+        "nav-link",
+        "nav-link group",
         "../res/logo-h.png",
         'href="../index.php"',
         "../pages/products.php",

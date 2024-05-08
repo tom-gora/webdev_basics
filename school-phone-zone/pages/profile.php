@@ -38,7 +38,7 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 
 <!-- begin markup -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
@@ -52,15 +52,11 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 
     </title>
   <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
-  <!--NOTE: Logo font used is: Suez One-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/globals.css">
 </head>
 
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="bg-[--background-light] h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 // bring in the base markup for my html components
 $nav_html = file_get_contents("../html_components/navigation.html");
@@ -176,16 +172,16 @@ if (isset($_SESSION["user_type"]) && $_SESSION["user_type"] != "user") {
 // adjust navbar strings
 $nav_html = str_replace(
   [
-    "for-logged-in hidden",
-    "for-logged-in group hidden",
+    "for-logged-in nav-link hidden",
+    "for-logged-in nav-link group hidden",
     "pages/profile.php",
     "res/user_img/PROFILE_USER_IMG",
     "pages/products.php",
     "scripts/logout.php",
   ],
   [
-    "",
-    "group",
+    "nav-link",
+    "nav-link group",
     "../pages/profile.php",
     "../res/user_img/" . $logged_in_mf->user_img,
     "../pages/products.php",

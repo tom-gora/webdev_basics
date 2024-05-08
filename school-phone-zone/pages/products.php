@@ -1,7 +1,7 @@
 <!-- source for box shadow snippets https://manuarora.in/boxshadows -->
 <!-- animations from https://www.tailwindcss-animated.com/ -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
@@ -9,15 +9,11 @@
     <title>PhoneZone Products</title>
   <link rel="icon" type="image/png" href="../res/favicon.png" />
   <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
-  <!--NOTE: Logo font used is: Suez One-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/globals.css">
 </head>
 
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-[5.5rem]">
+<body class="bg-[--background-light] h-screen flex flex-col items-center gap-4 md:pt-[5.5rem]">
 <?php
 define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();
@@ -52,8 +48,8 @@ if (!isset($_SESSION["user_id"])) {
     [
       "GOOGLE_API_URL",
       "GITHUB_API_URL",
-      "for-logged-out hidden",
-      "for-logged-out mb-auto mt-24 hidden",
+      "for-logged-out nav-link hidden",
+      "for-logged-out mb-auto mt-4 hidden",
       "scripts/login.php",
     ],
     [
@@ -71,15 +67,15 @@ if (!isset($_SESSION["user_id"])) {
   $logged_in_mf = get_user($_SESSION["user_id"]);
   $nav_html = str_replace(
     [
-      "for-logged-in hidden",
-      "for-logged-in group hidden",
+      "for-logged-in nav-link hidden",
+      "for-logged-in nav-link group hidden",
       "pages/profile.php",
       "scripts/logout.php",
       "res/user_img/PROFILE_USER_IMG",
     ],
     [
-      "",
-      "group",
+      "nav-link",
+      "nav-link group",
       "../pages/profile.php",
       "../scripts/logout.php",
       "../res/user_img/" . $logged_in_mf->user_img,

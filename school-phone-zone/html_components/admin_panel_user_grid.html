@@ -4,7 +4,7 @@
     class="mx-auto mb-0 mt-4 flex h-fit w-full items-center justify-around px-4 sm:mb-16">
     <button
       type="button"
-      class="group relative m-1 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-md border-b-4 border-l-2 border-gray-400 bg-gray-200 px-3.5 py-2 text-black shadow-md active:shadow-none">
+      class="group relative m-1 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 border-gray-400 bg-gray-200 px-3.5 py-2 text-black shadow-md active:shadow-none">
       <span
         class="absolute h-0 w-0 rounded-full bg-black opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
       <span class="relative">Manage products</span>
@@ -12,7 +12,7 @@
     <button
       type="button"
       id="add-user-btn"
-      class="group relative mr-2 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-md border-b-4 border-l-2 border-[--brand-color-dark-blue] bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
+      class="group relative mr-2 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 border-[--brand-color-dark-blue] bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
       <span
         class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
       <span class="relative">+ ADD</span>
@@ -21,7 +21,7 @@
   <div class="mb-10 flex justify-end"></div>
   <div class="grid grid-cols-2">
     <div
-      class="fixed mb-24 flex flex-col items-start justify-start gap-[14px] rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
+      class="fixed mb-24 flex flex-col items-start justify-start gap-[14px] rounded-sm bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
       <p class="font-bold text-black">ID:</p>
       <p class="font-bold text-black">Name:</p>
       <p class="font-bold text-black sm:ps-6">Email:</p>
@@ -30,7 +30,7 @@
       <p class="font-bold text-black sm:ps-2">Auth:</p>
     </div>
     <div
-      class="fixed left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-md bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
+      class="fixed left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-sm bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
       <p class="font-bold text-black">ID:</p>
       <p class="font-bold text-black">Name:</p>
       <p class="font-bold text-black sm:ps-6">Email:</p>
@@ -47,7 +47,7 @@
 
 <dialog
   id="del-dialog"
-  class="flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24">
+  class="flex-col items-center gap-4 rounded-sm bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24">
   <h2 class="text-center text-xl font-bold">Delete user</h2>
   <p id="del-confirmation-box" class="py-4 text-sm"></p>
   <form action="../scripts/admin_functionality.php" method="POST">
@@ -56,7 +56,7 @@
       <button
         type="submit"
         id="del-dialog-confirm-btn"
-        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:shadow-none">
+        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:shadow-none">
         <span
           class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
         <span class="relative">Confirm and delete</span>
@@ -64,7 +64,7 @@
       <!-- button animation source: https://devdojo.com/tailwindcss/buttons -->
       <button
         type="button"
-        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none"
+        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none"
         id="del-dialog-close">
         <span
           class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
@@ -79,11 +79,11 @@
 
 <dialog
   id="edit-dialog"
-  class="mt-4 flex-col items-center gap-4 rounded-md bg-[--brand-color-light-blue] px-4 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 md:px-8">
+  class="mt-4 flex-col items-center gap-4 rounded-sm bg-[--brand-color-light-blue] px-4 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 md:px-8">
   <h2 class="text-center text-xl font-bold">Edit details</h2>
   <p id="edit-confirmation-box" class="py-4 text-center text-sm"></p>
   <form
-    class="flex flex-col gap-4 rounded-md px-2 py-4"
+    class="flex flex-col gap-4 rounded-sm px-2 py-4"
     action="../scripts/admin_functionality.php"
     autocomplete="off"
     readonly
@@ -94,7 +94,7 @@
     <label class="grid grid-cols-5" for="edit-user-email">
       <span class="col-span-2 mr-4">Email:</span>
       <input
-        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         autocomplete="off"
         readonly
         onfocus="this.removeAttribute('readonly');"
@@ -107,7 +107,7 @@
     <label class="grid grid-cols-5" for="edit-user-first-name">
       <span class="col-span-2 mr-4">First Name:</span>
       <input
-        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         placeholder="First Name"
         type="text"
         id="edit-user-first-name"
@@ -117,7 +117,7 @@
     <label class="grid grid-cols-5" for="edit-user-last-name">
       <span class="col-span-2 mr-4">Last Name:</span>
       <input
-        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         placeholder="Last Name"
         type="text"
         id="edit-user-last-name"
@@ -127,7 +127,7 @@
     <label class="grid grid-cols-5" for="edit-user-password">
       <span class="col-span-2 mr-4">Password:</span>
       <input
-        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
         type="password"
         id="edit-user-password"
         placeholder="Enter new password"
@@ -169,7 +169,7 @@
         id="edit-user-type"
         name="edit-user-type"
         required
-        class="col-span-3 rounded-md border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black">
+        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black">
         <option value="user">User</option>
         <option value="admin">Admin</option>
         <option value="owner">Owner</option>
@@ -178,7 +178,7 @@
     <div class="flex flex-wrap justify-around gap-2">
       <button
         type="submit"
-        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
+        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
         <span
           class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
         <span class="relative">Confirm changes</span>
@@ -186,7 +186,7 @@
       <button
         id="edit-dialog-close"
         type="button"
-        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-md bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none">
+        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none">
         <span
           class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
         <span class="relative">Cancel</span>

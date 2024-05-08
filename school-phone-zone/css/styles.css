@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .nav-link {
+    @apply cursor-pointer transition-all duration-300 hover:text-brand-primary-300 focus:text-brand-secondary motion-reduce:transition-none dark:hover:text-brand-primary-300 dark:focus:text-brand-primary-300;
+  }
+}

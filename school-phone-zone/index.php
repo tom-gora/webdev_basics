@@ -9,19 +9,10 @@
   <title>PhoneZone</title>
   <link rel="icon" type="image/png" href="../phonezone/res/favicon.png" />
   <link href="css/output/tailwind-styles.css" rel="stylesheet" />
-  <!--NOTE: Logo font used is: Suez One-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/globals.css">
-  <style>
-      .email-admin { transition: 200ms; font-weight: bold;}
-      .email-admin:hover,
-      .email-admin:focus { color: #0D72B9; }
-  </style>
 </head>
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="bg-[--background-light] h-screen flex flex-col items-center gap-4 md:pt-24">
   <?php
   define("ALLOW_REQUIRED_SCRIPTS", true);
   session_start();
@@ -54,14 +45,14 @@
       [
         "GOOGLE_API_URL",
         "GITHUB_API_URL",
-        "for-logged-out hidden",
+        "for-logged-out nav-link hidden",
         "for-logged-out mb-auto mt-4 hidden",
         "res/user_img/PROFILE_USER_IMG",
       ],
       [
         "window.location = '" . $google_login_button_target . "';",
         "window.location = '" . $github_login_button_target . "';",
-        "",
+        "nav-link",
         "mb-auto mt-4",
         "",
       ],
@@ -70,8 +61,9 @@
   } else {
     require_once "./scripts/user_functionality.php";
     $nav_html = str_replace(
-      ["for-logged-in hidden", "for-logged-in group hidden"],
-      ["", "group"],
+      ["for-logged-in nav-link hidden", "for-logged-in nav-link group hidden"],
+
+      ["nav-link", "nav-link group"],
       $nav_html
     );
     $logged_in_mf = get_user($_SESSION["user_id"]);
@@ -92,8 +84,8 @@
   $phone_card_html = str_replace(
     ["PROMO", "promo-sticker h-0"],
     [
-      '<div class="text-white text-sm text-center absolute w-36 h-6 bg-red-400 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
-      "",
+      '<div class="text-sm text-center absolute w-36 h-6 dark:bg-brand-primary-600 bg-brand-primary-200 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
+      "promo-sticker",
     ],
     $phone_card_html
   );

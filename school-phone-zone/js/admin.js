@@ -46,21 +46,21 @@ switch (err) {
   //
   case "deletedisallowed":
     msgBox.innerText = "You are not allowed to delete this user.";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-info-complementary]");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
   case "editdisallowed":
     msgBox.innerText = "You are not allowed to edit this user.";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-info-complementary]");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
   // and other cases
   case "add_emailtaken":
     msgBox.innerText = "Cannot add user. Email already taken.";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-info-complementary]");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
   case "internalerr":
@@ -68,8 +68,8 @@ switch (err) {
     msgBox.innerHTML = `<p>Something went wrong.<br>Error: ${err_msg}<br>Timestamp: ${current_timestamp} </p>`;
     msgBox.classList.remove("animate-delay-[3000]");
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-info-complementary]");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
 }
