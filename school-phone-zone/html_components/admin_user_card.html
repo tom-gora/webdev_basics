@@ -1,11 +1,11 @@
 <div
-  class="me-8 ms-24 flex min-h-32 snap-center flex-col items-start justify-start gap-4 rounded-sm border border-gray-300 p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-0">
+  class="border-gray-300 me-8 ms-24 flex min-h-32 snap-center flex-col items-start justify-start gap-4 rounded-sm border p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-0">
   <p class="w-8 max-w-24 pe-2 text-lg font-semibold">USER_ID</p>
   <p class="w-80 max-w-24 pe-2 text-lg font-semibold">USER_NAME</p>
-  <p class="break-all pe-2 text-sm text-gray-600 sm:w-[10.75rem]">USER_EMAIL</p>
-  <p class="pe-2 text-sm text-gray-600">USER_REGISTRATION</p>
-  <p class="pe-8 text-sm text-gray-600">USER_ROLE</p>
-  <p class="pe-2 text-sm text-gray-600">USER_AUTH_METHOD</p>
+  <p class="text-gray-600 break-all pe-2 text-sm sm:w-[10.75rem]">USER_EMAIL</p>
+  <p class="text-gray-600 pe-2 text-sm">USER_REGISTRATION</p>
+  <p class="text-gray-600 pe-8 text-sm">USER_ROLE</p>
+  <p class="text-gray-600 pe-2 text-sm">USER_AUTH_METHOD</p>
   <div class="flex grow justify-end gap-4 sm:flex-col sm:items-end">
     <div class="forbidden flex hidden h-10 w-10 cursor-not-allowed justify-end">
       <img src="../res/forbidden.svg" alt="Not allowed" class="sm:mr-5" />
@@ -18,14 +18,14 @@
       data-user-email="USER_EMAIL"
       data-user-img="USER_IMG"
       data-user-type="USER_TYPE"
-      class="edit-btn w-24 rounded-sm bg-[--brand-color-green] px-4 py-2 text-white hover:bg-[--brand-color-dark-green]">
+      class="edit-btn w-24 rounded-sm bg-[--brand-color-green] px-4 py-2 text-bg-lighter hover:bg-[--brand-color-dark-green]">
       Edit
     </button>
     <button
       type="button"
       data-user-id="USER_ID"
       data-user-name="USER_NAME"
-      class="del-btn w-24 rounded-sm bg-red-400 px-4 py-2 text-white hover:bg-red-500">
+      class="del-btn bg-red-400 hover:bg-red-500 w-24 rounded-sm px-4 py-2 text-bg-lighter">
       Delete
     </button>
   </div>

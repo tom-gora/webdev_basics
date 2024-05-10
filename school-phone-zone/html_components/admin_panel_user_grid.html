@@ -4,17 +4,17 @@
     class="mx-auto mb-0 mt-4 flex h-fit w-full items-center justify-around px-4 sm:mb-16">
     <button
       type="button"
-      class="group relative m-1 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 border-gray-400 bg-gray-200 px-3.5 py-2 text-black shadow-md active:shadow-none">
+      class="border-gray-400 bg-gray-200 group relative m-1 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 px-3.5 py-2 text-bg-darker shadow-md active:shadow-none">
       <span
-        class="absolute h-0 w-0 rounded-full bg-black opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+        class="absolute h-0 w-0 rounded-full bg-bg-darker opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
       <span class="relative">Manage products</span>
     </button>
     <button
       type="button"
       id="add-user-btn"
-      class="group relative mr-2 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 border-[--brand-color-dark-blue] bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
+      class="group relative mr-2 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 border-[--brand-color-dark-blue] bg-[--brand-color-blue] px-3.5 py-2 text-bg-lighter shadow-md active:shadow-none">
       <span
-        class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+        class="absolute h-0 w-0 rounded-full bg-bg-lighter opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
       <span class="relative">+ ADD</span>
     </button>
   </div>
@@ -22,21 +22,21 @@
   <div class="grid grid-cols-2">
     <div
       class="fixed mb-24 flex flex-col items-start justify-start gap-[14px] rounded-sm bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
-      <p class="font-bold text-black">ID:</p>
-      <p class="font-bold text-black">Name:</p>
-      <p class="font-bold text-black sm:ps-6">Email:</p>
-      <p class="font-bold text-black sm:ps-28">Joined:</p>
-      <p class="font-bold text-black sm:ps-2">Role:</p>
-      <p class="font-bold text-black sm:ps-2">Auth:</p>
+      <p class="font-bold text-bg-darker">ID:</p>
+      <p class="font-bold text-bg-darker">Name:</p>
+      <p class="font-bold text-bg-darker sm:ps-6">Email:</p>
+      <p class="font-bold text-bg-darker sm:ps-28">Joined:</p>
+      <p class="font-bold text-bg-darker sm:ps-2">Role:</p>
+      <p class="font-bold text-bg-darker sm:ps-2">Auth:</p>
     </div>
     <div
       class="fixed left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-sm bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
-      <p class="font-bold text-black">ID:</p>
-      <p class="font-bold text-black">Name:</p>
-      <p class="font-bold text-black sm:ps-6">Email:</p>
-      <p class="font-bold text-black sm:ps-28">Joined:</p>
-      <p class="font-bold text-black sm:ps-2">Role:</p>
-      <p class="font-bold text-black sm:ps-2">Auth:</p>
+      <p class="font-bold text-bg-darker">ID:</p>
+      <p class="font-bold text-bg-darker">Name:</p>
+      <p class="font-bold text-bg-darker sm:ps-6">Email:</p>
+      <p class="font-bold text-bg-darker sm:ps-28">Joined:</p>
+      <p class="font-bold text-bg-darker sm:ps-2">Role:</p>
+      <p class="font-bold text-bg-darker sm:ps-2">Auth:</p>
     </div>
   </div>
   <div
@@ -47,7 +47,7 @@
 
 <dialog
   id="del-dialog"
-  class="flex-col items-center gap-4 rounded-sm bg-[--brand-color-light-blue] px-8 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24">
+  class="flex-col items-center gap-4 rounded-sm bg-[--brand-color-light-blue] bg-bg-light px-8 py-4 text-brand-secondary shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 dark:bg-surface-dark-100 dark:text-bg-lighter">
   <h2 class="text-center text-xl font-bold">Delete user</h2>
   <p id="del-confirmation-box" class="py-4 text-sm"></p>
   <form action="../scripts/admin_functionality.php" method="POST">
@@ -56,22 +56,19 @@
       <button
         type="submit"
         id="del-dialog-confirm-btn"
-        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[--brand-color-green] px-3.5 py-2 text-white shadow-md active:shadow-none">
-        <span
-          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
-        <span class="relative">Confirm and delete</span>
+        class="btn-warning w-full">
+        <span></span>
+        <span></span>
+        <span>Confirm and delete</span>
       </button>
       <!-- button animation source: https://devdojo.com/tailwindcss/buttons -->
-      <button
-        type="button"
-        class="group relative m-1 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none"
-        id="del-dialog-close">
-        <span
-          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
-        <span class="relative">Cancel</span>
+      <button type="button" class="btn-neutral w-full" id="del-dialog-close">
+        <span></span>
+        <span></span>
+        <span>Cancel</span>
       </button>
     </div>
-    <p class="p-2 text-center text-sm text-red-400">
+    <p class="text-brand-primary-400 p-2 text-center font-bold pt-4 text-sm">
       Caution! This action is permanent.
     </p>
   </form>
@@ -79,11 +76,11 @@
 
 <dialog
   id="edit-dialog"
-  class="mt-4 flex-col items-center gap-4 rounded-sm bg-[--brand-color-light-blue] px-4 py-4 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 md:px-8">
+  class="mt-4 flex-col items-center gap-4 rounded-sm bg-bg-light px-4 py-4 text-brand-secondary shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 md:px-8 dark:bg-surface-dark-100 dark:text-bg-lighter">
   <h2 class="text-center text-xl font-bold">Edit details</h2>
   <p id="edit-confirmation-box" class="py-4 text-center text-sm"></p>
   <form
-    class="flex flex-col gap-4 rounded-sm px-2 py-4"
+    class="flex flex-col gap-4 rounded-sm px-4 pb-4 pt-8"
     action="../scripts/admin_functionality.php"
     autocomplete="off"
     readonly
@@ -94,7 +91,7 @@
     <label class="grid grid-cols-5" for="edit-user-email">
       <span class="col-span-2 mr-4">Email:</span>
       <input
-        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+ class="input-text-custom col-span-3"
         autocomplete="off"
         readonly
         onfocus="this.removeAttribute('readonly');"
@@ -107,7 +104,7 @@
     <label class="grid grid-cols-5" for="edit-user-first-name">
       <span class="col-span-2 mr-4">First Name:</span>
       <input
-        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+ class="input-text-custom col-span-3"
         placeholder="First Name"
         type="text"
         id="edit-user-first-name"
@@ -117,7 +114,7 @@
     <label class="grid grid-cols-5" for="edit-user-last-name">
       <span class="col-span-2 mr-4">Last Name:</span>
       <input
-        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+ class="input-text-custom col-span-3"
         placeholder="Last Name"
         type="text"
         id="edit-user-last-name"
@@ -127,7 +124,7 @@
     <label class="grid grid-cols-5" for="edit-user-password">
       <span class="col-span-2 mr-4">Password:</span>
       <input
-        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black"
+ class="input-text-custom col-span-3"
         type="password"
         id="edit-user-password"
         placeholder="Enter new password"
@@ -135,7 +132,7 @@
     </label>
     <label
       for="edit-user-image"
-      class="relative isolate ml-12 grid aspect-square w-28 cursor-pointer grid-rows-2 items-center self-center overflow-hidden rounded-xl border-2 border-[--brand-color-dark-blue] bg-gray-200 p-4 text-center md:ml-10 md:w-[150px]">
+      class="bg-surface-dark-300 relative isolate ml-12 grid aspect-square w-28 cursor-pointer grid-rows-2 items-center self-center overflow-hidden rounded-sm border-2 border-brand-secondary dark:border-bg-lighter p-4 text-center md:ml-10 md:w-[150px]">
       <input
         id="edit-user-image"
         name="edit-user-image"
@@ -148,7 +145,7 @@
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
-        class="m-auto h-6 w-6 text-[--brand-color-dark-blue]">
+        class="m-auto h-6 w-6 text-brand-secondary dark:text-bg-lighter">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -159,7 +156,7 @@
         class="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-25"></div>
       <h5
         id="user-img-description"
-        class="mb-2 text-xl font-semibold tracking-tight text-[--brand-color-dark-blue]">
+        class="mb-2 text-xl font-semibold tracking-tight text-brand-secondary dark:text-bg-lighter">
         Change picture
       </h5>
     </label>
@@ -169,27 +166,22 @@
         id="edit-user-type"
         name="edit-user-type"
         required
-        class="col-span-3 rounded-sm border-2 border-[--brand-color-dark-blue] bg-[#F0F2F6] px-2 py-2 text-black">
+ class="input-text-custom col-span-3"
         <option value="user">User</option>
         <option value="admin">Admin</option>
         <option value="owner">Owner</option>
       </select>
     </label>
     <div class="flex flex-wrap justify-around gap-2">
-      <button
-        type="submit"
-        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-[--brand-color-blue] px-3.5 py-2 text-white shadow-md active:shadow-none">
-        <span
-          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
-        <span class="relative">Confirm changes</span>
+      <button type="submit" class="btn-info w-40">
+        <span></span>
+        <span></span>
+        <span>Confirm changes</span>
       </button>
-      <button
-        id="edit-dialog-close"
-        type="button"
-        class="group relative m-1 inline-flex w-44 cursor-pointer items-center justify-center overflow-hidden rounded-sm bg-red-400 px-3.5 py-2 text-white shadow-md active:shadow-none">
-        <span
-          class="absolute h-0 w-0 rounded-full bg-white opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
-        <span class="relative">Cancel</span>
+      <button id="edit-dialog-close" type="button" class="btn-warning w-40">
+        <span></span>
+        <span></span>
+        <span>Cancel</span>
       </button>
     </div>
   </form>

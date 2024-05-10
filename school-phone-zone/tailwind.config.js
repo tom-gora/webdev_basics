@@ -16,26 +16,35 @@ module.exports = {
       //https://tailwindcss.com/docs/customizing-colors
 
       "bg-lighter": "#f3f4f6",
-      "bg-light": "#e5e7eb",
+      "bg-light": "#d1d5db",
+      "bg-light-less": "#bcc0c5",
+
       "surface-light-100": "#9ca3af",
       "surface-light-200": "#a7adb8",
       "surface-light-300": "#b1b7c0",
 
       "bg-darker": "#0B0B0B",
-      "bg-dark": "#171717",
-      "brand-primary-100": "#fba58f",
-      "brand-primary-200": "#ef765b",
-      "brand-primary-300": "#e03f2a",
+      "bg-dark": "#252525",
+
+      "brand-primary-100": "#ffa27c",
+      "brand-primary-200": "#ff8260",
+      "brand-primary-300": "#ff6145",
+      "brand-primary-400": "#fa3f2b",
       "brand-primary-500-neutral": "#D61010",
       "brand-primary-600": "#ab0d0d",
       "brand-primary-700": "#800a0a",
       "brand-primary-800": "#6b0808",
       "brand-secondary": "#161F45",
+      "brand-secondary-100": "#413866",
+      "brand-secondary-200": "#6e5387",
+      "brand-secondary-300": "#9d6fa6",
+      "brand-secondary-400": "#d08cc4",
+
       "surface-dark-100": "#232323",
       "surface-dark-200": "#3a3a3a",
       "surface-dark-300": "#535353",
 
-      "info-complementary": "#0b9696"
+      "bg-info": "#009a80"
     },
     extend: {}
   },
@@ -59,7 +68,7 @@ module.exports = {
     "surface-dark-100",
     "surface-dark-200",
     "surface-dark-300",
-    "info-complementary"
+    "bg-info"
   ],
   plugins: [require("tailwindcss-animated")]
 };

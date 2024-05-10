@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Fjalla+One&display=swap");
 /* custom declarations for brand colors */
 :root {
-  font-family: "IBM Plex Sans", sans-serif, system-ui;
+  font-family: "Cantarell", sans-serif, system-ui;
   font-weight: 300;
   h1,
   h2,
@@ -9,7 +9,7 @@
   h4,
   h5,
   .nav-link {
-    font-family: "IBM Plex Sans Condensed", Arial, Helvetica, sans-serif;
+    font-family: "Fjalla One", Arial, Helvetica, sans-serif;
   }
 
   --background-light: #e4e4e7;
@@ -47,7 +47,18 @@
 }
 :root[data-theme="dark"] body {
   color: #f3f4f6;
-  background: #171717;
+  background: #252525;
+}
+
+a:focus-visible,
+button:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input[type="text"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="password"]:focus-visible {
+  border-radius: 2px;
+  outline: 4px double #009a80;
 }
 
 :root[data-theme="dark"] #theme-toggle::after {
@@ -76,20 +87,6 @@
   fill: #f3f4f6;
 }
 
-/* extra styling on the contact admin message. css because markup
- is being dynamically injected and swapped by js so dom nodes do not persist */
-#msg-box {
-  color: #f3f4f6;
-}
-.email-admin {
-  transition: 200ms;
-  font-weight: bold;
-}
-.email-admin:hover,
-.email-admin:focus {
-  color: #0d72b9;
-}
-
 /* set up locally scoped vars for the toggle  */
 #theme-toggle {
   --theme_transition: all 0.3s ease-in-out;
@@ -113,6 +110,19 @@
 
 #theme-toggle svg path {
   transition: var(--theme_transition);
+  border-radius: 2px;
+}
+
+/* too much hassle to set it up with TW */
+@media (width > 768px) {
+  #navigation {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 2vw));
+  }
+
+  #products-grid,
+  #profile-purchases-details {
+    clip-path: polygon(0 0, 100% 2vw, 100% 100%, 0 100%);
+  }
 }
 
 /* navigation logo underscore because fuck working with pseudoelements using tailwind */
@@ -130,7 +140,7 @@
 }
 
 #navigation .logo:not(#mobile-store-logo):hover::after {
-  scale: 0.84 1;
+  scale: 0.73 1;
 }
 
 /* extra styling on the contact admin message. css because markup

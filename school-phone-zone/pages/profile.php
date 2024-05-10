@@ -56,7 +56,7 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 </head>
 
 
-<body class="bg-[--background-light] h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 // bring in the base markup for my html components
 $nav_html = file_get_contents("../html_components/navigation.html");
@@ -164,8 +164,8 @@ $nav_html = str_replace(
 //conditional changes based on user type (for admin/owner stuff)
 if (isset($_SESSION["user_type"]) && $_SESSION["user_type"] != "user") {
   $profile_header_html = str_replace(
-    ["role hidden", "PROFILE_USER_ROLE", "inline-flex hidden"],
-    ["", ucfirst($_SESSION["user_type"]), "inline-flex"],
+    ["role hidden", "PROFILE_USER_ROLE", "btn-primary hidden"],
+    ["", ucfirst($_SESSION["user_type"]), "btn-primary"],
     $profile_header_html
   );
 }
@@ -210,7 +210,7 @@ $profile_header_html = str_replace(
 // echo content to the page
 echo $nav_html;
 echo $profile_header_html;
-echo "<div class='w-10/12 py-8 h-max grow md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
+echo "<div id='profile-purchases-details' class='w-full px-[8.33%] bg-bg-light dark:bg-bg-darker pt-12 h-max grow md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
 echo $profile_cart_html;
 echo $profile_order_history;
 echo "</div>";

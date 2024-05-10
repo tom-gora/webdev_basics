@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./css/globals.css">
 </head>
 
-<body class="bg-[--background-light] h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
   <?php
   define("ALLOW_REQUIRED_SCRIPTS", true);
   session_start();
@@ -30,6 +30,7 @@
   //get my html components contents
   $nav_html = file_get_contents("./html_components/navigation.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
+  $btn_raw_html = file_get_contents("./html_components/custom-button.html");
   $phone_card_html = file_get_contents("./html_components/phone_card.html");
   $about_html = file_get_contents("./html_components/about.html");
   $footer_html = file_get_contents("./html_components/footer.html");
@@ -80,11 +81,12 @@
     ["Best sellers", "", ""],
     file_get_contents("./html_components/products_grid.html")
   );
+
   // and also make the promo sticker show up (removing the attribute giving it height of 0 and injecting html into it)
   $phone_card_html = str_replace(
     ["PROMO", "promo-sticker h-0"],
     [
-      '<div class="text-sm text-center absolute w-36 h-6 dark:bg-brand-primary-600 bg-brand-primary-200 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
+      '<div class="text-sm text-center absolute w-36 pt-[2px] h-6 dark:bg-brand-primary-600 bg-brand-primary-200 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
       "promo-sticker",
     ],
     $phone_card_html

@@ -55,7 +55,7 @@ if (err_msg) {
           "<p>This is a demo system.<br>Limit of registered users has been reached.<br>If you have an account consider removing it to add a new one.<br>Otherwise";
         msgBox.classList.remove("animate-delay-[3000]");
         msgBox.style.animationDelay = "8000ms";
-        msgBox.classList.remove("bg-info-complementary");
+        msgBox.classList.remove("bg-bg-info");
         msgBox.classList.add("bg-brand-primary-200");
         msgBox.classList.remove("hidden");
         break;
@@ -77,7 +77,7 @@ switch (err) {
     // HACK: changing animation via toggling classes don't work so forcing longer
     // delay directly with JS to allow for re3ading longer message and clicking link
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-info-complementary");
+    msgBox.classList.remove("bg-bg-info");
     msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
@@ -86,7 +86,7 @@ switch (err) {
       "<p>Something went wrong. Please <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
     msgBox.classList.remove("animate-delay-[3000]");
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-info-complementary");
+    msgBox.classList.remove("bg-bg-info");
     msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
@@ -95,7 +95,7 @@ switch (err) {
       "<p>Something went wrong. Please try a different login method <br>or <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
     msgBox.classList.remove("animate-delay-[3000]");
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-info-complementary");
+    msgBox.classList.remove("bg-bg-info");
     msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
@@ -112,7 +112,7 @@ switch (err) {
     break;
   case "noadmin":
     msgBox.innerText = "You have no permissions to access this page.";
-    msgBox.classList.remove("bg-info-complementary");
+    msgBox.classList.remove("bg-bg-info");
     msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
