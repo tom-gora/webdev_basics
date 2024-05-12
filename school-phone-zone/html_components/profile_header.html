@@ -21,13 +21,13 @@
     class="absolute left-2 top-2 m-4 grid aspect-square max-w-28 animate-jump-in items-center overflow-hidden rounded-sm animate-duration-300 animate-ease-out sm:left-12 md:static md:flex md:w-28 md:justify-center">
     <img
       style="clip-path: polygon(0 0, 100% 6%, 100% 100%, 0 94%)"
-      class="aspect-square h-24 rounded-sm border-[6px] border-bg-light transition-all duration-300 ease-out hover:scale-105 hover:border-surface-dark-300"
+      class="aspect-square h-24 rounded-sm border-[6px] border-bg-lighter transition-all duration-300 ease-out hover:scale-105 hover:border-surface-dark-300"
       src="../res/user_img/PROFILE_USER_IMG"
       alt="User image" />
   </div>
   <div
-    class="flex h-min w-full items-start justify-around gap-2 p-2 md:w-52 md:flex-col">
-    <button type="button" id="edit-profile-btn" class="btn-primary w-full">
+    class="flex h-min w-full items-start justify-around gap-4 p-2 md:w-52 md:flex-col">
+    <button type="button" id="edit-profile-btn" class="btn-info w-full">
       <span></span>
       <span></span>
       <span>Edit profile</span>
@@ -37,13 +37,13 @@
       <span></span>
       <span>Delete profile</span>
     </button>
+    <button
+      type="button"
+      onclick="window.location.href='../pages/admin.php'"
+      class="btn-primary hidden w-full">
+      <span></span>
+      <span></span>
+      <span>Admin Panel</span>
+    </button>
   </div>
 </div>
-<button
-  type="button"
-  onclick="window.location.href='../pages/admin.php'"
-  class="btn-primary hidden">
-  <span></span>
-  <span></span>
-  <span>Admin Panel</span>
-</button>

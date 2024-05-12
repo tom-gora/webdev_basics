@@ -4,39 +4,39 @@
     class="mx-auto mb-0 mt-4 flex h-fit w-full items-center justify-around px-4 sm:mb-16">
     <button
       type="button"
-      class="border-gray-400 bg-gray-200 group relative m-1 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 px-3.5 py-2 text-bg-darker shadow-md active:shadow-none">
-      <span
-        class="absolute h-0 w-0 rounded-full bg-bg-darker opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
-      <span class="relative">Manage products</span>
+      class="btn-neutral w-40">
+      <span></span>
+      <span></span>
+      <span>Manage products</span>
     </button>
     <button
       type="button"
       id="add-user-btn"
-      class="group relative mr-2 inline-flex h-min w-40 cursor-pointer items-center justify-center overflow-hidden rounded-sm border-b-4 border-l-2 border-[--brand-color-dark-blue] bg-[--brand-color-blue] px-3.5 py-2 text-bg-lighter shadow-md active:shadow-none">
-      <span
-        class="absolute h-0 w-0 rounded-full bg-bg-lighter opacity-10 transition-all duration-300 ease-out group-hover:h-32 group-hover:w-[120%]"></span>
+      class="btn-info w-40">
+      <span></span>
+      <span></span>
       <span class="relative">+ ADD</span>
     </button>
   </div>
   <div class="mb-10 flex justify-end"></div>
   <div class="grid grid-cols-2">
     <div
-      class="fixed mb-24 flex flex-col items-start justify-start gap-[14px] rounded-sm bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
-      <p class="font-bold text-bg-darker">ID:</p>
-      <p class="font-bold text-bg-darker">Name:</p>
-      <p class="font-bold text-bg-darker sm:ps-6">Email:</p>
-      <p class="font-bold text-bg-darker sm:ps-28">Joined:</p>
-      <p class="font-bold text-bg-darker sm:ps-2">Role:</p>
-      <p class="font-bold text-bg-darker sm:ps-2">Auth:</p>
+      class="fixed z-10 mb-24 flex flex-col items-start justify-start gap-[14px] rounded-sm bg-bg-light dark:bg-bg-darker p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
+      <p class="font-bold text-bg-darker dark:text-bg-lighter">ID:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter">Name:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-6">Email:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-28">Joined:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Role:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Auth:</p>
     </div>
     <div
-      class="fixed left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-sm bg-[--brand-color-light-blue] p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
-      <p class="font-bold text-bg-darker">ID:</p>
-      <p class="font-bold text-bg-darker">Name:</p>
-      <p class="font-bold text-bg-darker sm:ps-6">Email:</p>
-      <p class="font-bold text-bg-darker sm:ps-28">Joined:</p>
-      <p class="font-bold text-bg-darker sm:ps-2">Role:</p>
-      <p class="font-bold text-bg-darker sm:ps-2">Auth:</p>
+      class="fixed z-10 left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-sm bg-bg-light dark:bg-bg-darker  p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
+      <p class="font-bold text-bg-darker dark:text-bg-lighter">ID:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter">Name:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-6">Email:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-28">Joined:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Role:</p>
+      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Auth:</p>
     </div>
   </div>
   <div
@@ -47,7 +47,7 @@
 
 <dialog
   id="del-dialog"
-  class="flex-col items-center gap-4 rounded-sm bg-[--brand-color-light-blue] bg-bg-light px-8 py-4 text-brand-secondary shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 dark:bg-surface-dark-100 dark:text-bg-lighter">
+  class="flex-col items-center gap-4 rounded-sm bg-bg-light px-8 py-4 text-brand-secondary shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] backdrop:bg-[rgba(0,_0,_0,_0.6)] md:mt-24 dark:bg-surface-dark-100 dark:text-bg-lighter">
   <h2 class="text-center text-xl font-bold">Delete user</h2>
   <p id="del-confirmation-box" class="py-4 text-sm"></p>
   <form action="../scripts/admin_functionality.php" method="POST">
@@ -62,7 +62,7 @@
         <span>Confirm and delete</span>
       </button>
       <!-- button animation source: https://devdojo.com/tailwindcss/buttons -->
-      <button type="button" class="btn-neutral w-full" id="del-dialog-close">
+      <button autofocus type="button" class="btn-neutral w-full" id="del-dialog-close">
         <span></span>
         <span></span>
         <span>Cancel</span>
@@ -176,7 +176,7 @@
       <button type="submit" class="btn-info w-40">
         <span></span>
         <span></span>
-        <span>Confirm changes</span>
+        <span class="relative">Confirm changes</span>
       </button>
       <button id="edit-dialog-close" type="button" class="btn-warning w-40">
         <span></span>

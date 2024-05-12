@@ -186,6 +186,7 @@ addUserButton.addEventListener("click", () => {
 (async () => {
   let currentMasterAndCommander = await dialogFunctions.get_role();
   const roleSelect = document.querySelector("select[name='edit-user-type']");
+  console.log(roleSelect);
   if (currentMasterAndCommander !== "owner" && roleSelect.children.length > 1) {
     roleSelect.querySelector("option[value='admin']").remove();
     roleSelect.querySelector("option[value='owner']").remove();

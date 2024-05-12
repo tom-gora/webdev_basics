@@ -63,12 +63,12 @@ input[type="password"]:focus-visible {
 
 :root[data-theme="dark"] #theme-toggle::after {
   transform: translateX(24px);
-  background: #161f45;
+  background: #6e5387;
 }
 
 :root[data-theme="light"] #theme-toggle::after {
   transform: translateX(0px);
-  background: #5c627d;
+  background: #161f45;
 }
 
 :root[data-theme="light"] #theme-toggle-sun path {
@@ -100,8 +100,8 @@ input[type="password"]:focus-visible {
   top: 2px;
   left: 2px;
   aspect-ratio: 1/1;
-  border-radius: 50%;
   transition: var(--theme_transition);
+  border-radius: 6px;
 }
 
 #theme-toggle svg {
@@ -155,4 +155,19 @@ input[type="password"]:focus-visible {
 .email-admin:hover,
 .email-admin:focus {
   color: #9dd5d5;
+}
+
+/* another pseudoelement done easier with css */
+.profile-section-title::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  bottom: -0.5rem;
+  transform: scaleX(1.5);
+  transform-origin: bottom left;
+  border-bottom: 1px solid #0b0b0b;
+}
+
+:root[data-theme="dark"] .profile-section-title::after {
+  border-bottom: 1px solid #f3f4f6;
 }

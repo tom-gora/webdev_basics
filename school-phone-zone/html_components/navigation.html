@@ -2,7 +2,7 @@
 <div class="fixed bottom-4 right-6 z-50 md:hidden">
   <button type="button" id="mobile-toggle" class="group relative">
     <div
-      class="relative flex h-[50px] w-[50px] transform items-center justify-center overflow-hidden rounded-full bg-brand-primary-100 shadow-md transition-all duration-200">
+      class="relative flex h-[50px] w-[50px] transform items-center justify-center overflow-hidden rounded-full bg-brand-secondary shadow-md transition-all duration-200 dark:bg-brand-secondary-200">
       <div
         class="hamburger-content flex h-[20px] w-[20px] origin-center rotate-180 transform flex-col justify-between overflow-hidden transition-all duration-300">
         <div
@@ -34,7 +34,7 @@
 
 <nav
   id="navigation"
-  class="px-13 fixed right-[-100%] top-0 z-10 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:fixed md:right-auto md:top-0 md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
+  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:fixed md:right-auto md:top-0 md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
   <div
     id="mobile-store-logo"
     class="absolute left-[-200%] right-0 top-0 z-50 mx-auto h-20 w-full bg-bg-light pt-4 md:hidden dark:bg-bg-darker">
@@ -50,7 +50,7 @@
     class="mr-8 flex w-14 scale-125 items-center justify-end md:mr-12 md:h-full md:scale-100">
     <div
       id="theme-toggle"
-      class="relative mb-24 flex h-6 w-12 items-center justify-between rounded-[999px] bg-surface-light-100 px-0 shadow-inner shadow-surface-dark-300 md:mb-0 dark:bg-surface-dark-200 dark:shadow-bg-darker">
+      class="relative mb-24 flex h-6 w-12 items-center justify-between rounded-md bg-surface-light-100 px-0 shadow-inner shadow-surface-dark-300 md:mb-4 dark:bg-surface-dark-200 dark:shadow-bg-darker">
       <svg
         class="ml-[3px]"
         id="theme-toggle-sun"
@@ -86,18 +86,18 @@
   </div>
 
   <ul
-    class="flex scale-125 cursor-pointer flex-col items-end gap-12 pr-12 text-xl font-normal transition-all md:scale-100 md:flex-row md:items-baseline md:gap-8">
+    class="flex scale-125 cursor-pointer flex-col items-end gap-12 pr-12 text-xl font-normal text-brand-secondary transition-all md:scale-100 md:flex-row md:items-baseline md:gap-8 dark:text-bg-lighter">
     <li class="nav-link">
       <a href="index.php">Home</a>
     </li>
     <li class="nav-link">
       <a href="pages/products.php">Shop</a>
     </li>
-    <li class="for-logged-in nav-link group hidden">
+    <li class="for-logged-in nav-link group hidden pr-12">
       <a href="pages/profile.php">
         Your profile
         <img
-          class="nav-link ml-2 inline aspect-square w-10 rounded-full border-2 border-[rgba(0,0,0,0)] group-hover:border-brand-primary-300"
+          class="absolute bottom-2 right-[-4px] aspect-square w-10 rounded-full ring-2 ring-bg-darker dark:ring-bg-lighter"
           src="res/user_img/PROFILE_USER_IMG"
           alt="Profile Image Miniature" />
       </a>
@@ -108,17 +108,16 @@
     <li class="for-logged-in nav-link hidden">
       <a href="../phonezone/scripts/logout.php">Log out</a>
     </li>
-    <li class="relative inset-0 aspect-square w-6 cursor-pointer">
+    <li
+      class="nav-link relative inset-0 bottom-4 aspect-square w-8 cursor-pointer self-end">
       <svg
         id="nav-basket"
-        class="group absolute top-1"
-        width="24px"
-        height="24px"
+        class="group absolute top-[-6px] h-full w-8"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <path
-          class="nav-link fill-brand-secondary group-hover:fill-brand-primary-300 dark:fill-bg-lighter dark:group-hover:fill-brand-primary-300"
+          class="absolute top-[-0.5rem] fill-brand-secondary dark:fill-bg-lighter"
           fill-rule="evenodd"
           clip-rule="evenodd"
           d="M9.99976 2.25C9.30136 2.25 8.69851 2.65912 8.4178 3.25077C7.73426 3.25574 7.20152 3.28712 6.72597 3.47298C6.15778 3.69505 5.66357 4.07255 5.29985 4.5623C4.93292 5.05639 4.76067 5.68968 4.5236 6.56133L4.47721 6.73169L3.96448 9.69473C3.77895 9.82272 3.61781 9.97428 3.47767 10.1538C2.57684 11.3075 3.00581 13.0234 3.86376 16.4552C4.40943 18.6379 4.68227 19.7292 5.49605 20.3646C6.30983 21 7.43476 21 9.68462 21H14.3153C16.5652 21 17.6901 21 18.5039 20.3646C19.3176 19.7292 19.5905 18.6379 20.1362 16.4552C20.9941 13.0234 21.4231 11.3075 20.5222 10.1538C20.382 9.97414 20.2207 9.82247 20.035 9.69442L19.5223 6.73169L19.4759 6.56133C19.2388 5.68968 19.0666 5.05639 18.6997 4.5623C18.336 4.07255 17.8417 3.69505 17.2736 3.47298C16.798 3.28712 16.2653 3.25574 15.5817 3.25077C15.301 2.65912 14.6982 2.25 13.9998 2.25H9.99976ZM18.4177 9.14571L18.0564 7.05765C17.7726 6.01794 17.6696 5.69121 17.4954 5.45663C17.2996 5.19291 17.0335 4.98964 16.7275 4.87007C16.5077 4.78416 16.2421 4.75888 15.5803 4.75219C15.299 5.34225 14.697 5.75 13.9998 5.75H9.99976C9.30252 5.75 8.70052 5.34225 8.41921 4.75219C7.75738 4.75888 7.4918 4.78416 7.272 4.87007C6.96605 4.98964 6.69994 5.19291 6.50409 5.45662C6.32988 5.6912 6.22688 6.01794 5.9431 7.05765L5.58176 9.14577C6.57992 9 7.9096 9 9.68462 9H14.3153C16.0901 9 17.4196 9 18.4177 9.14571ZM8 12.25C8.41421 12.25 8.75 12.5858 8.75 13V17C8.75 17.4142 8.41421 17.75 8 17.75C7.58579 17.75 7.25 17.4142 7.25 17V13C7.25 12.5858 7.58579 12.25 8 12.25ZM16.75 13C16.75 12.5858 16.4142 12.25 16 12.25C15.5858 12.25 15.25 12.5858 15.25 13V17C15.25 17.4142 15.5858 17.75 16 17.75C16.4142 17.75 16.75 17.4142 16.75 17V13ZM12 12.25C12.4142 12.25 12.75 12.5858 12.75 13V17C12.75 17.4142 12.4142 17.75 12 17.75C11.5858 17.75 11.25 17.4142 11.25 17V13C11.25 12.5858 11.5858 12.25 12 12.25Z" />
@@ -135,10 +134,10 @@
   <dialog
     id="login-dialog"
     class="for-logged-out mb-auto mt-4 animate-fade-down flex-col items-center gap-4 rounded-sm bg-bg-light px-8 py-2 text-brand-secondary shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px] animate-duration-300 animate-ease-out backdrop:bg-[rgba(0,_0,_0,_0.6)] motion-reduce:animate-none md:mt-24 md:py-4 dark:bg-surface-dark-100 dark:text-bg-lighter">
-    <h2 class="mb-2 text-center text-xl font-bold">Login</h2>
+    <h2 class="mb-2 text-center text-xl font-bold">Log in</h2>
     <div
       id="err-msg"
-      class="bg-red-300 text-red-900 mb-4 hidden w-full rounded-sm py-1 text-center font-bold">
+      class="mb-4 hidden w-full rounded-sm bg-brand-primary-100 py-1 text-center font-bold text-brand-primary-800">
       &nbsp;
     </div>
     <form autofocus action="scripts/login.php" method="POST">
@@ -156,7 +155,7 @@
           name="password"
           placeholder="Password"
           class="input-text-custom" />
-        <button type="submit" class="btn-primary">
+        <button type="submit" class="btn-info">
           <span></span>
           <span></span>
           <span>Log in</span>
@@ -178,7 +177,7 @@
       class="grid w-full items-center gap-2">
       <!-- button template sourced from: -->
       <!-- https://tailwindflex.com/@prajwal/continue-with-social-login-buttons-google-linkedin-twitter-facebook-github-apple -->
-      <button class="btn-neutral" onclick="GOOGLE_API_URL" type="button">
+      <button class="btn-primary" onclick="GOOGLE_API_URL" type="button">
         <span></span>
         <span></span>
         <span>
@@ -221,13 +220,13 @@
           </div>
         </span>
       </button>
-      <button class="btn-neutral" onclick="GITHUB_API_URL" type="button">
+      <button class="btn-primary" onclick="GITHUB_API_URL" type="button">
         <span></span>
         <span></span>
         <span>
           <div class="flex h-fit w-full items-center justify-around">
             <svg
-              class="mr-2 h-6 w-6 rounded-md border-[3px] border-bg-lighter"
+              class="mr-2 h-6 w-6 rounded-sm"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               viewBox="0 0 73 73"
@@ -270,7 +269,7 @@
     <p class="relative text-center text-sm">
       If you don't have an account, please
       <a
-        class="inline-block animate-jump-in font-bold text-[--brand-color-blue] animate-delay-300 animate-once motion-reduce:animate-none"
+        class="inline-block animate-jump-in font-bold text-bg-info animate-delay-300 animate-once motion-reduce:animate-none"
         href="#">
         register
       </a>
@@ -321,7 +320,6 @@
 
   const setLogoVariant = (theme) => {
     const isIndex = window.location.pathname.includes("index.php");
-    console.log("hey!");
     const storeLogos = document.querySelectorAll("img[alt='Store Logo'");
     let pathPrefifx;
     isIndex ? (pathPrefifx = "") : (pathPrefifx = "../");

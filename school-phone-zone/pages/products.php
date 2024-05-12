@@ -13,7 +13,7 @@
 </head>
 
 
-<body class="bg-[--background-light] h-screen flex flex-col items-center gap-4 md:pt-[5.5rem]">
+<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();
@@ -95,12 +95,16 @@ foreach ($products as $product) {
       "PRODUCT_PRICE",
       "res/phones/PRODUCT_IMG_PATH",
       "promo-sticker",
+      "dark:bg-bg-dark",
+      "bg-bg-lighter",
     ],
     [
       $product->product_name,
       $product->product_price,
       "../res/phones/" . $product->product_img_path,
       "hidden",
+      "dark:bg-bg-darker",
+      "bg-bg-light",
     ],
     $phone_card_html
   );
@@ -108,8 +112,13 @@ foreach ($products as $product) {
 }
 
 $grid_html = str_replace(
-  ["SECTION_TITLE", "PRODUCTS_GRID"],
-  ["OUR PHONES RANGE", $products_cards_html_stringbuilder],
+  ["SECTION_TITLE", "bg-bg-light", "dark:bg-bg-darker"],
+  ["OUR PHONES RANGE", "bg-bg-lighter", "dark:bg-bg-dark"],
+  $grid_html
+);
+$grid_html = str_replace(
+  "PRODUCTS_GRID",
+  $products_cards_html_stringbuilder,
   $grid_html
 );
 

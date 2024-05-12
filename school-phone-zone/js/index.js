@@ -106,7 +106,7 @@ switch (err) {
     loginDialog.showModal();
     break;
   case "nologin":
-    loginErrMsgBox.innerText = "You need to login to see this page.";
+    loginErrMsgBox.innerText = "You need to log in to see this page.";
     loginErrMsgBox.classList.toggle("hidden");
     loginDialog.showModal();
     break;
