@@ -1,48 +1,55 @@
-<div class="container mx-auto mb-24 mt-16 py-8 md:mt-20">
+<div class="container mx-auto mt-24 grow sm:mt-28">
   <h1 class="text-center text-3xl font-bold">Admin Panel</h1>
   <div
-    class="mx-auto mb-0 mt-4 flex h-fit w-full items-center justify-around px-4 sm:mb-16">
-    <button
-      type="button"
-      class="btn-neutral w-40">
+    class="mx-auto mb-8 mt-4 flex h-fit w-full items-center justify-around gap-2 px-4 sm:mb-16">
+    <button type="button" class="btn-neutral w-min-40 w-40">
       <span></span>
       <span></span>
-      <span>Manage products</span>
+      <span>See products</span>
     </button>
-    <button
-      type="button"
-      id="add-user-btn"
-      class="btn-info w-40">
+    <button type="button" id="add-user-btn" class="btn-info w-min-40 w-40">
       <span></span>
       <span></span>
       <span class="relative">+ ADD</span>
     </button>
   </div>
-  <div class="mb-10 flex justify-end"></div>
   <div class="grid grid-cols-2">
     <div
-      class="fixed z-10 mb-24 flex flex-col items-start justify-start gap-[14px] rounded-sm bg-bg-light dark:bg-bg-darker p-4 shadow-md sm:mx-2 sm:mt-[-5rem] sm:flex-row sm:items-center sm:gap-4">
-      <p class="font-bold text-bg-darker dark:text-bg-lighter">ID:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter">Name:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-6">Email:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-28">Joined:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Role:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Auth:</p>
+      class="col-span-2 col-start-1 m-2 hidden w-11/12 grid-cols-9 justify-self-center rounded-sm bg-bg-light px-4 shadow-md sm:grid xl:col-span-1 xl:-translate-x-1 dark:bg-bg-darker">
+      <p class="col-span-3 font-bold text-bg-darker dark:text-bg-lighter">
+        Name / Email
+      </p>
+      <p class="col-span-2 font-bold text-bg-darker dark:text-bg-lighter">
+        Joined
+      </p>
+      <p
+        class="justify-self-start font-bold text-bg-darker dark:text-bg-lighter">
+        Role
+      </p>
+      <p
+        class="col-span-2 justify-self-start font-bold text-bg-darker dark:text-bg-lighter">
+        Auth method
+      </p>
     </div>
     <div
-      class="fixed z-10 left-[50%] mt-[-5rem] hidden translate-x-2 flex-col items-start justify-start gap-3 rounded-sm bg-bg-light dark:bg-bg-darker  p-4 shadow-md sm:mx-2 sm:flex-row sm:items-center sm:gap-4 xl:flex">
-      <p class="font-bold text-bg-darker dark:text-bg-lighter">ID:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter">Name:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-6">Email:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-28">Joined:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Role:</p>
-      <p class="font-bold text-bg-darker dark:text-bg-lighter sm:ps-2">Auth:</p>
+      class="col-start-2 my-2 hidden w-11/12 grid-cols-9 justify-self-center rounded-sm bg-bg-light px-4 shadow-md xl:grid xl:translate-x-1 dark:bg-bg-darker">
+      <p class="col-span-3 font-bold text-bg-darker dark:text-bg-lighter">
+        Name / Email
+      </p>
+      <p class="col-span-2 font-bold text-bg-darker dark:text-bg-lighter">
+        Joined
+      </p>
+      <p
+        class="justify-self-start font-bold text-bg-darker dark:text-bg-lighter">
+        Role
+      </p>
+      <p
+        class="col-span-2 justify-self-start font-bold text-bg-darker dark:text-bg-lighter">
+        Auth method
+      </p>
     </div>
   </div>
-  <div
-    class="grid snap-y snap-mandatory grid-cols-1 gap-4 sm:snap-none xl:grid-cols-2">
-    ADMIN_USERS_CARDS
-  </div>
+  <div id="users-grid" class="grid grid-cols-1 gap-4 xl:grid-cols-2"></div>
 </div>
 
 <dialog
@@ -52,7 +59,7 @@
   <p id="del-confirmation-box" class="py-4 text-sm"></p>
   <form action="../scripts/admin_functionality.php" method="POST">
     <input type="hidden" name="del-user-id" value="delete_user" />
-    <div class="flex flex-col gap-4">
+    <div class="mx-auto flex w-52 flex-col gap-4">
       <button
         type="submit"
         id="del-dialog-confirm-btn"
@@ -62,13 +69,17 @@
         <span>Confirm and delete</span>
       </button>
       <!-- button animation source: https://devdojo.com/tailwindcss/buttons -->
-      <button autofocus type="button" class="btn-neutral w-full" id="del-dialog-close">
+      <button
+        autofocus
+        type="button"
+        class="btn-neutral w-full"
+        id="del-dialog-close">
         <span></span>
         <span></span>
         <span>Cancel</span>
       </button>
     </div>
-    <p class="text-brand-primary-400 p-2 text-center font-bold pt-4 text-sm">
+    <p class="p-2 pt-4 text-center text-sm font-bold text-brand-primary-400">
       Caution! This action is permanent.
     </p>
   </form>
@@ -91,7 +102,7 @@
     <label class="grid grid-cols-5" for="edit-user-email">
       <span class="col-span-2 mr-4">Email:</span>
       <input
- class="input-text-custom col-span-3"
+        class="input-text-custom col-span-3"
         autocomplete="off"
         readonly
         onfocus="this.removeAttribute('readonly');"
@@ -104,7 +115,7 @@
     <label class="grid grid-cols-5" for="edit-user-first-name">
       <span class="col-span-2 mr-4">First Name:</span>
       <input
- class="input-text-custom col-span-3"
+        class="input-text-custom col-span-3"
         placeholder="First Name"
         type="text"
         id="edit-user-first-name"
@@ -114,7 +125,7 @@
     <label class="grid grid-cols-5" for="edit-user-last-name">
       <span class="col-span-2 mr-4">Last Name:</span>
       <input
- class="input-text-custom col-span-3"
+        class="input-text-custom col-span-3"
         placeholder="Last Name"
         type="text"
         id="edit-user-last-name"
@@ -124,7 +135,7 @@
     <label class="grid grid-cols-5" for="edit-user-password">
       <span class="col-span-2 mr-4">Password:</span>
       <input
- class="input-text-custom col-span-3"
+        class="input-text-custom col-span-3"
         type="password"
         id="edit-user-password"
         placeholder="Enter new password"
@@ -132,7 +143,7 @@
     </label>
     <label
       for="edit-user-image"
-      class="bg-surface-dark-300 relative isolate ml-12 grid aspect-square w-28 cursor-pointer grid-rows-2 items-center self-center overflow-hidden rounded-sm border-2 border-brand-secondary dark:border-bg-lighter p-4 text-center md:ml-10 md:w-[150px]">
+      class="relative isolate ml-12 grid aspect-square w-28 cursor-pointer grid-rows-2 items-center self-center overflow-hidden rounded-sm border-2 border-brand-secondary bg-surface-dark-300 p-4 text-center md:ml-10 md:w-[150px] dark:border-bg-lighter">
       <input
         id="edit-user-image"
         name="edit-user-image"
@@ -166,7 +177,7 @@
         id="edit-user-type"
         name="edit-user-type"
         required
- class="input-text-custom col-span-3"
+        class="input-text-custom col-span-3">
         <option value="user">User</option>
         <option value="admin">Admin</option>
         <option value="owner">Owner</option>

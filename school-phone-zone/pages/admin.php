@@ -25,7 +25,7 @@ if (!$user_id || $user_role == "user") {
     <link rel="stylesheet" href="../css/globals.css" />
   </head>
 
-  <body class="h-screen items-center bg-[--background-light]">
+  <body class="h-screen items-center flex flex-col">
     <?php
     //only establish connection after confirming session status
     require_once "../scripts/db.php";
@@ -40,92 +40,8 @@ if (!$user_id || $user_role == "user") {
     $user_card_html = file_get_contents(
       "../html_components/admin_user_card.html"
     );
+    $pagination_html = file_get_contents("../html_components/pagination.html");
     $footer_html = file_get_contents("../html_components/footer.html");
-
-    // get the users
-    $users = get_users_array();
-    $users_cards_html_stringbuilder = "";
-
-    //In a loop step 1:
-    //put the unconditional content into each user's card html
-    foreach ($users as $user) {
-      $formatted_date = $user->user_registration->format("d/m/Y");
-      $auth_as_string;
-      // switch case for auth method to show readble strings not codes
-      switch ($user->user_auth_method) {
-        case "1":
-          $auth_as_string = "Email";
-          break;
-        case "2":
-          $auth_as_string = "Google";
-          break;
-        case "3":
-          $auth_as_string = "Github";
-          break;
-      }
-      // per user insert personal details
-      $next_user_card_html = str_replace(
-        [
-          "USER_ID",
-          "USER_NAME",
-          "USER_EMAIL",
-          "USER_REGISTRATION",
-          "USER_ROLE",
-          "USER_AUTH_METHOD",
-          "USER_FIRST_NAME",
-          "USER_LAST_NAME",
-          "USER_IMG",
-          "USER_TYPE",
-        ],
-        [
-          $user->user_id,
-          $user->user_firstname . " " . $user->user_lastname,
-          $user->user_email,
-          $formatted_date,
-          ucfirst($user->user_type),
-          $auth_as_string,
-          $user->user_firstname,
-          $user->user_lastname,
-          $user->user_img,
-          $user->user_type,
-        ],
-        $user_card_html
-      );
-      //
-      //WARN:
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // ASSESSMENT: this is accomplishing task 3 in my implementation on the front end by hiding buttons (additional prevention)
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      //
-      // In a loop step 2:
-      // put the conditional content into each user's card html to not show UI
-      // allowing for editing admin/owner unless owner is logged in by hiding it
-      // for everyone else
-      if ($_SESSION["user_type"] != "owner" && $user->user_type != "user") {
-        $users_grid_html = str_replace(
-          [
-            '<option value="admin">Admin</option>',
-            '<option value="owner">Owner</option>',
-          ],
-          ["", ""],
-          $users_grid_html
-        );
-        $next_user_card_html = str_replace(
-          ["del-btn", "edit-btn", "forbidden flex hidden"],
-          ["hidden", "hidden", "flex mr-2"],
-          $next_user_card_html
-        );
-      }
-      // with the card ready concat it to the stringbuilder var
-      $users_cards_html_stringbuilder .= $next_user_card_html;
-    }
-
-    // insert the markup into a grid wrapper
-    $users_grid_html = str_replace(
-      ["ADMIN_USERS_CARDS"],
-      [$users_cards_html_stringbuilder],
-      $users_grid_html
-    );
 
     //get the logged in user avatar for the navigation miniature
     $connection = get_mysqli();
@@ -158,9 +74,15 @@ if (!$user_id || $user_role == "user") {
       $nav_html
     );
 
+    $pagination_html = str_replace(
+      "scale-90",
+      "scale-90 mb-12",
+      $pagination_html
+    );
     // add content onto the page before shipping to client
     echo $nav_html;
     echo $users_grid_html;
+    echo $pagination_html;
     echo $footer_html;
     ?>
 

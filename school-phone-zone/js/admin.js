@@ -7,7 +7,6 @@ const editDialog = document.querySelector("#edit-dialog");
 const delDialog = document.querySelector("#del-dialog");
 // trigger buttons
 const addUserButton = document.querySelector("#add-user-btn");
-const editButtons = document.querySelectorAll(".edit-btn");
 const delButtons = document.querySelectorAll(".del-btn");
 // close dialog buttons
 const editDialogCancelBtn = editDialog.querySelector("#edit-dialog-close");
@@ -26,7 +25,7 @@ const delInput = delDialog.querySelector("input[value='delete_user']");
 const delDialogConfirmationBox = delDialog.querySelector(
   "#del-confirmation-box"
 );
-// url query string
+// url query string for error and status messages
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");
 const stat = params.get("status");
@@ -111,17 +110,6 @@ delDialogCancelBtn.addEventListener("click", (e) => {
   delDialog.close();
 });
 
-delButtons.forEach((delButton) => {
-  delButton.addEventListener("click", () => {
-    const id = delButton.dataset.userId;
-    const name = delButton.dataset.userName;
-    delInput.value = id;
-    delDialogConfirmationBox.innerText = `Are you sure you want to delete ${name}?`;
-
-    delDialog.showModal();
-  });
-});
-
 imageInput.addEventListener("change", () => {
   if (imageInput.files[0] && imageInput.files[0].name) {
     const reader = new FileReader();
@@ -149,46 +137,266 @@ editDialogCancelBtn.addEventListener("click", (e) => {
   editDialog.close();
 });
 
-editButtons.forEach((editButton) => {
-  editButton.addEventListener("click", () => {
-    const id = editButton.dataset.userId;
-    const firstName = editButton.dataset.userFirstName;
-    const lastName = editButton.dataset.userLastName;
-    const email = editButton.dataset.userEmail;
-    const img = editButton.dataset.userImg;
-    const role = editButton.dataset.userType;
-    dialogFunctions.prefillFormForEdit(
-      editDialog,
-      id,
-      firstName,
-      lastName,
-      email,
-      img,
-      role
-    );
-    editDialog.showModal();
-  });
-});
-
 addUserButton.addEventListener("click", () => {
   dialogFunctions.setFormForAddition(editDialog);
   editDialog.showModal();
 });
 
-//
-//WARN:
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ASSESSMENT: this improves the restrictions by hiding select options
-// and not allowing to add or edit admin/owner types unless and owner account
-// is logged in. regular admin type can only add regular user types
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+const usersGrid = document.querySelector("#users-grid");
 
-(async () => {
-  let currentMasterAndCommander = await dialogFunctions.get_role();
-  const roleSelect = document.querySelector("select[name='edit-user-type']");
-  console.log(roleSelect);
-  if (currentMasterAndCommander !== "owner" && roleSelect.children.length > 1) {
-    roleSelect.querySelector("option[value='admin']").remove();
-    roleSelect.querySelector("option[value='owner']").remove();
+const getUsersPageData = async (
+  client_request,
+  requested_data,
+  page_nr,
+  items_per_page
+) => {
+  const data = {
+    client_request: client_request,
+    requested_data: requested_data,
+    page_nr: page_nr,
+    items_per_page: items_per_page
+  };
+
+  const requestOpts = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json, charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  };
+  const url = "../scripts/get_paginated_data.php";
+  return fetch(url, requestOpts)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
+    });
+};
+
+const getUserCardHtml = async () => {
+  const cardUrl = "../html_components/admin_user_card.html";
+  const response = await fetch(cardUrl);
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
   }
-})();
+  return response.text();
+};
+
+let page_nr = 1;
+let documentWidth = window.innerWidth;
+// default value
+let items_per_page = 8;
+documentWidth >= 768 ? (items_per_page = 8) : (items_per_page = 4);
+
+const renderUsersPage = (page_nr, items_per_page) => {
+  const client_request = "get_data_portion";
+  const requested_data = "users";
+
+  const promises = [
+    getUserCardHtml(),
+    getUsersPageData(client_request, requested_data, page_nr, items_per_page),
+    dialogFunctions.get_role()
+  ];
+
+  Promise.all(promises).then(([cardHtml, usersData, loggedInUserRole]) => {
+    //for dynamic front end pagination reimplemented conditional logic previously
+    // handled by php on the server when all users were loaded at once
+    //
+    //WARN:
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ASSESSMENT: this improves the restrictions by hiding select options
+    // and not allowing to add or edit admin/owner types unless and owner account
+    // is logged in. regular admin type can only add regular user types
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    const roleSelect = document.querySelector("#edit-user-type");
+
+    if (loggedInUserRole !== "owner" && roleSelect.children.length > 1) {
+      roleSelect.querySelector("option[value='admin']").remove();
+      roleSelect.querySelector("option[value='owner']").remove();
+    }
+
+    const parser = new DOMParser();
+    // extract the total number of users passed as the last element of arr
+    // then dispose of it to only leave actual user data
+    const userCount = usersData[usersData.length - 1];
+    usersData = usersData.slice(0, usersData.length - 1);
+
+    sessionStorage.setItem("user_count", userCount);
+
+    usersData.forEach((user) => {
+      const parsedCard = parser.parseFromString(cardHtml, "text/html");
+      const nextCard = parsedCard.querySelector(".admin-page-user-card");
+      const nextCardButtons = nextCard.querySelectorAll("button");
+      const nextCardForbiddenImg = nextCard.querySelector(".forbidden");
+
+      // additionally remove edit/delete buttons entirely from dom
+      // for non-regular user cards unless the owner is logged in
+      if (loggedInUserRole !== "owner" && user.user_type !== "User") {
+        nextCardForbiddenImg.classList.remove("hidden");
+        nextCardButtons.forEach((btn) => {
+          btn.parentNode.removeChild(btn);
+        });
+      }
+
+      nextCard.querySelector("p.insert-user-id").innerText = user.user_id;
+      nextCard.querySelector("p.insert-user-name").innerText =
+        `${user.user_firstname} ${user.user_lastname}`;
+      nextCard.querySelector("p.insert-user-email").innerText = user.user_email;
+      nextCard.querySelector("p.insert-user-registration").innerText =
+        user.user_registration;
+      nextCard.querySelector("p.insert-user-role").innerText = user.user_type;
+      nextCard.querySelector("p.insert-user-auth").innerText =
+        user.user_auth_method;
+      const editBtn = nextCard.querySelector(".edit-btn");
+      const delBtn = nextCard.querySelector(".del-btn");
+      if (editBtn) {
+        editBtn.dataset.userId = user.user_id;
+        editBtn.dataset.userFirstName = user.user_firstname;
+        editBtn.dataset.userLastName = user.user_lastname;
+        editBtn.dataset.userEmail = user.user_email;
+        editBtn.dataset.userImg = user.user_img;
+        editBtn.dataset.userType = user.user_type;
+
+        editBtn.addEventListener("click", () => {
+          //grab prefilled values stored on the button itself
+          const id = editBtn.dataset.userId;
+          const firstName = editBtn.dataset.userFirstName;
+          const lastName = editBtn.dataset.userLastName;
+          const email = editBtn.dataset.userEmail;
+          const img = editBtn.dataset.userImg;
+          const role = editBtn.dataset.userType;
+          dialogFunctions.prefillFormForEdit(
+            editDialog,
+            id,
+            firstName,
+            lastName,
+            email,
+            img,
+            role
+          );
+          editDialog.showModal();
+        });
+      }
+      if (delBtn) {
+        delBtn.setAttribute("data-user-id", user.user_id);
+        delBtn.setAttribute(
+          "data-user-name",
+          `${user.user_firstname} ${user.user_lastname}`
+        );
+
+        delBtn.addEventListener("click", () => {
+          const id = delBtn.dataset.userId;
+          const name = delBtn.dataset.userName;
+          delInput.value = id;
+          delDialogConfirmationBox.innerText = `Are you sure you want to delete ${name}?`;
+
+          delDialog.showModal();
+        });
+      }
+
+      usersGrid.appendChild(nextCard);
+    });
+  });
+};
+renderUsersPage(page_nr, items_per_page);
+
+// handle pagination buttons
+
+const paginationDiv = document.querySelector("#pagination");
+
+const paginationFirst = paginationDiv.querySelector(
+  "button.pagination-btn-first"
+);
+const paginationPrev = paginationDiv.querySelector(
+  "button.pagination-btn-prev"
+);
+const paginationNext = paginationDiv.querySelector(
+  "button.pagination-btn-next"
+);
+const paginationLast = paginationDiv.querySelector(
+  "button.pagination-btn-last"
+);
+const paginationCurrentPage = paginationDiv.querySelector("p.current-page");
+const paginationTotalPages = paginationDiv.querySelector("p.total-pages");
+const totalPagesCount = Math.ceil(
+  sessionStorage.getItem("user_count") / items_per_page
+);
+
+paginationTotalPages.innerText = totalPagesCount;
+sessionStorage.setItem("page_nr", page_nr);
+
+paginationFirst.addEventListener("click", () => {
+  const currentlyRenderedCards = usersGrid.querySelectorAll(
+    ".admin-page-user-card"
+  );
+  currentlyRenderedCards.forEach((card) => {
+    card.parentNode.removeChild(card);
+  });
+
+  page_nr = 1;
+  sessionStorage.setItem("page_nr", page_nr);
+
+  renderUsersPage(page_nr, items_per_page);
+  paginationCurrentPage.innerText = page_nr;
+  paginationFirst.blur();
+  document.body.scrollTop = document.body.scrollHeight;
+});
+
+paginationPrev.addEventListener("click", () => {
+  let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
+  if (currentPageNr > 1) {
+    const currentlyRenderedCards = usersGrid.querySelectorAll(
+      ".admin-page-user-card"
+    );
+    currentlyRenderedCards.forEach((card) => {
+      card.parentNode.removeChild(card);
+    });
+    page_nr = currentPageNr - 1;
+    sessionStorage.setItem("page_nr", page_nr);
+    renderUsersPage(page_nr, items_per_page);
+    paginationCurrentPage.innerText = page_nr;
+  } else {
+    paginationPrev.blur();
+  }
+});
+
+paginationNext.addEventListener("click", () => {
+  let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
+  if (currentPageNr < totalPagesCount) {
+    const currentlyRenderedCards = usersGrid.querySelectorAll(
+      ".admin-page-user-card"
+    );
+    currentlyRenderedCards.forEach((card) => {
+      card.parentNode.removeChild(card);
+    });
+    page_nr = currentPageNr + 1;
+    sessionStorage.setItem("page_nr", page_nr);
+    renderUsersPage(page_nr, items_per_page);
+    paginationCurrentPage.innerText = page_nr;
+  } else {
+    paginationNext.blur();
+  }
+});
+
+paginationLast.addEventListener("click", () => {
+  const currentlyRenderedCards = usersGrid.querySelectorAll(
+    ".admin-page-user-card"
+  );
+  currentlyRenderedCards.forEach((card) => {
+    card.parentNode.removeChild(card);
+  });
+
+  page_nr = totalPagesCount;
+  sessionStorage.setItem("page_nr", page_nr);
+
+  renderUsersPage(page_nr, items_per_page);
+  paginationCurrentPage.innerText = page_nr;
+  paginationLast.blur();
+});
