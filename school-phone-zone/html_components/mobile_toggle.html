@@ -1,0 +1,46 @@
+<div class="fixed bottom-8 right-8 z-50 md:hidden">
+  <button type="button" id="mobile-toggle" class="group relative">
+    <div
+      class="relative flex h-[50px] w-[50px] items-center justify-center overflow-hidden rounded bg-brand-secondary shadow-md dark:bg-brand-secondary-200">
+      <svg
+        class="hamburger-content h-6 w-6 fill-bg-lighter stroke-bg-lighter"
+        viewBox="0 0 16 16"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M1,9h14V7H1V9z M1,14h14v-2H1V14z M1,2v2h14V2H1z" />
+      </svg>
+      <div class="close-content hidden">
+        <svg
+          class="h-6 w-6 fill-bg-lighter stroke-bg-lighter"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 16 16"
+          aria-hidden="true">
+          <path
+            d="M15.1 3.1l-2.2-2.2-4.9 5-4.9-5-2.2 2.2 5 4.9-5 4.9 2.2 2.2 4.9-5 4.9 5 2.2-2.2-5-4.9z" />
+        </svg>
+      </div>
+    </div>
+  </button>
+</div>
+
+<script defer>
+  const mobileToggle = document.querySelector("#mobile-toggle");
+  const hamburgerIcon = document.querySelector(".hamburger-content");
+  const closeIcon = document.querySelector(".close-content");
+  const mobileLogoBox = document.querySelector("#mobile-store-logo");
+  const mobileLogo = document.querySelector("#mobile-store-logo img");
+  const mobileLogoBoxW = mobileLogoBox.offsetWidth;
+  const mobileLogoW = mobileLogo.offsetWidth;
+
+  mobileToggle.onclick = () => {
+    body.style.overflow =
+      body.style.overflow === "hidden" ? "scroll" : "hidden";
+    navigation.style.right = navigation.style.right === "0px" ? "-100%" : "0px";
+    mobileLogo.style.right =
+      mobileLogo.style.right === "0px"
+        ? `-${3 * mobileLogoBoxW - mobileLogoW - 48}px`
+        : "0px";
+    hamburgerIcon.classList.toggle("hidden");
+    closeIcon.classList.toggle("hidden");
+  };
+</script>

@@ -101,7 +101,7 @@ input[type="password"]:focus-visible {
   left: 2px;
   aspect-ratio: 1/1;
   transition: var(--theme_transition);
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 #theme-toggle svg {

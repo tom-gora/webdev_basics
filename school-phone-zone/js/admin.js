@@ -25,6 +25,9 @@ const delInput = delDialog.querySelector("input[value='delete_user']");
 const delDialogConfirmationBox = delDialog.querySelector(
   "#del-confirmation-box"
 );
+// pagination
+const paginationDiv = document.querySelector("#pagination");
+
 // url query string for error and status messages
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");
@@ -192,7 +195,7 @@ let page_nr = 1;
 let documentWidth = window.innerWidth;
 // default value
 let items_per_page = 8;
-documentWidth >= 768 ? (items_per_page = 8) : (items_per_page = 4);
+documentWidth >= 768 ? (items_per_page = 8) : (items_per_page = 3);
 
 const renderUsersPage = (page_nr, items_per_page) => {
   const client_request = "get_data_portion";
@@ -303,13 +306,20 @@ const renderUsersPage = (page_nr, items_per_page) => {
 
       usersGrid.appendChild(nextCard);
     });
+
+    const paginationTotalPages = paginationDiv.querySelector("p.total-pages");
+    const savedUserCount = sessionStorage.getItem("user_count");
+    const totalPagesCount = savedUserCount
+      ? Math.ceil(savedUserCount / items_per_page)
+      : Math.ceil(userCount / items_per_page);
+
+    paginationTotalPages.innerText = totalPagesCount;
   });
 };
+
 renderUsersPage(page_nr, items_per_page);
 
 // handle pagination buttons
-
-const paginationDiv = document.querySelector("#pagination");
 
 const paginationFirst = paginationDiv.querySelector(
   "button.pagination-btn-first"
@@ -324,79 +334,111 @@ const paginationLast = paginationDiv.querySelector(
   "button.pagination-btn-last"
 );
 const paginationCurrentPage = paginationDiv.querySelector("p.current-page");
-const paginationTotalPages = paginationDiv.querySelector("p.total-pages");
+sessionStorage.setItem("page_nr", page_nr);
+
 const totalPagesCount = Math.ceil(
   sessionStorage.getItem("user_count") / items_per_page
 );
 
-paginationTotalPages.innerText = totalPagesCount;
-sessionStorage.setItem("page_nr", page_nr);
-
 paginationFirst.addEventListener("click", () => {
-  const currentlyRenderedCards = usersGrid.querySelectorAll(
-    ".admin-page-user-card"
-  );
-  currentlyRenderedCards.forEach((card) => {
-    card.parentNode.removeChild(card);
-  });
-
+  removeCurrentlyRenderedCardsFromDom();
   page_nr = 1;
   sessionStorage.setItem("page_nr", page_nr);
-
   renderUsersPage(page_nr, items_per_page);
   paginationCurrentPage.innerText = page_nr;
-  paginationFirst.blur();
-  document.body.scrollTop = document.body.scrollHeight;
+  customEnableBtn(paginationNext);
+  customDisableBtn(paginationPrev);
+  customEnableBtn(paginationLast);
+  customDisableBtn(paginationFirst);
 });
 
 paginationPrev.addEventListener("click", () => {
   let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
+  if (currentPageNr == 1) {
+    customDisableBtn(paginationPrev);
+    customDisableBtn(paginationFirst);
+  }
   if (currentPageNr > 1) {
-    const currentlyRenderedCards = usersGrid.querySelectorAll(
-      ".admin-page-user-card"
-    );
-    currentlyRenderedCards.forEach((card) => {
-      card.parentNode.removeChild(card);
-    });
+    removeCurrentlyRenderedCardsFromDom();
     page_nr = currentPageNr - 1;
     sessionStorage.setItem("page_nr", page_nr);
     renderUsersPage(page_nr, items_per_page);
     paginationCurrentPage.innerText = page_nr;
+    customEnableBtn(paginationLast);
+    customEnableBtn(paginationNext);
   } else {
-    paginationPrev.blur();
+    customEnableBtn(paginationNext);
+    customDisableBtn(paginationPrev);
+    customEnableBtn(paginationLast);
+    customDisableBtn(paginationFirst);
   }
 });
 
 paginationNext.addEventListener("click", () => {
   let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
+  if (currentPageNr == totalPagesCount) {
+    customDisableBtn(paginationNext);
+    customDisableBtn(paginationLast);
+  }
   if (currentPageNr < totalPagesCount) {
-    const currentlyRenderedCards = usersGrid.querySelectorAll(
-      ".admin-page-user-card"
-    );
-    currentlyRenderedCards.forEach((card) => {
-      card.parentNode.removeChild(card);
-    });
+    removeCurrentlyRenderedCardsFromDom();
     page_nr = currentPageNr + 1;
     sessionStorage.setItem("page_nr", page_nr);
     renderUsersPage(page_nr, items_per_page);
     paginationCurrentPage.innerText = page_nr;
+    customEnableBtn(paginationFirst);
+    customEnableBtn(paginationPrev);
   } else {
-    paginationNext.blur();
+    customDisableBtn(paginationNext);
+    customEnableBtn(paginationPrev);
+    customDisableBtn(paginationLast);
+    customEnableBtn(paginationFirst);
   }
 });
 
 paginationLast.addEventListener("click", () => {
+  removeCurrentlyRenderedCardsFromDom();
+  page_nr = totalPagesCount;
+  sessionStorage.setItem("page_nr", page_nr);
+  renderUsersPage(page_nr, items_per_page);
+  paginationCurrentPage.innerText = page_nr;
+  customDisableBtn(paginationNext);
+  customEnableBtn(paginationPrev);
+  customDisableBtn(paginationLast);
+  customEnableBtn(paginationFirst);
+});
+
+paginationCurrentPage.addEventListener("DOMSubtreeModified", () => {
+  let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
+  if (currentPageNr == 1) {
+    customDisableBtn(paginationPrev);
+    customDisableBtn(paginationFirst);
+  } else if (currentPageNr == totalPagesCount) {
+    customDisableBtn(paginationNext);
+    customDisableBtn(paginationLast);
+  }
+});
+
+const customDisableBtn = (btn) => {
+  btn.setAttribute("inert", "");
+  btn.setAttribute("disabled", true);
+  btn.style.filter = "brightness(0.5)";
+};
+
+const customEnableBtn = (btn) => {
+  btn.removeAttribute("inert");
+  btn.removeAttribute("disabled");
+  btn.style.filter = "brightness(1)";
+};
+
+const removeCurrentlyRenderedCardsFromDom = () => {
   const currentlyRenderedCards = usersGrid.querySelectorAll(
     ".admin-page-user-card"
   );
   currentlyRenderedCards.forEach((card) => {
     card.parentNode.removeChild(card);
   });
+};
 
-  page_nr = totalPagesCount;
-  sessionStorage.setItem("page_nr", page_nr);
-
-  renderUsersPage(page_nr, items_per_page);
-  paginationCurrentPage.innerText = page_nr;
-  paginationLast.blur();
-});
+customDisableBtn(paginationPrev);
+customDisableBtn(paginationFirst);

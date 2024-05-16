@@ -34,6 +34,7 @@ if (!$user_id || $user_role == "user") {
 
     // get the markup
     $nav_html = file_get_contents("../html_components/navigation.html");
+    $mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
     $users_grid_html = file_get_contents(
       "../html_components/admin_panel_user_grid.html"
     );
@@ -84,6 +85,7 @@ if (!$user_id || $user_role == "user") {
     echo $users_grid_html;
     echo $pagination_html;
     echo $footer_html;
+    echo $mobile_toggle;
     ?>
 
 <script type="module" src="../js/admin.js"></script>

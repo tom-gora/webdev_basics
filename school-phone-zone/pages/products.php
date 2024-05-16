@@ -26,6 +26,7 @@ require_once "../github/login_conf.php";
 
 // grab markup for my html components
 $nav_html = file_get_contents("../html_components/navigation.html");
+$mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $phone_card_html = file_get_contents("../html_components/phone_card.html");
 $grid_html = file_get_contents("../html_components/products_grid.html");
 $footer_html = file_get_contents("../html_components/footer.html");
@@ -126,6 +127,7 @@ $grid_html = str_replace(
 echo $nav_html;
 echo $grid_html;
 echo $footer_html;
+echo $mobile_toggle;
 ?>
 
 </body>

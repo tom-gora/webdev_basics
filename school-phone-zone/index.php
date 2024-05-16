@@ -29,6 +29,7 @@
 
   //get my html components contents
   $nav_html = file_get_contents("./html_components/navigation.html");
+  $mobile_toggle = file_get_contents("./html_components/mobile_toggle.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
   $btn_raw_html = file_get_contents("./html_components/custom-button.html");
   $phone_card_html = file_get_contents("./html_components/phone_card.html");
@@ -125,6 +126,7 @@
   echo $top_products_html;
   echo $about_html;
   echo $footer_html;
+  echo $mobile_toggle;
   ?>
 
   <script src="./js/index.js" type="text/javascript"></script>

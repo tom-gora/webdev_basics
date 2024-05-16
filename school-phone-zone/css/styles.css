@@ -26,8 +26,7 @@
   }
 
   /* buttons */
-
-  /* active behavior */
+  /* active behavior  */
   .btn-neutral:active,
   .btn-primary:active,
   .btn-warning:active,
@@ -46,7 +45,7 @@
   }
 
   .btn-neutral:hover span:nth-child(1),
-  .btn-neutral:focus-within span:nth-child(1) {
+  .btn-neutral:focus-visible span:nth-child(1) {
     @apply translate-x-0 translate-y-0;
   }
 
@@ -55,7 +54,7 @@
   }
 
   .btn-neutral:hover span:nth-child(2),
-  .btn-neutral:focus-within span:nth-child(2) {
+  .btn-neutral:focus-visible span:nth-child(2) {
     @apply bg-bg-darker dark:bg-bg-lighter;
   }
 
@@ -64,7 +63,7 @@
   }
 
   .btn-neutral:hover span:nth-child(3),
-  .btn-neutral:focus-within span:nth-child(3) {
+  .btn-neutral:focus-visible span:nth-child(3) {
     @apply text-bg-lighter dark:text-bg-darker;
   }
 
@@ -80,7 +79,7 @@
   }
 
   .btn-primary:hover span:nth-child(1),
-  .btn-primary:focus-within span:nth-child(1) {
+  .btn-primary:focus-visible span:nth-child(1) {
     @apply translate-x-0 translate-y-0;
   }
 
@@ -91,7 +90,7 @@
   }
 
   .btn-primary:hover span:nth-child(2),
-  .btn-primary:focus-within span:nth-child(2) {
+  .btn-primary:focus-visible span:nth-child(2) {
     @apply bg-brand-secondary dark:bg-bg-lighter;
   }
 
@@ -101,7 +100,7 @@
   }
 
   .btn-primary:hover span:nth-child(3),
-  .btn-primary:focus-within span:nth-child(3) {
+  .btn-primary:focus-visible span:nth-child(3) {
     @apply text-bg-lighter dark:text-bg-darker;
   }
 
@@ -117,7 +116,7 @@
   }
 
   .btn-warning:hover span:nth-child(1),
-  .btn-warning:focus-within span:nth-child(1) {
+  .btn-warning:focus-visible span:nth-child(1) {
     @apply translate-x-0 translate-y-0;
   }
 
@@ -128,7 +127,7 @@
   }
 
   .btn-warning:hover span:nth-child(2),
-  .btn-warning:focus-within span:nth-child(2) {
+  .btn-warning:focus-visible span:nth-child(2) {
     @apply bg-brand-primary-400 dark:bg-bg-lighter;
   }
 
@@ -138,7 +137,7 @@
   }
 
   .btn-warning:hover span:nth-child(3),
-  .btn-warning:focus-within span:nth-child(3) {
+  .btn-warning:focus-visible span:nth-child(3) {
     @apply text-bg-lighter dark:text-bg-darker;
   }
 
@@ -154,7 +153,7 @@
   }
 
   .btn-info:hover span:nth-child(1),
-  .btn-info:focus-within span:nth-child(1) {
+  .btn-info:focus-visible span:nth-child(1) {
     @apply translate-x-0 translate-y-0;
   }
 
@@ -165,7 +164,7 @@
   }
 
   .btn-info:hover span:nth-child(2),
-  .btn-info:focus-within span:nth-child(2) {
+  .btn-info:focus-visible span:nth-child(2) {
     @apply bg-bg-info dark:bg-bg-lighter;
   }
 
@@ -175,7 +174,7 @@
   }
 
   .btn-info:hover span:nth-child(3),
-  .btn-info:focus-within span:nth-child(3) {
+  .btn-info:focus-visible span:nth-child(3) {
     @apply text-bg-lighter dark:text-bg-darker;
   }
 

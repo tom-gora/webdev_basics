@@ -1,40 +1,6 @@
-<!-- button source https://tailwindcomponents.com/component/animated-hamburger-menu-icon -->
-<div class="fixed bottom-4 right-6 z-50 md:hidden">
-  <button type="button" id="mobile-toggle" class="group relative">
-    <div
-      class="relative flex h-[50px] w-[50px] transform items-center justify-center overflow-hidden rounded-full bg-brand-secondary shadow-md transition-all duration-200 dark:bg-brand-secondary-200">
-      <div
-        class="hamburger-content flex h-[20px] w-[20px] origin-center rotate-180 transform flex-col justify-between overflow-hidden transition-all duration-300">
-        <div
-          class="z-10 h-[2px] w-7 -translate-x-1 transform bg-bg-lighter transition-all duration-300 group-focus:rotate-45"></div>
-        <div
-          class="h-[2px] w-7 transform rounded bg-bg-lighter transition-all duration-300"></div>
-        <div
-          class="h-[2px] w-7 -translate-x-1 transform bg-bg-lighter transition-all duration-300 group-focus:-rotate-45"></div>
-      </div>
-      <div class="close-content hidden">
-        <svg
-          class="h-6 w-6"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="white"
-          aria-hidden="true">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-          ␍
-        </svg>
-      </div>
-    </div>
-  </button>
-</div>
-
 <nav
   id="navigation"
-  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:fixed md:right-auto md:top-0 md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
+  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:!right-0 md:top-0 md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
   <div
     id="mobile-store-logo"
     class="absolute left-[-200%] right-0 top-0 z-50 mx-auto h-20 w-full bg-bg-light pt-4 md:hidden dark:bg-bg-darker">
@@ -47,10 +13,10 @@
     </a>
   </div>
   <div
-    class="mr-8 flex w-14 scale-125 items-center justify-end md:mr-12 md:h-full md:scale-100">
+    class="mr-9 flex w-14 scale-110 items-center justify-end md:mr-12 md:h-full md:scale-100">
     <div
       id="theme-toggle"
-      class="relative mb-24 flex h-6 w-12 items-center justify-between rounded-md bg-surface-light-100 px-0 shadow-inner shadow-surface-dark-300 md:mb-4 dark:bg-surface-dark-200 dark:shadow-bg-darker">
+      class="relative mb-16 flex h-6 w-12 items-center justify-between rounded bg-surface-light-100 px-0 shadow-inner shadow-surface-dark-300 md:mb-4 dark:bg-surface-dark-200 dark:shadow-bg-darker">
       <svg
         class="ml-[3px]"
         id="theme-toggle-sun"
@@ -86,7 +52,7 @@
   </div>
 
   <ul
-    class="flex scale-125 cursor-pointer flex-col items-end gap-12 pr-12 text-xl font-normal text-brand-secondary transition-all md:scale-100 md:flex-row md:items-baseline md:gap-8 dark:text-bg-lighter">
+    class="flex scale-[1.15] cursor-pointer flex-col items-end gap-8 pr-10 text-xl font-normal text-brand-secondary transition-all md:scale-100 md:flex-row md:items-baseline md:gap-8 dark:text-bg-lighter">
     <li class="nav-link">
       <a href="index.php">Home</a>
     </li>
@@ -125,9 +91,10 @@
     </li>
   </ul>
 
-  <div class="logo relative mb-4 ml-4 mr-12 mt-4 hidden md:block">
+  <div
+    class="logo relative mb-4 ml-4 mr-12 mt-4 hidden scale-75 md:block lg:scale-100">
     <a href="index.php">
-      <img src="res/pz_logo_1_dark.svg" alt="Store Logo" width="250px" />
+      <img src="res/pz_logo_1_dark.svg" alt="Store Logo" width="250" />
     </a>
   </div>
 
@@ -286,14 +253,7 @@
 <!-- js section -->
 <script defer>
   const body = document.querySelector("body");
-  const toggle = document.querySelector("#mobile-toggle");
   const navigation = document.querySelector("#navigation");
-  const hamburgerIcon = document.querySelector(".hamburger-content");
-  const closeIcon = document.querySelector(".close-content");
-  const mobileLogoBox = document.querySelector("#mobile-store-logo");
-  const mobileLogo = document.querySelector("#mobile-store-logo img");
-  const mobileLogoBoxW = mobileLogoBox.offsetWidth;
-  const mobileLogoW = mobileLogo.offsetWidth;
 
   const loginBtn = document.querySelector("#login-btn");
   const loginDialog = document.querySelector("#login-dialog");
@@ -307,6 +267,7 @@
     "(prefers-color-scheme: dark)"
   ).matches;
 
+  //handle theme with data attribute on html and local storage to save preference
   const root = document.documentElement;
 
   const toggleTheme = () => {
@@ -318,34 +279,45 @@
     setLogoVariant(newTheme);
   };
 
+  // set store logo adequate to contrast on dark/light bg
   const setLogoVariant = (theme) => {
-    const isIndex = window.location.pathname.includes("index.php");
+    // adjust relative path based on current page
+    const isIndex =
+      window.location.pathname.includes("index.php") ||
+      window.location.pathname === "/phonezone/";
     const storeLogos = document.querySelectorAll("img[alt='Store Logo'");
-    let pathPrefifx;
-    isIndex ? (pathPrefifx = "") : (pathPrefifx = "../");
+    let pathPrefix;
+    isIndex ? (pathPrefix = "") : (pathPrefix = "../");
+
     storeLogos.forEach((logo) => {
-      logo.setAttribute("src", pathPrefifx + "res/pz_logo_1_" + theme + ".svg");
+      logo.setAttribute("src", `${pathPrefix}res/pz_logo_1_${theme}.svg`);
     });
   };
 
   const themeOnLoad = () => {
+    // see if user preference is stored
     const storedTheme = localStorage.getItem("preferredTheme");
-    if (!storedTheme) {
+    if (storedTheme === null) {
+      //if not follow the system preference,adjust things thjen return
       systemPrefersDark
         ? root.setAttribute("data-theme", "dark")
         : root.setAttribute("data-theme", "light");
-      setLogoVariant(root.getAttribute("data-theme"));
-      return;
     }
-    root.setAttribute("data-theme", storedTheme);
-    setLogoVariant(storedTheme);
+    // if yes then use it
+    else {
+      root.setAttribute("data-theme", storedTheme);
+    }
+    return root.getAttribute("data-theme");
   };
-  themeOnLoad();
 
+  // call above func on page load
+  setLogoVariant(themeOnLoad());
+
+  // wire all the above logic to the theme toggle btn
   themeToggle.addEventListener("click", toggleTheme);
 
   // animate in the login dialog on btn click
-  loginBtn.onclick = () => {
+  loginBtn.onclick = (e) => {
     loginDialog.showModal();
   };
 
@@ -372,27 +344,4 @@
   loginDialogCloseBtn.onclick = () => {
     loginDialog.close();
   };
-
-  toggle.addEventListener("click", () => {
-    body.style.overflow =
-      body.style.overflow === "hidden" ? "scroll" : "hidden";
-    navigation.style.right = navigation.style.right === "0px" ? "-100%" : "0px";
-    mobileLogo.style.right =
-      mobileLogo.style.right === "0px"
-        ? `-${3 * mobileLogoBoxW - mobileLogoW - 48}px`
-        : "0px";
-    hamburgerIcon.classList.toggle("hidden");
-    closeIcon.classList.toggle("hidden");
-  });
-
-  const resizeObserver = new ResizeObserver((entries) => {
-    const screenWidth = entries[0].contentRect.width;
-    if (screenWidth > 768) {
-      navigation.style.right = "0px";
-    } else {
-      navigation.style.right = "-100%";
-    }
-  });
-
-  resizeObserver.observe(document.body);
 </script>

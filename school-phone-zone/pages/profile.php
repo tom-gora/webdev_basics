@@ -60,6 +60,7 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 <?php
 // bring in the base markup for my html components
 $nav_html = file_get_contents("../html_components/navigation.html");
+$mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $profile_header_html = file_get_contents(
   "../html_components/profile_header.html"
 );
@@ -215,6 +216,8 @@ echo $profile_cart_html;
 echo $profile_order_history;
 echo "</div>";
 echo $footer_html;
+echo $mobile_toggle;
+
 echo $edit_form;
 echo $del_form;
 ?>
