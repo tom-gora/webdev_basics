@@ -7,7 +7,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PhoneZone Products</title>
-  <link rel="icon" type="image/png" href="../res/favicon.png" />
+  <link rel="icon" type="image/png" href="../res/favicon.ico" />
   <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
   <link rel="stylesheet" href="../css/globals.css">
 </head>

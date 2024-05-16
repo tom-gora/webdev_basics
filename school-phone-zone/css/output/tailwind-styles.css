@@ -669,7 +669,9 @@ video {
 
 /* buttons */
 
-active behavior .btn-neutral:active,
+/* active behavior  */
+
+.btn-neutral:active,
   .btn-primary:active,
   .btn-warning:active,
   .btn-info:active {

@@ -43,7 +43,7 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="../res/favicon.png" />
+  <link rel="icon" type="image/png" href="../res/favicon.ico" />
     <title>PhoneZone
       <?php echo " - Your profile: " .
         $logged_in_mf->user_firstname .

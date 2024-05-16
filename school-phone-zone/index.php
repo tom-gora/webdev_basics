@@ -7,7 +7,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PhoneZone</title>
-  <link rel="icon" type="image/png" href="../phonezone/res/favicon.png" />
+  <link rel="icon" type="image/png" href="../phonezone/res/favicon.ico" />
   <link href="css/output/tailwind-styles.css" rel="stylesheet" />
   <link rel="stylesheet" href="./css/globals.css">
 </head>
@@ -56,7 +56,7 @@
         "window.location = '" . $github_login_button_target . "';",
         "nav-link",
         "mb-auto mt-4",
-        "",
+        "./res/pz_logo_1_dark.svg",
       ],
       $nav_html
     );
