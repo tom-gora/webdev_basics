@@ -1,6 +1,6 @@
 <?php
 require_once "utils.php";
-ban_script_access();
+// ban_script_access();
 function get_mysqli()
 {
   $pass = getenv("MYSQL_PASS_TOMANO");

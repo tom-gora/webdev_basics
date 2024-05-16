@@ -15,28 +15,17 @@ if (!$user_id || $user_role == "user") {
 
 <!-- begin markup -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PhoneZone - Admin Panel</title>
-    <link rel="icon" type="image/png" href="../res/favicon.png" />
+    <link rel="icon" type="image/png" href="../res/favicon.ico" />
     <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
-    <!--NOTE: Logo font used is: Suez One-->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap"
-      rel="stylesheet" />
     <link rel="stylesheet" href="../css/globals.css" />
-    <style>
-        .email-admin { transition: 200ms; font-weight: bold;}
-        .email-admin:hover,
-        .email-admin:focus { color: #0D72B9; }
-    </style>
   </head>
 
-  <body class="h-screen items-center bg-gray-100">
+  <body class="h-screen items-center flex flex-col">
     <?php
     //only establish connection after confirming session status
     require_once "../scripts/db.php";
@@ -45,97 +34,20 @@ if (!$user_id || $user_role == "user") {
 
     // get the markup
     $nav_html = file_get_contents("../html_components/navigation.html");
+    $mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
     $users_grid_html = file_get_contents(
       "../html_components/admin_panel_user_grid.html"
     );
     $user_card_html = file_get_contents(
       "../html_components/admin_user_card.html"
     );
+    $pagination_html = file_get_contents("../html_components/pagination.html");
     $footer_html = file_get_contents("../html_components/footer.html");
-
-    // get the users
-    $users = get_users_array();
-    $users_cards_html_stringbuilder = "";
-
-    //In a loop step 1:
-    //put the unconditional content into each user's card html
-    foreach ($users as $user) {
-      $formatted_date = $user->user_registration->format("d/m/Y");
-      $auth_as_string;
-      // switch case for auth method to show readble strings not codes
-      switch ($user->user_auth_method) {
-        case "1":
-          $auth_as_string = "Email";
-          break;
-        case "2":
-          $auth_as_string = "Google";
-          break;
-        case "3":
-          $auth_as_string = "Github";
-          break;
-      }
-      // per user insert personal details
-      $next_user_card_html = str_replace(
-        [
-          "USER_ID",
-          "USER_NAME",
-          "USER_EMAIL",
-          "USER_REGISTRATION",
-          "USER_ROLE",
-          "USER_AUTH_METHOD",
-          "USER_FIRST_NAME",
-          "USER_LAST_NAME",
-          "USER_IMG",
-          "USER_TYPE",
-        ],
-        [
-          $user->user_id,
-          $user->user_firstname . " " . $user->user_lastname,
-          $user->user_email,
-          $formatted_date,
-          ucfirst($user->user_type),
-          $auth_as_string,
-          $user->user_firstname,
-          $user->user_lastname,
-          $user->user_img,
-          $user->user_type,
-        ],
-        $user_card_html
-      );
-      //
-      //WARN:
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      // ASSESSMENT: this is accomplishing task 3 in my implementation on the front end by hiding buttons (additional prevention)
-      // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      //
-      // In a loop step 2:
-      // put the conditional content into each user's card html to not show UI
-      // allowing for editing admin/owner unless owner is logged in by hiding it
-      // for everyone else
-      if ($_SESSION["user_type"] != "owner" && $user->user_type != "user") {
-        $users_grid_html = str_replace(
-          [
-            '<option value="admin">Admin</option>',
-            '<option value="owner">Owner</option>',
-          ],
-          ["", ""],
-          $users_grid_html
-        );
-        $next_user_card_html = str_replace(
-          ["del-btn", "edit-btn", "forbidden flex hidden"],
-          ["hidden", "hidden", "flex mr-2"],
-          $next_user_card_html
-        );
-      }
-      // with the card ready concat it to the stringbuilder var
-      $users_cards_html_stringbuilder .= $next_user_card_html;
-    }
-
-    // insert the markup into a grid wrapper
-    $users_grid_html = str_replace(
-      ["ADMIN_USERS_CARDS"],
-      [$users_cards_html_stringbuilder],
-      $users_grid_html
+    $del_dialog_html = file_get_contents(
+      "../html_components/dialog_delete.html"
+    );
+    $edit_dialog_html = file_get_contents(
+      "../html_components/dialog_edit.html"
     );
 
     //get the logged in user avatar for the navigation miniature
@@ -148,8 +60,8 @@ if (!$user_id || $user_role == "user") {
     $nav_html = str_replace(
       [
         "res/user_img/PROFILE_USER_IMG",
-        "for-logged-in hidden",
-        "for-logged-in group hidden",
+        "for-logged-in nav-link hidden",
+        "for-logged-in nav-link group hidden",
         "res/logo-h.png",
         'href="index.php"',
         "pages/products.php",
@@ -158,8 +70,8 @@ if (!$user_id || $user_role == "user") {
       ],
       [
         "../res/user_img/" . $row["user_img"],
-        "",
-        "group",
+        "nav-link",
+        "nav-link group",
         "../res/logo-h.png",
         'href="../index.php"',
         "../pages/products.php",
@@ -169,10 +81,37 @@ if (!$user_id || $user_role == "user") {
       $nav_html
     );
 
+    $query = "SELECT COUNT(user_id) AS total_users FROM users;";
+    $statement = mysqli_prepare($connection, $query);
+    if (!$statement) {
+      mysqli_close($connection);
+      $err_msg_params = ["error_msg" => "err_retrieving_user_count_01"];
+      redirect_with_query("../index.php", $err_msg_params);
+    }
+    $result = mysqli_stmt_execute($statement);
+    if (!$result) {
+      db_tidy_up($statement, $connection);
+      $err_msg_params = ["error_msg" => "err_retrieving_user_count_02"];
+      redirect_with_query("../index.php", $err_msg_params);
+    }
+    $result = mysqli_stmt_get_result($statement);
+    db_tidy_up($statement, $connection);
+    $row = mysqli_fetch_assoc($result);
+    $total_users = $row["total_users"];
+
+    $pagination_html = str_replace(
+      ['id="pagination"', "scale-90"],
+      ['id="pagination" data-total-users=' . $total_users, "scale-90 mb-12"],
+      $pagination_html
+    );
     // add content onto the page before shipping to client
+    echo $del_dialog_html;
+    echo $edit_dialog_html;
     echo $nav_html;
     echo $users_grid_html;
+    echo $pagination_html;
     echo $footer_html;
+    echo $mobile_toggle;
     ?>
 
 <script type="module" src="../js/admin.js"></script>

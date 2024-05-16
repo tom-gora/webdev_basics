@@ -58,13 +58,13 @@ export const prefillFormForEdit = (
   // console.log(roleSelect);
   const roleSelect = editForm.querySelector("select[name='edit-user-type']");
   switch (role) {
-    case "user":
+    case "User":
       roleSelect.options.selectedIndex = 0;
       break;
-    case "admin":
+    case "Admin":
       roleSelect.options.selectedIndex = 1;
       break;
-    case "owner":
+    case "Owner":
       roleSelect.options.selectedIndex = 2;
       break;
   }

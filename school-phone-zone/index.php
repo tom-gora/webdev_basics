@@ -7,21 +7,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PhoneZone</title>
-  <link rel="icon" type="image/png" href="../phonezone/res/favicon.png" />
+  <link rel="icon" type="image/png" href="../phonezone/res/favicon.ico" />
   <link href="css/output/tailwind-styles.css" rel="stylesheet" />
-  <!--NOTE: Logo font used is: Suez One-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/globals.css">
-  <style>
-      .email-admin { transition: 200ms; font-weight: bold;}
-      .email-admin:hover,
-      .email-admin:focus { color: #0D72B9; }
-  </style>
 </head>
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
   <?php
   define("ALLOW_REQUIRED_SCRIPTS", true);
   session_start();
@@ -38,10 +29,12 @@
 
   //get my html components contents
   $nav_html = file_get_contents("./html_components/navigation.html");
+  $mobile_toggle = file_get_contents("./html_components/mobile_toggle.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
   $phone_card_html = file_get_contents("./html_components/phone_card.html");
   $about_html = file_get_contents("./html_components/about.html");
   $footer_html = file_get_contents("./html_components/footer.html");
+  $login_dialog_html = file_get_contents("./html_components/dialog_login.html");
 
   // inject google api url and control what html to show for logged in and logged out users
   $google_login_button_target = get_google_login_url();
@@ -50,28 +43,30 @@
     $github_login_button_target . "&scope=user:email";
 
   if (!isset($_SESSION["user_id"])) {
-    $nav_html = str_replace(
-      [
-        "GOOGLE_API_URL",
-        "GITHUB_API_URL",
-        "for-logged-out hidden",
-        "for-logged-out mb-auto mt-4 hidden",
-        "res/user_img/PROFILE_USER_IMG",
-      ],
+    $login_dialog_html = str_replace(
+      ["GOOGLE_API_URL", "GITHUB_API_URL"],
       [
         "window.location = '" . $google_login_button_target . "';",
         "window.location = '" . $github_login_button_target . "';",
-        "",
-        "mb-auto mt-4",
-        "",
       ],
+      $login_dialog_html
+    );
+
+    $nav_html = str_replace(
+      [
+        "for-logged-out nav-link hidden",
+        "for-logged-out mb-auto mt-4 hidden",
+        "res/user_img/PROFILE_USER_IMG",
+      ],
+      ["nav-link", "mb-auto mt-4", "./res/pz_logo_1_dark.svg"],
       $nav_html
     );
   } else {
     require_once "./scripts/user_functionality.php";
     $nav_html = str_replace(
-      ["for-logged-in hidden", "for-logged-in group hidden"],
-      ["", "group"],
+      ["for-logged-in nav-link hidden", "for-logged-in nav-link group hidden"],
+
+      ["nav-link", "nav-link group"],
       $nav_html
     );
     $logged_in_mf = get_user($_SESSION["user_id"]);
@@ -82,18 +77,25 @@
     );
   }
 
+  $login_dialog_html = str_replace(
+    'action="../scripts/login.php"',
+    'action="./scripts/login.php"',
+    $login_dialog_html
+  );
+
   // since we are on index, adjust the top sellers component with appropriate title
   $top_products_html = str_replace(
     ["SECTION_TITLE", " 2xl:grid-cols-5", " lg:grid-cols-3"],
     ["Best sellers", "", ""],
     file_get_contents("./html_components/products_grid.html")
   );
+
   // and also make the promo sticker show up (removing the attribute giving it height of 0 and injecting html into it)
   $phone_card_html = str_replace(
     ["PROMO", "promo-sticker h-0"],
     [
-      '<div class="text-white text-sm text-center absolute w-36 h-6 bg-red-400 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
-      "",
+      '<div class="text-sm text-center absolute w-36 pt-[2px] h-6 dark:bg-brand-primary-600 bg-brand-primary-200 rotate-45 top-0 translate-y-7 translate-x-8 right-0">GREAT DEAL</div>',
+      "promo-sticker",
     ],
     $phone_card_html
   );
@@ -126,14 +128,16 @@
   );
 
   // echo crap onto the page
+  echo $login_dialog_html;
   echo $nav_html;
   echo $cta_html;
   echo $top_products_html;
   echo $about_html;
   echo $footer_html;
+  echo $mobile_toggle;
   ?>
 
-  <script src="./js/index.js" type="text/javascript"></script>
+  <script defer src="./js/index.js" type="text/javascript"></script>
 </body>
 
 </html>

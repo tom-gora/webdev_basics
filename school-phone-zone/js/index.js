@@ -1,4 +1,3 @@
-console.log("hello world");
 const msgBox = document.querySelector("#msg-box");
 
 const params = new URLSearchParams(window.location.search);
@@ -56,8 +55,8 @@ if (err_msg) {
           "<p>This is a demo system.<br>Limit of registered users has been reached.<br>If you have an account consider removing it to add a new one.<br>Otherwise";
         msgBox.classList.remove("animate-delay-[3000]");
         msgBox.style.animationDelay = "8000ms";
-        msgBox.classList.remove("bg-[--brand-color-green]");
-        msgBox.classList.add("bg-red-400");
+        msgBox.classList.remove("bg-bg-info");
+        msgBox.classList.add("bg-brand-primary-200");
         msgBox.classList.remove("hidden");
         break;
       default:
@@ -78,8 +77,8 @@ switch (err) {
     // HACK: changing animation via toggling classes don't work so forcing longer
     // delay directly with JS to allow for re3ading longer message and clicking link
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-bg-info");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
   case "internalerr":
@@ -87,8 +86,8 @@ switch (err) {
       "<p>Something went wrong. Please <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
     msgBox.classList.remove("animate-delay-[3000]");
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-bg-info");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
   case "autherror":
@@ -96,8 +95,8 @@ switch (err) {
       "<p>Something went wrong. Please try a different login method <br>or <a class='email-admin' href='mailto:goratomasz@outlook.com'>contact the administrator</a>.</p>";
     msgBox.classList.remove("animate-delay-[3000]");
     msgBox.style.animationDelay = "8000ms";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-bg-info");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
   // info level error reporting
@@ -107,14 +106,14 @@ switch (err) {
     loginDialog.showModal();
     break;
   case "nologin":
-    loginErrMsgBox.innerText = "You need to login to see this page.";
+    loginErrMsgBox.innerText = "You need to log in to see this page.";
     loginErrMsgBox.classList.toggle("hidden");
     loginDialog.showModal();
     break;
   case "noadmin":
     msgBox.innerText = "You have no permissions to access this page.";
-    msgBox.classList.remove("bg-[--brand-color-green]");
-    msgBox.classList.add("bg-red-400");
+    msgBox.classList.remove("bg-bg-info");
+    msgBox.classList.add("bg-brand-primary-200");
     msgBox.classList.remove("hidden");
     break;
 }

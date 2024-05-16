@@ -21,13 +21,9 @@ $connection = get_mysqli();
 
 $limit = $obj->items_per_page;
 $offset = ($obj->page_nr - 1) * $obj->items_per_page;
-$connection = get_mysqli();
 switch ($requested_data) {
   case "products":
     $query = "SELECT * FROM products ORDER BY product_id ASC LIMIT ? OFFSET ?";
-    break;
-  case "users":
-    $query = "SELECT * FROM users ORDER BY user_id ASC LIMIT ? OFFSET ?";
     $statement = mysqli_prepare($connection, $query);
     if (!$statement) {
       redirect_with_query(
@@ -44,6 +40,34 @@ switch ($requested_data) {
         "../index.php",
         ["error" => "internalerr"],
         ["err_message" => "err_getting_pagination_03"]
+      );
+    }
+    $data = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+      $row["product_price"] = "£" . $row["product_price"] . ".00";
+      array_push($data, $row);
+    }
+    echo json_encode($data);
+
+    break;
+  case "users":
+    $query = "SELECT * FROM users ORDER BY user_id ASC LIMIT ? OFFSET ?";
+    $statement = mysqli_prepare($connection, $query);
+    if (!$statement) {
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "err_getting_pagination_04"]
+      );
+    }
+    mysqli_stmt_bind_param($statement, "ii", $limit, $offset);
+    mysqli_stmt_execute($statement);
+    $result = mysqli_stmt_get_result($statement);
+    if (!$result) {
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "err_getting_pagination_05"]
       );
     }
     $data = [];

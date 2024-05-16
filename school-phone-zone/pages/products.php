@@ -1,23 +1,19 @@
 <!-- source for box shadow snippets https://manuarora.in/boxshadows -->
 <!-- animations from https://www.tailwindcss-animated.com/ -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PhoneZone Products</title>
-  <link rel="icon" type="image/png" href="../res/favicon.png" />
+  <link rel="icon" type="image/png" href="../res/favicon.ico" />
   <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
-  <!--NOTE: Logo font used is: Suez One-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/globals.css">
 </head>
 
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-[5.5rem]">
+<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();
@@ -30,9 +26,12 @@ require_once "../github/login_conf.php";
 
 // grab markup for my html components
 $nav_html = file_get_contents("../html_components/navigation.html");
+$mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $phone_card_html = file_get_contents("../html_components/phone_card.html");
 $grid_html = file_get_contents("../html_components/products_grid.html");
 $footer_html = file_get_contents("../html_components/footer.html");
+$pagination_html = file_get_contents("../html_components/pagination.html");
+$login_dialog_html = file_get_contents("../html_components/dialog_login.html");
 
 // inject google api url and control what html to show for logged in and logged out users
 $google_login_button_target = get_google_login_url();
@@ -48,21 +47,22 @@ $nav_html = str_replace(
 
 if (!isset($_SESSION["user_id"])) {
   // changes when user is logged out
-  $nav_html = str_replace(
-    [
-      "GOOGLE_API_URL",
-      "GITHUB_API_URL",
-      "for-logged-out hidden",
-      "for-logged-out mb-auto mt-24 hidden",
-      "scripts/login.php",
-    ],
+  $login_dialog_html = str_replace(
+    ["GOOGLE_API_URL", "GITHUB_API_URL"],
     [
       "window.location = '" . $google_login_button_target . "';",
       "window.location = '" . $github_login_button_target . "';",
-      "",
-      "mb-auto mt-24",
-      "../scripts/login.php",
     ],
+    $login_dialog_html
+  );
+
+  $nav_html = str_replace(
+    [
+      "for-logged-out nav-link hidden",
+      "for-logged-out mb-auto mt-4 hidden",
+      "scripts/login.php",
+    ],
+    ["nav-link", "mb-auto mt-24", "../scripts/login.php"],
     $nav_html
   );
 } else {
@@ -71,15 +71,15 @@ if (!isset($_SESSION["user_id"])) {
   $logged_in_mf = get_user($_SESSION["user_id"]);
   $nav_html = str_replace(
     [
-      "for-logged-in hidden",
-      "for-logged-in group hidden",
+      "for-logged-in nav-link hidden",
+      "for-logged-in nav-link group hidden",
       "pages/profile.php",
       "scripts/logout.php",
       "res/user_img/PROFILE_USER_IMG",
     ],
     [
-      "",
-      "group",
+      "nav-link",
+      "nav-link group",
       "../pages/profile.php",
       "../scripts/logout.php",
       "../res/user_img/" . $logged_in_mf->user_img,
@@ -88,39 +88,52 @@ if (!isset($_SESSION["user_id"])) {
   );
 }
 
-//build products grid markup
-$products = get_products();
-shuffle($products);
-$products_cards_html_stringbuilder = "";
-foreach ($products as $product) {
-  $next_product_card_html = str_replace(
-    [
-      "PRODUCT_NAME",
-      "PRODUCT_PRICE",
-      "res/phones/PRODUCT_IMG_PATH",
-      "promo-sticker",
-    ],
-    [
-      $product->product_name,
-      $product->product_price,
-      "../res/phones/" . $product->product_img_path,
-      "hidden",
-    ],
-    $phone_card_html
-  );
-  $products_cards_html_stringbuilder .= $next_product_card_html;
-}
-
 $grid_html = str_replace(
-  ["SECTION_TITLE", "PRODUCTS_GRID"],
-  ["OUR PHONES RANGE", $products_cards_html_stringbuilder],
+  ["SECTION_TITLE", "bg-bg-light", "dark:bg-bg-darker", "col-span-full grid"],
+  [
+    "OUR PHONES RANGE",
+    "bg-bg-lighter",
+    "dark:bg-bg-dark",
+    "col-span-full grid pt-4",
+  ],
   $grid_html
 );
 
+$grid_html = str_replace("pb-16", "pb-8", $grid_html);
+
+$connection = get_mysqli();
+$query = "SELECT COUNT(product_id) AS total_products FROM products;";
+$statement = mysqli_prepare($connection, $query);
+if (!$statement) {
+  mysqli_close($connection);
+  $err_msg_params = ["error_msg" => "err_retrieving_products_count_01"];
+  redirect_with_query("../index.php", $err_msg_params);
+}
+$result = mysqli_stmt_execute($statement);
+if (!$result) {
+  db_tidy_up($statement, $connection);
+  $err_msg_params = ["error_msg" => "err_retrieving_products_count_02"];
+  redirect_with_query("../index.php", $err_msg_params);
+}
+$result = mysqli_stmt_get_result($statement);
+db_tidy_up($statement, $connection);
+$row = mysqli_fetch_assoc($result);
+$total_products = $row["total_products"];
+
+$pagination_html = str_replace(
+  ['id="pagination"'],
+  ['id="pagination" data-total-products=' . $total_products],
+  $pagination_html
+);
+$pagination_html = str_replace("scale-90", "pb-16", $pagination_html);
+
 //pout stuff onto a page and send to browser
+echo $login_dialog_html;
 echo $nav_html;
 echo $grid_html;
+echo $pagination_html;
 echo $footer_html;
+echo $mobile_toggle;
 ?>
-
+<script type="module" src="../js/products.js"></script>
 </body>

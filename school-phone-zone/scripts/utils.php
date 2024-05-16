@@ -14,7 +14,7 @@ function ban_script_access()
       : exit($markup_message . $markup_button);
   }
 }
-ban_script_access();
+// ban_script_access();
 
 // handle client requests
 

@@ -1,4 +1,5 @@
 import * as dialogFunctions from "./dialog_functions.js";
+import * as paginationFunctions from "./pagination.js";
 
 // popup for errors and status messages
 const msgBox = document.querySelector("#msg-box");
@@ -143,44 +144,12 @@ editDialogCancelBtn.addEventListener("click", (e) => {
 addUserButton.addEventListener("click", () => {
   dialogFunctions.setFormForAddition(editDialog);
   editDialog.showModal();
+  editDialog.showModal();
+  editDialog.showModal();
+  editDialog.showModal();
 });
 
 const usersGrid = document.querySelector("#users-grid");
-
-const getUsersPageData = async (
-  client_request,
-  requested_data,
-  page_nr,
-  items_per_page
-) => {
-  const data = {
-    client_request: client_request,
-    requested_data: requested_data,
-    page_nr: page_nr,
-    items_per_page: items_per_page
-  };
-
-  const requestOpts = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json, charset=utf-8"
-    },
-    body: JSON.stringify(data)
-  };
-  const url = "../scripts/get_paginated_data.php";
-  return fetch(url, requestOpts)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.log(
-        "There has been a problem with your fetch operation: " + error.message
-      );
-    });
-};
 
 const getUserCardHtml = async () => {
   const cardUrl = "../html_components/admin_user_card.html";
@@ -203,7 +172,12 @@ const renderUsersPage = (page_nr, items_per_page) => {
 
   const promises = [
     getUserCardHtml(),
-    getUsersPageData(client_request, requested_data, page_nr, items_per_page),
+    paginationFunctions.dataFetcher(
+      client_request,
+      requested_data,
+      page_nr,
+      items_per_page
+    ),
     dialogFunctions.get_role()
   ];
 
@@ -305,10 +279,7 @@ const renderUsersPage = (page_nr, items_per_page) => {
 
     const paginationTotalPages = paginationDiv.querySelector("p.total-pages");
     const savedUserCount = sessionStorage.getItem("user_count");
-    const totalPagesCount = savedUserCount
-      ? Math.ceil(savedUserCount / items_per_page)
-      : Math.ceil(userCount / items_per_page);
-
+    const totalPagesCount = Math.ceil(savedUserCount / items_per_page);
     paginationTotalPages.innerText = totalPagesCount;
   });
 };
@@ -349,101 +320,91 @@ const totalPagesCount = Math.ceil(
   sessionStorage.getItem("user_count") / items_per_page
 );
 
+const cardsClass = "admin-page-user-card";
+
 paginationFirst.addEventListener("click", () => {
-  removeCurrentlyRenderedCardsFromDom();
+  paginationFunctions.removeCurrentlyRenderedCardsFromDom(
+    usersGrid,
+    cardsClass
+  );
   page_nr = 1;
   sessionStorage.setItem("page_nr", page_nr);
   renderUsersPage(page_nr, items_per_page);
   paginationCurrentPage.innerText = page_nr;
-  customEnableBtn(paginationNext);
-  customDisableBtn(paginationPrev);
-  customEnableBtn(paginationLast);
-  customDisableBtn(paginationFirst);
+  paginationFunctions.customEnableBtn(paginationNext);
+  paginationFunctions.customDisableBtn(paginationPrev);
+  paginationFunctions.customEnableBtn(paginationLast);
+  paginationFunctions.customDisableBtn(paginationFirst);
 });
 
 paginationPrev.addEventListener("click", () => {
   let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
   if (currentPageNr > 1) {
-    removeCurrentlyRenderedCardsFromDom();
+    paginationFunctions.removeCurrentlyRenderedCardsFromDom(
+      usersGrid,
+      cardsClass
+    );
     page_nr = currentPageNr - 1;
     sessionStorage.setItem("page_nr", page_nr);
     renderUsersPage(page_nr, items_per_page);
     paginationCurrentPage.innerText = page_nr;
-    customEnableBtn(paginationLast);
-    customEnableBtn(paginationNext);
+    paginationFunctions.customEnableBtn(paginationLast);
+    paginationFunctions.customEnableBtn(paginationNext);
   } else {
-    customEnableBtn(paginationNext);
-    customDisableBtn(paginationPrev);
-    customEnableBtn(paginationLast);
-    customDisableBtn(paginationFirst);
+    paginationFunctions.customEnableBtn(paginationNext);
+    paginationFunctions.customDisableBtn(paginationPrev);
+    paginationFunctions.customEnableBtn(paginationLast);
+    paginationFunctions.customDisableBtn(paginationFirst);
   }
 });
 
-console.log("total pages" + totalPagesCount);
-let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
-console.log("current page" + currentPageNr);
 paginationNext.addEventListener("click", () => {
   let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
   if (currentPageNr < totalPagesCount) {
-    removeCurrentlyRenderedCardsFromDom();
+    paginationFunctions.removeCurrentlyRenderedCardsFromDom(
+      usersGrid,
+      cardsClass
+    );
     page_nr = currentPageNr + 1;
     sessionStorage.setItem("page_nr", page_nr);
     renderUsersPage(page_nr, items_per_page);
     paginationCurrentPage.innerText = page_nr;
-    customEnableBtn(paginationFirst);
-    customEnableBtn(paginationPrev);
+    paginationFunctions.customEnableBtn(paginationFirst);
+    paginationFunctions.customEnableBtn(paginationPrev);
   } else {
-    customDisableBtn(paginationNext);
-    customEnableBtn(paginationPrev);
-    customDisableBtn(paginationLast);
-    customEnableBtn(paginationFirst);
+    paginationFunctions.customDisableBtn(paginationNext);
+    paginationFunctions.customEnableBtn(paginationPrev);
+    paginationFunctions.customDisableBtn(paginationLast);
+    paginationFunctions.customEnableBtn(paginationFirst);
   }
 });
 
 paginationLast.addEventListener("click", () => {
-  removeCurrentlyRenderedCardsFromDom();
+  paginationFunctions.removeCurrentlyRenderedCardsFromDom(
+    usersGrid,
+    cardsClass
+  );
   page_nr = totalPagesCount;
   sessionStorage.setItem("page_nr", page_nr);
   renderUsersPage(page_nr, items_per_page);
   paginationCurrentPage.innerText = page_nr;
-  customDisableBtn(paginationNext);
-  customEnableBtn(paginationPrev);
-  customDisableBtn(paginationLast);
-  customEnableBtn(paginationFirst);
+  paginationFunctions.customDisableBtn(paginationNext);
+  paginationFunctions.customEnableBtn(paginationPrev);
+  paginationFunctions.customDisableBtn(paginationLast);
+  paginationFunctions.customEnableBtn(paginationFirst);
 });
 
 paginationCurrentPage.addEventListener("DOMSubtreeModified", () => {
   let currentPageNr = parseInt(sessionStorage.getItem("page_nr"));
   if (currentPageNr == 1) {
-    customDisableBtn(paginationPrev);
-    customDisableBtn(paginationFirst);
+    paginationFunctions.customDisableBtn(paginationPrev);
+    paginationFunctions.customDisableBtn(paginationFirst);
   } else if (currentPageNr == totalPagesCount) {
-    customDisableBtn(paginationNext);
-    customDisableBtn(paginationLast);
+    paginationFunctions.customDisableBtn(paginationNext);
+    paginationFunctions.customDisableBtn(paginationLast);
   }
 });
 
-const customDisableBtn = (btn) => {
-  btn.setAttribute("inert", "");
-  btn.setAttribute("disabled", true);
-  btn.style.filter = "brightness(0.5)";
-};
-
-const customEnableBtn = (btn) => {
-  btn.removeAttribute("inert");
-  btn.removeAttribute("disabled");
-  btn.style.filter = "brightness(1)";
-};
-
-const removeCurrentlyRenderedCardsFromDom = () => {
-  const currentlyRenderedCards = usersGrid.querySelectorAll(
-    ".admin-page-user-card"
-  );
-  currentlyRenderedCards.forEach((card) => {
-    card.parentNode.removeChild(card);
-  });
-};
-
 // page 1 on load so disable those by default
-customDisableBtn(paginationPrev);
-customDisableBtn(paginationFirst);
+paginationFunctions.customDisableBtn(paginationPrev);
+paginationFunctions.customDisableBtn(paginationFirst);

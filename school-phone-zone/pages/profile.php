@@ -38,12 +38,12 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 
 <!-- begin markup -->
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/png" href="../res/favicon.png" />
+  <link rel="icon" type="image/png" href="../res/favicon.ico" />
     <title>PhoneZone
       <?php echo " - Your profile: " .
         $logged_in_mf->user_firstname .
@@ -52,32 +52,22 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 
     </title>
   <link href="../css/output/tailwind-styles.css" rel="stylesheet" />
-  <!--NOTE: Logo font used is: Suez One-->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Suez+One&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/globals.css">
 </head>
 
 
-<body class="bg-gray-100 h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 // bring in the base markup for my html components
 $nav_html = file_get_contents("../html_components/navigation.html");
+$mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $profile_header_html = file_get_contents(
   "../html_components/profile_header.html"
 );
-$html_containing_form = file_get_contents(
-  "../html_components/admin_panel_user_grid.html"
-);
-$temp_dom = new DOMDocument();
-@$temp_dom->loadHTML($html_containing_form);
-$edit_form = $temp_dom->getElementById("edit-dialog");
-@$del_form = $temp_dom->getElementById("del-dialog");
+$edit_dialog_html = file_get_contents("../html_components/dialog_edit.html");
+$del_dialog_html = file_get_contents("../html_components/dialog_delete.html");
 
-$edit_form = $temp_dom->saveHTML($edit_form);
-$del_form = $temp_dom->saveHTML($del_form);
-$edit_form = str_replace(
+$edit_dialog_html = str_replace(
   [
     "Edit details</h2>",
     'name="edit-user-id" value=""',
@@ -98,7 +88,7 @@ $edit_form = str_replace(
     $logged_in_mf->user_img .
     '); background-size: cover; background-position: center;"',
   ],
-  $edit_form
+  $edit_dialog_html
 );
 // WOW I will always remeber how I fucking came up with this solution
 // just by reading docs for select element and flipping the AI off HARD
@@ -111,7 +101,7 @@ $edit_form = str_replace(
 // can play fucking 11-D chess made of strings and branes if he wants XD
 switch ($logged_in_mf->user_type) {
   case "user":
-    $edit_form = str_replace(
+    $edit_dialog_html = str_replace(
       [
         '<option value="owner">Owner</option>',
         '<option value="admin">Admin</option',
@@ -124,31 +114,31 @@ switch ($logged_in_mf->user_type) {
         '<option value="user" selected>User</option>',
         'id="role-input" class="hidden ',
       ],
-      $edit_form
+      $edit_dialog_html
     );
     break;
   case "admin":
-    $edit_form = str_replace(
+    $edit_dialog_html = str_replace(
       [
         '<option value="owner">Owner</option>',
         '<option value="admin">Admin</option',
       ],
       ["", '<option value="admin" selected>Admin</option>'],
-      $edit_form
+      $edit_dialog_html
     );
     break;
   case "owner":
-    $edit_form = str_replace(
+    $edit_dialog_html = str_replace(
       ['<option value="owner">Owner</option>'],
       ['<option value="owner" selected>Owner</option>'],
-      $edit_form
+      $edit_dialog_html
     );
     break;
 }
-$del_form = str_replace(
+$del_dialog_html = str_replace(
   'name="del-user-id" value="delete_user',
   'name="del-user-id" value="' . $user_id,
-  $del_form
+  $del_dialog_html
 );
 $profile_cart_html = file_get_contents("../html_components/profile_cart.html");
 $profile_order_history = file_get_contents(
@@ -168,24 +158,24 @@ $nav_html = str_replace(
 //conditional changes based on user type (for admin/owner stuff)
 if (isset($_SESSION["user_type"]) && $_SESSION["user_type"] != "user") {
   $profile_header_html = str_replace(
-    ["role hidden", "PROFILE_USER_ROLE", "inline-flex hidden"],
-    ["", ucfirst($_SESSION["user_type"]), "inline-flex"],
+    ["role hidden", "PROFILE_USER_ROLE", "btn-primary hidden"],
+    ["", ucfirst($_SESSION["user_type"]), "btn-primary"],
     $profile_header_html
   );
 }
 // adjust navbar strings
 $nav_html = str_replace(
   [
-    "for-logged-in hidden",
-    "for-logged-in group hidden",
+    "for-logged-in nav-link hidden",
+    "for-logged-in nav-link group hidden",
     "pages/profile.php",
     "res/user_img/PROFILE_USER_IMG",
     "pages/products.php",
     "scripts/logout.php",
   ],
   [
-    "",
-    "group",
+    "nav-link",
+    "nav-link group",
     "../pages/profile.php",
     "../res/user_img/" . $logged_in_mf->user_img,
     "../pages/products.php",
@@ -212,15 +202,16 @@ $profile_header_html = str_replace(
 );
 
 // echo content to the page
+echo $edit_dialog_html;
+echo $del_dialog_html;
 echo $nav_html;
 echo $profile_header_html;
-echo "<div class='w-10/12 py-8 h-max grow md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
+echo "<div id='profile-purchases-details' class='w-full px-[8.33%] bg-bg-light dark:bg-bg-darker pt-12 h-max grow md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
 echo $profile_cart_html;
 echo $profile_order_history;
 echo "</div>";
 echo $footer_html;
-echo $edit_form;
-echo $del_form;
+echo $mobile_toggle;
 ?>
 <script type="module" src="../js/profile.js"></script>
   </body>
