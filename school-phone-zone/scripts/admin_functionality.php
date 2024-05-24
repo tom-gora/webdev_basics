@@ -31,7 +31,6 @@ if (isset($_POST["del-user-id"])) {
 //  FN: _______________________________________________________________________
 // function handling operations on users performed by admin
 // conditionally acting on requested action - delete, or edit
-// TODO: further functionalities for managing products
 
 function handle_user_operations(string $operation_type)
 {
@@ -80,7 +79,7 @@ function handle_user_operations(string $operation_type)
     $id_to_edit = $_POST["edit-user-id"];
     $edited_user = get_user($id_to_edit);
 
-    //TODO: Log print to be deleted
+    // TEST: Log print to be deleted
     // echo $edited_user->user_type;
     // exit();
 
