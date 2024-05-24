@@ -33,8 +33,8 @@
   const mobileLogoW = mobileLogo.offsetWidth;
 
   mobileToggle.onclick = () => {
-    body.style.overflow =
-      body.style.overflow === "hidden" ? "scroll" : "hidden";
+    document.body.style.overflow =
+      document.body.style.overflow === "hidden" ? "scroll" : "hidden";
     navigation.style.right = navigation.style.right === "0px" ? "-100%" : "0px";
     mobileLogo.style.right =
       mobileLogo.style.right === "0px"

@@ -171,3 +171,22 @@ input[type="password"]:focus-visible {
 :root[data-theme="dark"] .profile-section-title::after {
   border-bottom: 1px solid #f3f4f6;
 }
+
+/* inputs */
+input[type="number"] {
+  position: relative !important;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -moz-appearance: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  position: absolute !important;
+  margin: 0 !important;
+}
+/*   -webkit-appearance: none; */
+/*   color: white; */
+/*   background: red !important; */
+/*   appearance: none; */
+/*   margin: 0; */
+/* } */

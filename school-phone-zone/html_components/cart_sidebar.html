@@ -1,0 +1,73 @@
+<div
+  id="cart-sidebar"
+  class="animate-fade-left overflow-y-scroll hidden px-4 md:pl-6 md:pr-12 animate-reverse animate-duration-300 text-brand-secondary dark:text-bg-lighter fixed right-0 top-0 z-[200] md:z-20 h-screen w-screen bg-bg-light pt-12 shadow-[-10px_-15px_10px_0px_#00000024] md:mt-20 md:w-4/12 md:min-w-[500px] dark:bg-bg-darker">
+
+<svg id="cart-sidebar-innner-close-btn" class="group cursor-pointer w-8 aspect-square absolute right-16 top-12" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-180.000000, -6639.000000)" class="fill-brand-secondary dark:fill-bg-lighter group-hover:fill-brand-secondary-200 transition-fill duration-300">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M134,6479 L132.565,6480.393 L140.172,6488 L124,6488 L124,6490 L140.172,6490 L132.586,6497.586 L134,6499 C137.661,6495.339 140.496,6492.504 144,6489 L134,6479" id="arrow_right-[#349]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+  <h1 class="mb-10 text-center text-2xl font-bold">Cart Items</h1>
+  <div
+    class="mx-auto items-center justify-start px-8 md:flex md:flex-col md:space-x-6 xl:px-0">
+    <div id="cart-products-wrapper" class="w-full px-4">
+      
+    </div>
+    <!-- Sub total -->
+    <div class="mt-6 flex h-full w-full flex-col p-6 md:mt-0">
+      <div class="mb-2 flex justify-between">
+        <p>Subtotal</p>
+        <p id="insert-subtotal"></p>
+      </div>
+      <div class="flex justify-between">
+        <p>Shipping</p>
+        <p id="insert-shipping"></p>
+      </div>
+
+      <div class="flex justify-between border-t-brand-secondary border-t-2 dark:border-t-bg-info mt-4 pt-4"
+        <p class="text-lg font-bold">Total</p>
+        <div class="">
+          <p id="insert-total-with-shipping" class="mb-1 text-end text-lg font-bold"></p>
+          <p class="text-sm">including VAT</p>
+        </div>
+      </div>
+      <button class="btn-primary dark:btn-info mt-8 w-6/12 self-center">
+        <span></span>
+        <span></span>
+        <span>Check out</span>
+      </button>
+    </div>
+  </div>
+</div>
+<script type="module">
+import * as cartFunctions from "./js/cart_functions.js";
+
+const shippingCost = 20;
+const loggedInID = sessionStorage.getItem("user_id");
+const cartSidebar = document.querySelector("#cart-sidebar");
+const inCartToggle = cartSidebar.querySelector(
+  "#cart-sidebar-innner-close-btn"
+);
+const productsWrapper = cartSidebar.querySelector("#cart-products-wrapper");
+const phoneCards = document.querySelectorAll(".phone-card");
+const basketCounter = document.querySelector("#basket-counter");
+
+phoneCards.forEach((phoneCard) => {
+  const cardBtn = phoneCard.querySelector(".btn-neutral");
+  const idToFetch = phoneCard.getAttribute("data-product-id");
+  cardBtn.addEventListener("click", () => cartFunctions.addProductFromPage(idToFetch));
+});
+
+inCartToggle.addEventListener("click", () => {
+  inCartToggle.parentNode.classList.toggle("hidden");
+  inCartToggle.parentNode.classList.toggle("animate-reverse");
+});
+
+loggedInID !== "no_id" ? cartFunctions.initCart(shippingCost, loggedInID, cartSidebar, basketCounter) : null;
+</script>

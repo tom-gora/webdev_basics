@@ -91,24 +91,6 @@ export const setFormForAddition = (editForm) => {
     .querySelector("span[class='relative']").innerText = "Add user";
 };
 
-export async function get_id() {
-  try {
-    const data = new FormData();
-    data.append("client_request", "get_id");
-    const response = await fetch("scripts/utils.php", {
-      method: "POST",
-      body: data
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.text();
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
-}
-
 export async function get_role() {
   try {
     const data = new FormData();

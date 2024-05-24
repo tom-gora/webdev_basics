@@ -28,6 +28,7 @@
   $best_sellers_count_to_display = 4;
 
   //get my html components contents
+  $cart_sidebar = file_get_contents("./html_components/cart_sidebar.html");
   $nav_html = file_get_contents("./html_components/navigation.html");
   $mobile_toggle = file_get_contents("./html_components/mobile_toggle.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
@@ -35,6 +36,9 @@
   $about_html = file_get_contents("./html_components/about.html");
   $footer_html = file_get_contents("./html_components/footer.html");
   $login_dialog_html = file_get_contents("./html_components/dialog_login.html");
+  $reg_dialog_html = file_get_contents(
+    "./html_components/dialog_register.html"
+  );
 
   // inject google api url and control what html to show for logged in and logged out users
   $google_login_button_target = get_google_login_url();
@@ -82,6 +86,11 @@
     'action="./scripts/login.php"',
     $login_dialog_html
   );
+  $reg_dialog_html = str_replace(
+    'action="../scripts/admin_functionality.php"',
+    'action="./scripts/admin_functionality.php"',
+    $reg_dialog_html
+  );
 
   // since we are on index, adjust the top sellers component with appropriate title
   $top_products_html = str_replace(
@@ -109,10 +118,11 @@
   // adjust html per each phone grabbed from db and construct the html as string
   foreach ($random_products as $product) {
     $next_product_card_html = str_replace(
-      ["PRODUCT_NAME", "PRODUCT_PRICE", "PRODUCT_IMG_PATH"],
+      ["PRODUCT_ID", "PRODUCT_NAME", "PRODUCT_PRICE", "PRODUCT_IMG_PATH"],
       [
+        $product->product_id,
         $product->product_name,
-        $product->product_price,
+        "£" . $product->product_price,
         $product->product_img_path,
       ],
       $phone_card_html
@@ -128,7 +138,9 @@
   );
 
   // echo crap onto the page
+  echo $cart_sidebar;
   echo $login_dialog_html;
+  echo $reg_dialog_html;
   echo $nav_html;
   echo $cta_html;
   echo $top_products_html;

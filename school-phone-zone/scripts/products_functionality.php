@@ -4,6 +4,7 @@ require_once "utils.php";
 ban_script_access();
 class Product
 {
+  public int $product_id;
   public string $product_name;
   public int $product_price;
   public string $product_img_path;
@@ -36,6 +37,7 @@ function get_products()
   }
   while ($row = mysqli_fetch_assoc($result)) {
     $product = new Product();
+    $product->product_id = $row["product_id"];
     $product->product_name = $row["product_name"];
     $product->product_price = $row["product_price"];
     $product->product_img_path = $row["product_img_path"];

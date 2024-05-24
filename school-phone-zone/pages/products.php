@@ -25,6 +25,7 @@ require_once "../google/login_conf.php";
 require_once "../github/login_conf.php";
 
 // grab markup for my html components
+$cart_sidebar = file_get_contents("../html_components/cart_sidebar.html");
 $nav_html = file_get_contents("../html_components/navigation.html");
 $mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $phone_card_html = file_get_contents("../html_components/phone_card.html");
@@ -32,6 +33,7 @@ $grid_html = file_get_contents("../html_components/products_grid.html");
 $footer_html = file_get_contents("../html_components/footer.html");
 $pagination_html = file_get_contents("../html_components/pagination.html");
 $login_dialog_html = file_get_contents("../html_components/dialog_login.html");
+$reg_dialog_html = file_get_contents("../html_components/dialog_register.html");
 
 // inject google api url and control what html to show for logged in and logged out users
 $google_login_button_target = get_google_login_url();
@@ -128,7 +130,9 @@ $pagination_html = str_replace(
 $pagination_html = str_replace("scale-90", "pb-16", $pagination_html);
 
 //pout stuff onto a page and send to browser
+echo $cart_sidebar;
 echo $login_dialog_html;
+echo $reg_dialog_html;
 echo $nav_html;
 echo $grid_html;
 echo $pagination_html;

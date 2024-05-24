@@ -134,11 +134,12 @@
     <p class="divider-or">or</p>
   </div>
   <p class="relative text-center text-sm">
-    If you don't have an account, please
+    Alternatively, if you have no account
+    <br />
     <a
-      class="inline-block animate-jump-in font-bold text-bg-info animate-delay-300 animate-once motion-reduce:animate-none"
-      href="#">
-      register
+      class="inline-block animate-jump-in cursor-pointer font-bold text-bg-info transition-colors duration-300 animate-delay-300 animate-once hover:text-brand-secondary-200 focus-visible:text-brand-secondary-200 motion-reduce:animate-none"
+      onclick="document.getElementById('login-dialog').close(); document.getElementById('register-dialog').showModal();">
+      register with an email
     </a>
     .
   </p>

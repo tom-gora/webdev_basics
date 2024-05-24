@@ -14,8 +14,8 @@ if ($is_request_from_admin) {
   }
 }
 
-require_once "../scripts/db.php";
-require_once "../scripts/user_functionality.php";
+require_once "db.php";
+require_once "user_functionality.php";
 
 // select appropriate action and call func
 if (isset($_POST["del-user-id"])) {
@@ -24,6 +24,8 @@ if (isset($_POST["del-user-id"])) {
   handle_user_operations("edit");
 } elseif (isset($_POST["add-user"])) {
   handle_user_operations("add");
+} elseif (isset($_POST["register-user-id"])) {
+  handle_user_operations("register");
 }
 
 //  FN: _______________________________________________________________________
@@ -302,7 +304,6 @@ function handle_user_operations(string $operation_type)
 
     //prep the password handling objects with private pass value
     $received_new_user_password = new UserPassword();
-    $edited_user_password = new UserPassword();
     $received_new_user_password->user_id = "";
 
     if (
@@ -338,6 +339,86 @@ function handle_user_operations(string $operation_type)
         ["error_msg" => $result_param]
       );
     }
+  } elseif ($operation_type == "register") {
+    $result_param = "userregistered";
+
+    $pass1 = $_POST["register-user-password"];
+    $pass2 = $_POST["register-user-password-confirm"];
+    if (
+      !isset($pass1) ||
+      $pass1 == "" ||
+      $pass1 == null ||
+      md5($pass1) == "d41d8cd98f00b204e9800998ecf8427e" ||
+      !isset($pass2) ||
+      $pass2 == "" ||
+      $pass2 == null ||
+      md5($pass2) == "d41d8cd98f00b204e9800998ecf8427e"
+    ) {
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_msg" => "registering_pass_err_01"]
+      );
+    }
+    if ($pass1 != $pass2) {
+      redirect_with_query("../index.php", [
+        "error" => "passnotmatch",
+      ]);
+    }
+    $received_new_user_data = new User();
+    $received_new_user_data->user_id = 0;
+    $received_new_user_data->user_email = $_POST["register-user-email"];
+
+    $received_new_user_data->user_firstname =
+      $_POST["register-user-first-name"];
+    $received_new_user_data->user_lastname = $_POST["register-user-last-name"];
+    $received_new_user_data->user_registration = new DateTime("now");
+    $received_new_user_data->user_auth_method = 1;
+    //if new image is not set handle the err and just fallback to default image
+    if (!isset($_FILES["register-user-image"])) {
+      $received_new_user_data->user_img = "default.jpg";
+    } elseif (
+      //further checks for image upload data
+      //if it is an image, it is not empty or not null and no errors
+      isset($_FILES["register-user-image"]) &&
+      str_contains($_FILES["register-user-image"]["type"], "image") &&
+      $_FILES["register-user-image"]["name"] != "" &&
+      $_FILES["register-user-image"]["name"] != null &&
+      $_FILES["register-user-image"]["error"] == 0
+    ) {
+      $tmp_img_url = $_FILES["register-user-image"]["tmp_name"];
+      $attempt_store_img = store_user_img($tmp_img_url);
+
+      // if failed storing image from fallback to default image
+      if (!$attempt_store_img) {
+        $received_new_user_data->user_img = "default.jpg";
+        $result_param = "errordefaultimgused";
+      } else {
+        // else filename string was returned thus assign to user_img
+        $received_new_user_data->user_img = $attempt_store_img;
+      }
+    } else {
+      // if no new image is uploaded double make sure it is set to default
+      $received_new_user_data->user_img = "default.jpg";
+    }
+
+    $received_new_user_data->user_type = "user";
+
+    // email debouncer
+    if (check_if_email_exists($received_new_user_data->user_email)) {
+      redirect_with_query("../index.php", [
+        "error" => "registeremailtaken",
+      ]);
+    }
+
+    $received_new_user_password = new UserPassword();
+    $received_new_user_password->user_id = "";
+    $received_new_user_password->__set_password($pass1);
+    add_user(
+      $received_new_user_data,
+      $received_new_user_password->__get_password()
+    );
+    redirect_with_query("../index.php", ["status" => $result_param]);
   } else {
     redirect_with_query(
       "../pages/admin.php",
