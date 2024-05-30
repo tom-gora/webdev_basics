@@ -56,9 +56,10 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 </head>
 
 
-<body class="h-screen flex flex-col items-center gap-4 md:pt-24">
+<body class="min-h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 // bring in the base markup for my html components
+$cart_sidebar = file_get_contents("../html_components/cart_sidebar.html");
 $nav_html = file_get_contents("../html_components/navigation.html");
 $mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $profile_header_html = file_get_contents(
@@ -141,6 +142,9 @@ $del_dialog_html = str_replace(
   $del_dialog_html
 );
 $profile_cart_html = file_get_contents("../html_components/profile_cart.html");
+$profile_cart_card_html = file_get_contents(
+  "../html_components/profile_cart_card.html"
+);
 $profile_order_history = file_get_contents(
   "../html_components/profile_history.html"
 );
@@ -201,18 +205,96 @@ $profile_header_html = str_replace(
   $profile_header_html
 );
 
+$cart_products_json = get_user_cart_state($logged_in_mf->user_id);
+if ($cart_products_json == "[]" || $cart_products_json == "no_cart") {
+  $profile_cart_html = str_replace(
+    "CART_CONTETS",
+    '<p class="py-4 text-bg-info">You haven\'t got anything in your cart at the moment.</p>',
+    $profile_cart_html
+  );
+} else {
+  $cart_data = json_decode($cart_products_json);
+
+  $product_ids_to_retrieve = [];
+  foreach ($cart_data->products as $product) {
+    $product_ids_to_retrieve[] = $product->product_id;
+  }
+  $cards_string_builder = "";
+  foreach ($product_ids_to_retrieve as $product_id) {
+    $query = "SELECT * FROM products WHERE product_id = ?";
+    $statement = mysqli_prepare($connection, $query);
+    if (!$statement) {
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "err_getting_product_01"]
+      );
+    }
+    mysqli_stmt_bind_param($statement, "i", $product_id);
+    mysqli_stmt_execute($statement);
+    $result = mysqli_stmt_get_result($statement);
+    if (!$result) {
+      redirect_with_query(
+        "../index.php",
+        ["error" => "internalerr"],
+        ["err_message" => "err_getting_product_02"]
+      );
+    }
+    while ($row = mysqli_fetch_assoc($result)) {
+      $product_img = $row["product_img_path"];
+      $product_name = $row["product_name"];
+      $product_price = $row["product_price"];
+      $product_id = $row["product_id"];
+      $product_amount = null;
+      foreach ($cart_data->products as $product) {
+        if ($product->product_id == $product_id) {
+          $product_amount = $product->product_amount;
+          break;
+        }
+      }
+      $card_html = $profile_cart_card_html;
+      $card_html = str_replace(
+        [
+          "PRODUCT_ID",
+          "PRODUCT_IMG",
+          "PRODUCT_NAME",
+          "PRODUCT_PRICE",
+          "PRODUCT_AMOUNT",
+        ],
+        [
+          $product_id,
+          $product_img,
+          $product_name,
+          $product_price,
+          $product_amount,
+        ],
+        $card_html
+      );
+      $cards_string_builder .= $card_html;
+    }
+  }
+  $profile_cart_html = str_replace(
+    "CART_CONTETS",
+    $cards_string_builder,
+    $profile_cart_html
+  );
+}
+
 // echo content to the page
+echo $cart_sidebar;
 echo $edit_dialog_html;
 echo $del_dialog_html;
 echo $nav_html;
 echo $profile_header_html;
-echo "<div id='profile-purchases-details' class='w-full px-[8.33%] bg-bg-light dark:bg-bg-darker pt-12 h-max grow md:min-h-80 items-center flex flex-col md:flex-row gap-4 md:justify-between'>";
+echo "<div id='profile-purchases-details' class='w-full px-[8.33%] bg-bg-light dark:bg-bg-darker pt-12 h-max grow md:min-h-80 items-center flex flex-col gap-4 justify-start'>";
 echo $profile_cart_html;
 echo $profile_order_history;
 echo "</div>";
 echo $footer_html;
 echo $mobile_toggle;
 ?>
+<script type="module" src="../js/navigation.js"></script>
+<script defer type="module" src="../js/cart.js"></script>
 <script type="module" src="../js/profile.js"></script>
   </body>
 </html>

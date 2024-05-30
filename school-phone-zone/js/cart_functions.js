@@ -1,3 +1,12 @@
+const getPathPrefix = () => {
+  const location = window.location.pathname;
+  let pathSuffix;
+
+  location === "/" || location.includes("index.php")
+    ? (pathSuffix = "./")
+    : (pathSuffix = "../");
+  return pathSuffix;
+};
 export const getProductData = async (client_request, product_id) => {
   const data = {
     client_request: client_request,
@@ -10,7 +19,7 @@ export const getProductData = async (client_request, product_id) => {
     },
     body: JSON.stringify(data)
   };
-  const url = "scripts/cart_functionality.php";
+  const url = `${getPathPrefix()}scripts/cart_functionality.php`;
   return fetch(url, requestOpts)
     .then((response) => {
       if (!response.ok) {
@@ -37,7 +46,7 @@ export const deleteCartState = async (client_request, user_id) => {
     },
     body: JSON.stringify(data)
   };
-  const url = "scripts/cart_functionality.php";
+  const url = `${getPathPrefix()}scripts/cart_functionality.php`;
   return fetch(url, requestOpts)
     .then((response) => {
       if (!response.ok) {
@@ -65,7 +74,7 @@ export const saveCartState = async (client_request, user_id, cart_state) => {
     },
     body: JSON.stringify(data)
   };
-  const url = "scripts/cart_functionality.php";
+  const url = `${getPathPrefix()}scripts/cart_functionality.php`;
   return fetch(url, requestOpts)
     .then((response) => {
       if (!response.ok) {
@@ -80,7 +89,10 @@ export const saveCartState = async (client_request, user_id, cart_state) => {
     });
 };
 
-export const getDataForCartInit = async (client_request, user_id) => {
+const getDataForCartInit = async (client_request, user_id) => {
+  const referer = document.referrer;
+  let pathSuffix = "";
+  !referer.includes("index.php") ? (pathSuffix = "../") : (pathSuffix = "./");
   const data = {
     client_request: client_request,
     user_id: user_id
@@ -92,7 +104,7 @@ export const getDataForCartInit = async (client_request, user_id) => {
     },
     body: JSON.stringify(data)
   };
-  const url = "scripts/cart_functionality.php";
+  const url = `${getPathPrefix()}./scripts/cart_functionality.php`;
   return fetch(url, requestOpts)
     .then((response) => {
       if (!response.ok) {
@@ -108,7 +120,12 @@ export const getDataForCartInit = async (client_request, user_id) => {
 };
 
 export const getCartProductHtml = async () => {
-  const cartCardUrl = "html_components/cart_product_card.html";
+  const location = window.location.href;
+  let pathSuffix = "";
+  location === "/" || location.includes("index.php")
+    ? (pathSuffix = "./")
+    : (pathSuffix = "../");
+  const cartCardUrl = `${pathSuffix}html_components/cart_product_card.html`;
   const response = await fetch(cartCardUrl);
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -163,21 +180,15 @@ export const initCart = async (
   const client_request = "init_cart";
 
   const productsWrapper = cartSidebar.querySelector("#cart-products-wrapper");
-  const subtotalTxt = cartSidebar.querySelector("#insert-subtotal");
-  const shippingTxt = cartSidebar.querySelector("#insert-shipping");
-  const subtotalWithShipping = cartSidebar.querySelector(
-    "#insert-total-with-shipping"
-  );
   try {
     const cardHtml = await getCartProductHtml();
     const cartData = await getDataForCartInit(client_request, user_id);
-    console.log(cartData);
     const parser = new DOMParser();
     const parsedCard = parser.parseFromString(cardHtml, "text/html");
     if (cartData.order_contents === "no_cart") {
       sessionStorage.setItem("cart_contents", "no_cart");
       basketCounter.classList.add("hidden");
-      updateCartPrices(0, 0, subtotalTxt, shippingTxt, subtotalWithShipping);
+      updatePriceBreakdown("no_cart", cartSidebar, shippingCost);
       return (productsWrapper.innerHTML =
         '<p class="text-lg text-bg-info pl-6">Your cart is empty</p>');
     } else {
@@ -185,8 +196,12 @@ export const initCart = async (
       basketCounter.classList.remove("hidden");
       basketCounter.innerText = getItemsCountTotal(orderContents);
       sessionStorage.setItem("cart_contents", cartData.order_contents);
+      updatePriceBreakdown(
+        JSON.stringify(orderContents),
+        cartSidebar,
+        shippingCost
+      );
       let totalItems = 0;
-      let subtotal = 0;
 
       const productPromises = orderContents.products.map((product) => {
         const productID = product.product_id;
@@ -199,15 +214,13 @@ export const initCart = async (
             const nextCard = parsedCard
               .querySelector(".cart-card")
               .cloneNode(true);
-            const productPriceFloat = parseFloat(productData.product_price);
-            subtotal += productPriceFloat * amount;
 
             // Update the cart card with product details
             nextCard
               .querySelector("img.cart-insert-img")
               .setAttribute(
                 "src",
-                `res/phones/${productData.product_img_path}`
+                `${getPathPrefix()}res/phones/${productData.product_img_path}`
               );
             nextCard.querySelector("h2.cart-insert-name").innerText =
               productData.product_name;
@@ -223,9 +236,6 @@ export const initCart = async (
                 const currentCartState = JSON.parse(
                   sessionStorage.getItem("cart_contents")
                 );
-                const oldAmount = currentCartState.products.find(
-                  (product) => product.product_id === productID
-                ).product_amount;
                 const newAmount = parseInt(e.target.value);
                 currentCartState.products.find(
                   (product) => product.product_id === productID
@@ -235,27 +245,36 @@ export const initCart = async (
                   "cart_contents",
                   JSON.stringify(currentCartState)
                 );
-
-                const productPriceFloat = parseFloat(productData.product_price);
-                const oldPerProductSubtotal = productPriceFloat * oldAmount;
-                const newPerProductSubtotal = productPriceFloat * newAmount;
-                const newSubtotal =
-                  subtotal - oldPerProductSubtotal + newPerProductSubtotal;
                 basketCounter.classList.remove("hidden");
                 basketCounter.innerText = getItemsCountTotal(currentCartState);
-                updateCartPrices(
-                  newSubtotal,
-                  shippingCost,
-                  subtotalTxt,
-                  shippingTxt,
-                  subtotalWithShipping
+                updatePriceBreakdown(
+                  JSON.stringify(currentCartState),
+                  cartSidebar,
+                  shippingCost
                 );
+                if (window.location.href.indexOf("profile.php") !== -1) {
+                  const modiefiedProductId = e.target
+                    .closest(".cart-card")
+                    .getAttribute("data-product-id");
+                  const inPageProductAmount = document.querySelector(
+                    `.profile-cart-view-card[data-product-id="${modiefiedProductId}"] .profile-cart-view-amount`
+                  );
+                  inPageProductAmount.innerText = `x${newAmount}`;
+                }
               });
 
             nextCard
               .querySelector(".remove-item-btn")
               .addEventListener("click", (e) => {
-                e.preventDefault();
+                if (window.location.href.indexOf("profile.php") !== -1) {
+                  const modiefiedProductId = e.target
+                    .closest(".cart-card")
+                    .getAttribute("data-product-id");
+                  const inPageProductCard = document.querySelector(
+                    `.profile-cart-view-card[data-product-id="${modiefiedProductId}"]`
+                  );
+                  inPageProductCard.remove();
+                }
                 const cardToRemove = e.target.closest(".cart-card");
                 const idToRemove = cardToRemove.getAttribute("data-product-id");
                 const currentCartState = JSON.parse(
@@ -265,6 +284,7 @@ export const initCart = async (
                   sessionStorage.setItem("cart_contents", "no_cart");
                   deleteCartState("delete_cart_state", user_id);
                   basketCounter.classList.add("hidden");
+                  updatePriceBreakdown("no_cart", cartSidebar, shippingCost);
                   return (productsWrapper.innerHTML =
                     '<p class="text-lg text-bg-info pl-6">Your cart is empty</p>');
                 }
@@ -279,38 +299,104 @@ export const initCart = async (
                 );
                 basketCounter.innerText = getItemsCountTotal(newCartState);
                 cardToRemove.remove();
+                updatePriceBreakdown(
+                  JSON.stringify(newCartState),
+                  cartSidebar,
+                  shippingCost
+                );
               });
           })
           .catch((error) => {
             console.error("Error fetching product data:", error);
           });
       });
-      Promise.all(productPromises)
-        .then(() => {
-          updateCartPrices(
-            subtotal,
-            shippingCost,
-            subtotalTxt,
-            shippingTxt,
-            subtotalWithShipping
-          );
-        })
-        .catch((error) => {
-          console.error("Error processing products:", error);
-        });
     }
   } catch (error) {
     console.error("Error initializing cart:", error);
   }
 };
 
+// TODO: EUREKA!!!
+// I need to devise PHP response where it takes an array of IDs present in the current state and it returns
+// an associative arr of id => price for those ids. No point of fetching all the data for all producs or pushging
+// multiple async requests per product
+export const updatePriceBreakdown = async (
+  cartStateJson,
+  cartSidebar,
+  shippingCost
+) => {
+  const subtotalTxt = cartSidebar.querySelector("#insert-subtotal");
+  const shippingTxt = cartSidebar.querySelector("#insert-shipping");
+  const subtotalWithShipping = cartSidebar.querySelector(
+    "#insert-total-with-shipping"
+  );
+  const checkoutBtn = cartSidebar.querySelector("#checkout-btn");
+  if (cartStateJson === null || cartStateJson === "no_cart") {
+    subtotalTxt.innerText = "£0";
+    shippingTxt.innerText = "£0";
+    subtotalWithShipping.innerText = "£0";
+
+    checkoutBtn.setAttribute("inert", "");
+    checkoutBtn.classList.add("opacity-50");
+    return;
+  }
+  checkoutBtn.removeAttribute("inert");
+  checkoutBtn.classList.remove("opacity-50");
+  const cartState = JSON.parse(cartStateJson);
+  const product_ids = cartState.products.map((product) => product.product_id);
+  let subtotal = 0;
+
+  const data = {
+    client_request: "get_product_prices_only",
+    product_ids: product_ids
+  };
+  const requestOpts = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  };
+  const url = `${getPathPrefix()}scripts/cart_functionality.php`;
+  return fetch(url, requestOpts)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((response) => {
+      const mergedData = cartState.products.map((product) => {
+        const productPrice = response.find((productPrice) => {
+          return productPrice.product_id === product.product_id;
+        });
+        product.product_price = productPrice.product_price;
+        return product;
+      });
+      mergedData.forEach((item) => {
+        subtotal += item.product_price * item.product_amount;
+      });
+      shippingTxt.innerText = `£${shippingCost.toFixed(2)}`;
+      subtotalTxt.innerText = `£${subtotal.toFixed(2)}`;
+      subtotalWithShipping.innerText = `£${(subtotal + shippingCost).toFixed(2)}`;
+    })
+    .catch((error) => {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
+    });
+};
+
 export const addProductFromPage = (
+  cartSidebar,
   product_id,
+  shippingCost,
   basketCounter,
   productsWrapper
 ) => {
   const client_request = "get_product_for_cart";
   const user_id = sessionStorage.getItem("user_id");
+
   let productFound = false;
   let currentCartState = sessionStorage.getItem("cart_contents");
   if (currentCartState !== null && currentCartState !== "no_cart") {
@@ -326,13 +412,18 @@ export const addProductFromPage = (
         );
 
         const inputToUpdate = document.querySelector(
-          `.cart-card[data-product-id="${product_id}"]`
+          `.cart-card[data-product-id="${product_id}"] input.cart-insert-amount`
         );
-        console.log(inputToUpdate);
-        // .querySelector("input.cart-insert-amount");
         if (inputToUpdate) {
           inputToUpdate.value = product.product_amount;
+          updatePriceBreakdown(
+            JSON.stringify(currentCartState),
+            cartSidebar,
+            shippingCost
+          );
         }
+
+        basketCounter.innerText = getItemsCountTotal(currentCartState);
         productFound = true;
       }
     });
@@ -355,7 +446,10 @@ export const addProductFromPage = (
     const product = productData;
     cartCard
       .querySelector("img.cart-insert-img")
-      .setAttribute("src", `res/phones/${product.product_img_path}`);
+      .setAttribute(
+        "src",
+        `${getPathPrefix()}res/phones/${product.product_img_path}`
+      );
     cartCard.querySelector("h2.cart-insert-name").innerText =
       product.product_name;
     cartCard.querySelector("p.cart-insert-price").innerText =
@@ -373,22 +467,11 @@ export const addProductFromPage = (
     basketCounter.innerText = getItemsCountTotal(currentCartState);
 
     cartCard.setAttribute("data-product-id", product.product_id);
-    //
-    // cartCard.querySelector("input.cart-insert-amount").value++;
-    // TODO: !!! pricing section update on product addition
-    // two routes to be done, when item added to the empty cart,
-    // and when items are in the cart already and there is a saved state
-    //
-    //
-    //GET values for this function from the cart
-    //         
-    // updateCartPrices(
-    //   currentSubtotal,
-    //   shippingCost,
-    //   subtotalTxt,
-    //   shippingTxt,
-    //   subtotalWithShipping
-    // );
+    updatePriceBreakdown(
+      JSON.stringify(currentCartState),
+      cartSidebar,
+      shippingCost
+    );
 
     cartCard
       .querySelector(".remove-item-btn")
@@ -403,55 +486,157 @@ export const addProductFromPage = (
           sessionStorage.setItem("cart_contents", "no_cart");
           deleteCartState("delete_cart_state", user_id);
           basketCounter.classList.add("hidden");
+          updatePriceBreakdown("no_cart", cartSidebar, 0);
           return (productsWrapper.innerHTML =
             '<p class="text-lg text-bg-info pl-6">Your cart is empty</p>');
         }
         const newCartState = removeItemCompletely(idToRemove, currentCartState);
         saveCartState("save_cart_state", user_id, newCartState);
+        updatePriceBreakdown(
+          JSON.stringify(newCartState),
+          cartSidebar,
+          shippingCost
+        );
         sessionStorage.setItem("cart_contents", JSON.stringify(newCartState));
         basketCounter.innerText = getItemsCountTotal(newCartState);
         cardToRemove.remove();
       });
+
     cartCard
       .querySelector("input.cart-insert-amount")
       .addEventListener("change", (e) => {
-        const productID = cartCard.getAttribute("data-product-id");
-        const currentCartState = sessionStorage.getItem("cart_contents");
-        if (currentCartState === "no_cart") {
-          currentCartState = { products: [] };
-          currentCartState = JSON.parse(currentCartState);
-        }
-        const oldAmount = currentCartState.products.find(
-          (product) => product.product_id === productID
-        ).product_amount;
+        const currentCard = e.target.closest(".cart-card");
+        const currentCartState = JSON.parse(
+          sessionStorage.getItem("cart_contents")
+        );
         const newAmount = parseInt(e.target.value);
+        const currentID = parseInt(currentCard.getAttribute("data-product-id"));
+        console.log(currentID);
+        console.log(currentCartState);
         currentCartState.products.find(
-          (product) => product.product_id === productID
+          (product) => product.product_id === currentID
         ).product_amount = newAmount;
         saveCartState("save_cart_state", user_id, currentCartState);
         sessionStorage.setItem(
           "cart_contents",
           JSON.stringify(currentCartState)
         );
-
-        const productPriceFloat = parseFloat(productData.product_price);
-        const oldPerProductSubtotal = productPriceFloat * oldAmount;
-        const newPerProductSubtotal = productPriceFloat * newAmount;
-        const currentSubtotal =
-          subtotal - oldPerProductSubtotal + newPerProductSubtotal;
-        subtotal = currentSubtotal;
         basketCounter.classList.remove("hidden");
         basketCounter.innerText = getItemsCountTotal(currentCartState);
-        updateCartPrices(
-          currentSubtotal,
-          shippingCost,
-          subtotalTxt,
-          shippingTxt,
-          subtotalWithShipping
+        updatePriceBreakdown(
+          JSON.stringify(currentCartState),
+          cartSidebar,
+          shippingCost
         );
       });
 
-    productsWrapper.innerText = "";
+    if (productsWrapper.innerText === "Your cart is empty") {
+      productsWrapper.innerText = "";
+    }
     productsWrapper.appendChild(cartCard);
   });
 };
+
+export const setDefaultDate = (input) => {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  const year = today.getFullYear();
+  const todayStr = `${year}-${month}-${day}`;
+  const fiveYrsFutureDateStr = `${year + 5}-${month}-${day}`;
+  input.value = todayStr;
+  input.setAttribute("min", todayStr);
+  input.setAttribute("max", fiveYrsFutureDateStr);
+};
+
+export const validateCvvInput = (input) => {
+  const min = parseInt(input.getAttribute("min"));
+  const max = parseInt(input.getAttribute("max"));
+  const value = parseInt(input.value);
+  if (value < min || value > max || isNaN(value)) {
+    input.setCustomValidity(`Please enter a value between ${min} and ${max}.`);
+    input.reportValidity();
+    input.value = "";
+  } else {
+    input.setCustomValidity("");
+  }
+};
+
+export const storeOrder = async (client_request, userId, orderContents) => {
+  const data = {
+    client_request: client_request,
+    user_id: userId,
+    order_contents: orderContents
+  };
+  const requestOpts = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  };
+  const url = `${getPathPrefix()}scripts/cart_functionality.php`;
+  return fetch(url, requestOpts)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
+    });
+};
+
+const getOrders = async (client_request, userId) => {
+  const data = {
+    client_request: client_request,
+    user_id: userId
+  };
+  const requestOpts = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json, charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  };
+  const url = "../scripts/cart_functionality.php";
+  return fetch(url, requestOpts)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response;
+    })
+    .catch((error) => {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
+    });
+};
+
+const getId = async () => {
+  try {
+    const data = new FormData();
+    data.append("client_request", "get_id");
+    let url;
+    window.location.pathname.includes("index.php")
+      ? (url = "./scripts/utils.php")
+      : (url = "../scripts/utils.php");
+    const response = await fetch(url, {
+      method: "POST",
+      body: data
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.text();
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+};
+
+export { getId, getOrders, getDataForCartInit };

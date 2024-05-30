@@ -149,6 +149,8 @@
   echo $mobile_toggle;
   ?>
 
+  <script type="module" src="./js/navigation.js"></script>
+  <script defer type="module" src="./js/cart.js"></script>
   <script defer src="./js/index.js" type="text/javascript"></script>
 </body>
 

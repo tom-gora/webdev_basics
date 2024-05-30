@@ -1,6 +1,6 @@
 <nav
   id="navigation"
-  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:!right-0 md:top-0 md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
+  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:!right-0 md:top-0 md:z-[300] md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
   <div
     id="mobile-store-logo"
     class="absolute left-[-200%] right-0 top-0 z-50 mx-auto h-20 w-full bg-bg-light pt-4 md:hidden dark:bg-bg-darker">
@@ -72,7 +72,7 @@
       <a id="login-btn">Log in</a>
     </li>
     <li class="for-logged-in nav-link hidden">
-      <a href="../phonezone/scripts/logout.php">Log out</a>
+      <a id="logout-btn" href="../phonezone/scripts/logout.php">Log out</a>
     </li>
   </ul>
   <div
@@ -105,186 +105,6 @@
 </nav>
 <div
   id="msg-box"
-  class="absolute bottom-32 left-4 right-4 z-50 mx-auto hidden h-fit w-fit max-w-[75vw] scale-125 animate-fade-down rounded-sm bg-bg-info px-4 py-2 text-center text-bg-lighter animate-delay-[3000ms] animate-reverse animate-duration-300 motion-reduce:animate-[fade-down_0ms_forwards] motion-reduce:animate-delay-[3000ms] motion-reduce:animate-reverse md:top-4 md:scale-100">
+  class="absolute bottom-32 left-4 right-4 z-[500] mx-auto hidden h-fit w-fit max-w-[75vw] scale-125 animate-fade-down rounded-sm bg-bg-info px-4 py-2 text-center text-bg-lighter animate-delay-[3000ms] animate-reverse animate-duration-300 motion-reduce:animate-[fade-down_0ms_forwards] motion-reduce:animate-delay-[3000ms] motion-reduce:animate-reverse md:top-4 md:scale-100">
   <p>&nbsp;</p>
 </div>
-
-<!-- js section -->
-<script>
-  async function get_id() {
-    try {
-      const data = new FormData();
-      data.append("client_request", "get_id");
-      let url;
-      window.location.pathname.includes("index.php")
-        ? (url = "./scripts/utils.php")
-        : (url = "../scripts/utils.php");
-      const response = await fetch(url, {
-        method: "POST",
-        body: data
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.text();
-    } catch (error) {
-      console.error("Error:", error);
-      return null;
-    }
-  }
-
-  get_id().then((id) => {
-    sessionStorage.setItem("user_id", id);
-  });
-
-  const loginBtn = document.querySelector("#login-btn");
-  const loginDialog = document.querySelector("#login-dialog");
-  const loginErrMsgBox = document.querySelector("#err-msg");
-  const emailInput = document.querySelector('input[name="email"]');
-  const loginDialogCloseBtn = document.querySelector("#login-dialog-close");
-  const passInput = document.querySelector('input[name="password"]');
-
-  const registerDialog = document.querySelector("#register-dialog");
-  const registerErrMsgBox = document.querySelector("#register-err-msg");
-  const registerDialogCloseBtn = document.querySelector(
-    "#register-dialog-close"
-  );
-  const themeToggle = document.querySelector("#theme-toggle");
-  const systemPrefersDark = window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  ).matches;
-
-  const basketNavBtn = document.querySelector("#nav-basket");
-  const cartSidebar = document.querySelector("#cart-sidebar");
-
-  //handle theme with data attribute on html and local storage to save preference
-  const root = document.documentElement;
-
-  basketNavBtn.addEventListener("click", () => {
-    cartSidebar.classList.toggle("hidden");
-    cartSidebar.classList.toggle("animate-reverse");
-  });
-
-  const toggleTheme = () => {
-    let currentTheme = root.getAttribute("data-theme"),
-      newTheme;
-    newTheme = currentTheme === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", newTheme);
-    localStorage.setItem("preferredTheme", newTheme);
-    setLogoVariant(newTheme);
-  };
-
-  // set store logo adequate to contrast on dark/light bg
-  const setLogoVariant = (theme) => {
-    // adjust relative path based on current page
-    const isIndex =
-      window.location.pathname.includes("index.php") ||
-      window.location.pathname === "/phonezone/";
-    const storeLogos = document.querySelectorAll("img[alt='Store Logo'");
-    let pathPrefix;
-    isIndex ? (pathPrefix = "") : (pathPrefix = "../");
-
-    storeLogos.forEach((logo) => {
-      logo.setAttribute("src", `${pathPrefix}res/pz_logo_1_${theme}.svg`);
-    });
-  };
-
-  const themeOnLoad = () => {
-    // see if user preference is stored
-    const storedTheme = localStorage.getItem("preferredTheme");
-    if (storedTheme === null) {
-      //if not follow the system preference,adjust things thjen return
-      systemPrefersDark
-        ? root.setAttribute("data-theme", "dark")
-        : root.setAttribute("data-theme", "light");
-    }
-    // if yes then use it
-    else {
-      root.setAttribute("data-theme", storedTheme);
-    }
-    return root.getAttribute("data-theme");
-  };
-
-  // call above func on page load
-  setLogoVariant(themeOnLoad());
-
-  // wire all the above logic to the theme toggle btn
-  themeToggle.addEventListener("click", toggleTheme);
-
-  // animate in the login dialog on btn click
-  loginBtn.onclick = (e) => {
-    loginDialog.showModal();
-  };
-
-  if (loginDialog) {
-    // src: https://www.stefanjudis.com/blog/a-look-at-the-dialog-elements-super-powers/
-    // close dialog with a click outside of its boundaries
-    loginDialog.onclick = (e) => {
-      if (e.target.nodeName === "DIALOG") {
-        loginDialog.close();
-      }
-    };
-    //reset login dialog state on close
-    loginDialog.onclose = () => {
-      loginErrMsgBox.classList.add("hidden");
-      emailInput.setAttribute("autocomplete", "off");
-    };
-
-    loginDialogCloseBtn.onclick = () => {
-      loginDialog.close();
-    };
-  }
-
-  //preventing autocomplete suggestions from showing up before input is focused
-  //because they obscure entire modal content
-  if (emailInput) {
-    emailInput.onfocus = () => {
-      emailInput.setAttribute("autocomplete", "email");
-    };
-  }
-
-  if (registerDialog) {
-    const regImageInput = registerDialog.querySelector(
-      "input[name='register-user-image']"
-    );
-    const regImageInputLabel = registerDialog.querySelector(
-      "label[for='register-user-image']"
-    );
-    const regImageLabelBg = registerDialog.querySelector("#label-bg");
-    const regImageLabelDesc = registerDialog.querySelector(
-      "#user-img-description"
-    );
-    const regImageLabelSvg = registerDialog.querySelector(
-      "label[for='register-user-image'] svg"
-    );
-
-    registerDialog.onclick = (e) => {
-      if (e.target.nodeName === "DIALOG") {
-        registerDialog.close();
-      }
-    };
-    registerDialog.onclose = () => {
-      registerErrMsgBox.classList.add("hidden");
-    };
-    registerDialogCloseBtn.onclick = () => {
-      registerDialog.close();
-    };
-
-    regImageInput.addEventListener("change", () => {
-      if (regImageInput.files[0] && regImageInput.files[0].name) {
-        const reader = new FileReader();
-
-        reader.onload = (e) => {
-          const fileUrl = e.target.result;
-
-          regImageLabelDesc.classList.add("hidden");
-          regImageInputLabel.classList.remove("grid-rows-2");
-          regImageLabelSvg.classList.add("hidden");
-          regImageLabelBg.style.backgroundImage = `url(${fileUrl})`;
-          regImageLabelBg.classList.remove("opacity-25");
-        };
-        reader.readAsDataURL(regImageInput.files[0]);
-      }
-    });
-  }
-</script>

@@ -11,6 +11,10 @@ params.get("error_msg")
 
 //status handling currently only for logout
 switch (stat) {
+  case "order_placed":
+    msgBox.innerText = "Your order has been placed. Thank you!";
+    msgBox.classList.remove("hidden");
+    break;
   case "userdeleted":
     msgBox.innerHTML = "Your account has been deleted.<br>Goodbye!";
     msgBox.classList.remove("hidden");

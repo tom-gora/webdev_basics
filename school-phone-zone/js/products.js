@@ -58,6 +58,7 @@ const renderProductsPage = (page_nr, items_per_page) => {
         product.product_name;
       nextCard.querySelector("p.insert-product-price").innerText =
         product.product_price;
+      nextCard.setAttribute("data-product-id", product.product_id);
 
       productsGrid.appendChild(nextCard);
     });

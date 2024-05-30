@@ -114,6 +114,8 @@ if (!$user_id || $user_role == "user") {
     echo $mobile_toggle;
     ?>
 
+<script type="module" src="../js/navigation.js"></script>
+<script defer type="module" src="../js/cart.js"></script>
 <script type="module" src="../js/admin.js"></script>
   </body>
 </html>

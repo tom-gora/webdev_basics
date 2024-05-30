@@ -662,6 +662,44 @@ function get_user_img_by_id(int $user_id)
   return false;
 }
 
+//  FN: _______________________________________________________________________
+// function getting the user's cart state by ID
+function get_user_cart_state(int $user_id)
+{
+  if (validate_id($user_id) == false) {
+    redirect_with_query("../index.php", [
+      "error" => "fatalinvalidid",
+      "error_msg" => "err_user_get_type_invalid_id",
+    ]);
+  }
+  $connection = get_mysqli();
+  $query = "SELECT order_contents FROM cart_state_store WHERE user_id = ?";
+  $statement = mysqli_prepare($connection, $query);
+  if (!$statement) {
+    $err_msg_params = ["error_msg" => "err_user_get_cart_state_01"];
+    redirect_with_query(
+      "../index.php",
+      ["error" => "internalerr"],
+      $err_msg_params
+    );
+  }
+  mysqli_stmt_bind_param($statement, "i", $user_id);
+  $result = mysqli_stmt_execute($statement);
+  if (!$result) {
+    return "no_cart";
+    exit();
+  }
+  mysqli_stmt_store_result($statement);
+  if (mysqli_stmt_num_rows($statement) == 0) {
+    return "no_cart";
+    exit();
+  }
+  mysqli_stmt_bind_result($statement, $order_contents);
+  mysqli_stmt_fetch($statement);
+  db_tidy_up($statement, $connection);
+  return $order_contents;
+}
+
 //_____________________________________________________________________________
 //checks:
 

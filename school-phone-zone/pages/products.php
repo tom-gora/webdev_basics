@@ -139,5 +139,7 @@ echo $pagination_html;
 echo $footer_html;
 echo $mobile_toggle;
 ?>
+<script type="module" src="../js/navigation.js"></script>
+<script defer type="module" src="../js/cart.js"></script>
 <script type="module" src="../js/products.js"></script>
 </body>

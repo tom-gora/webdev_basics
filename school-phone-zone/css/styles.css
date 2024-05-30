@@ -183,3 +183,11 @@
     @apply w-full rounded-sm border-2 border-brand-secondary bg-bg-lighter px-2 py-2 text-brand-secondary dark:border-bg-darker dark:bg-surface-dark-300 dark:text-bg-lighter;
   }
 }
+
+#overlay:has(+ #cart-sidebar:not(.hidden)) {
+  display: block;
+}
+body:has(#cart-sidebar:not(.hidden)) {
+  height: 100vh;
+  overflow: hidden;
+}
