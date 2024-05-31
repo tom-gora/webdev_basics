@@ -71,10 +71,13 @@ function get_product(int $product_id)
       ["err_message" => "err_getting_product_02"]
     );
   }
+  $row = mysqli_fetch_assoc($result);
+
   $product = new Product();
-  $product->product_name = mysqli_fetch_assoc($result)["product_name"];
-  $product->product_price = mysqli_fetch_assoc($result)["product_price"];
-  $product->product_img_path = mysqli_fetch_assoc($result)["product_img_path"];
+  $product->product_name = $row["product_name"];
+  $product->product_price = $row["product_price"];
+  $product->product_img_path = $row["product_img_path"];
+
   return $product;
 }
 

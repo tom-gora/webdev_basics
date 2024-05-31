@@ -3,17 +3,11 @@
   class="t-0 l-0 fixed z-[200] -mt-8 hidden h-full w-screen bg-bg-light opacity-60 dark:bg-bg-dark"></div>
 <div
   id="cart-sidebar"
-  class="fixed right-0 top-0 z-[201] hidden h-screen w-screen animate-fade-left overflow-y-scroll bg-bg-light p-4 text-brand-secondary animate-reverse animate-duration-300 md:mt-20 md:w-4/12 md:min-w-[500px] md:pl-6 md:pr-12 md:pt-8 dark:bg-bg-darker dark:text-bg-lighter">
-  <svg
-    class="absolute right-16 top-8 aspect-square w-8 cursor-pointer fill-brand-secondary transition duration-300 hover:fill-brand-secondary-200 dark:fill-bg-info dark:hover:fill-bg-lighter"
-    id="cart-sidebar-innner-close-btn"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 16 16"
-    aria-hidden="true">
+  class="pb-24 fixed right-0 top-0 z-[201] hidden h-screen w-screen animate-fade-left overflow-y-scroll bg-bg-light p-4 text-brand-secondary animate-reverse animate-duration-300 md:mt-20 md:w-4/12 md:min-w-[500px] md:pl-6 md:pr-12 md:pt-8 dark:bg-bg-darker dark:text-bg-lighter">
     <path
       d="M15.1 3.1l-2.2-2.2-4.9 5-4.9-5-2.2 2.2 5 4.9-5 4.9 2.2 2.2 4.9-5 4.9 5 2.2-2.2-5-4.9z" />
   </svg>
-  <h1 class="mb-4 text-center text-2xl font-bold dark:text-bg-info">
+  <h1 class="mb-4 ml-4 text-center text-2xl font-bold dark:text-bg-info">
     Cart Summary
   </h1>
   <div
@@ -79,11 +73,19 @@
       </div>
       <button
         id="checkout-btn"
-        class="btn-primary dark:btn-info mt-8 w-6/12 self-center">
+        class="btn-primary dark:btn-info mt-8 w-8/12 self-center">
         <span></span>
         <span></span>
         <span>Check out</span>
       </button>
+      <button
+        id="cart-sidebar-innner-close-btn"
+        class="btn-warning mt-8 w-8/12 self-center">
+        <span></span>
+        <span></span>
+        <span class="whitespace-nowrap">Back to shopping</span>
+      </button>
+
     </div>
 
     <!-- Adapted from https://flowbite.com/blocks/e-commerce/payment-forms/ -->

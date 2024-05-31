@@ -1,4 +1,6 @@
 const msgBox = document.querySelector("#msg-box");
+const loginDialog = document.querySelector("#login-dialog");
+const loginErrMsgBox = document.querySelector("#err-msg");
 
 const params = new URLSearchParams(window.location.search);
 const err = params.get("error");

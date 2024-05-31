@@ -8,6 +8,7 @@ const inCartToggle = cartSidebar.querySelector(
 );
 const productsWrapper = cartSidebar.querySelector("#cart-products-wrapper");
 const basketCounter = document.querySelector("#basket-counter");
+const basketCounterPing = document.querySelector("#basket-counter-ping");
 const savedCardState = sessionStorage.getItem("cart_contents");
 const checkoutBtn = cartSidebar.querySelector("#checkout-btn");
 const paymentWrapper = cartSidebar.querySelector("#payment-wrapper");
@@ -30,7 +31,7 @@ if (window.location.href.indexOf("products.php") !== -1) {
     if (hasMutated) {
       phoneCards = document.querySelectorAll(".phone-card");
       phoneCards.forEach((phoneCard) => {
-        const cardBtn = phoneCard.querySelector(".btn-neutral");
+        const cardBtn = phoneCard.querySelector(".btn-add-to-cart");
         const idToFetch = phoneCard.getAttribute("data-product-id");
         cardBtn.addEventListener("click", () => {
           cartFunctions.addProductFromPage(
@@ -38,6 +39,7 @@ if (window.location.href.indexOf("products.php") !== -1) {
             idToFetch,
             shippingCost,
             basketCounter,
+            basketCounterPing,
             productsWrapper
           );
         });
@@ -54,7 +56,7 @@ if (window.location.href.indexOf("products.php") !== -1) {
 } else {
   phoneCards = document.querySelectorAll(".phone-card");
   phoneCards.forEach((phoneCard) => {
-    const cardBtn = phoneCard.querySelector(".btn-neutral");
+    const cardBtn = phoneCard.querySelector(".btn-add-to-cart");
     const idToFetch = phoneCard.getAttribute("data-product-id");
     cardBtn.addEventListener("click", () => {
       cartFunctions.addProductFromPage(
@@ -62,6 +64,7 @@ if (window.location.href.indexOf("products.php") !== -1) {
         idToFetch,
         shippingCost,
         basketCounter,
+        basketCounterPing,
         productsWrapper
       );
     });
@@ -155,8 +158,8 @@ if (savedCardState === "no_cart") {
 }
 
 inCartToggle.addEventListener("click", () => {
-  inCartToggle.parentNode.classList.toggle("hidden");
-  inCartToggle.parentNode.classList.toggle("animate-reverse");
+  inCartToggle.closest("#cart-sidebar").classList.toggle("hidden");
+  inCartToggle.closest("#cart-sidebar").classList.toggle("animate-reverse");
   productsWrapper.classList.remove("hidden");
   paymentWrapper.classList.add("hidden");
   checkoutBtn.style.display = "block";
@@ -169,7 +172,13 @@ inCartToggle.addEventListener("click", () => {
 });
 
 loggedInID !== "no_id"
-  ? cartFunctions.initCart(shippingCost, loggedInID, cartSidebar, basketCounter)
+  ? cartFunctions.initCart(
+      shippingCost,
+      loggedInID,
+      cartSidebar,
+      basketCounter,
+      basketCounterPing
+    )
   : null;
 
 // payments mock section:

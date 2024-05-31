@@ -50,6 +50,9 @@ const renderProductsPage = (page_nr, items_per_page) => {
       nextCard.classList.add("dark:bg-bg-darker");
       nextCard.classList.add("bg-bg-light");
 
+      nextCard
+        .querySelector("a")
+        .setAttribute("href", `product.php?id=${product.product_id}`);
       nextCard.querySelector(".promo-sticker").classList.add("hidden");
       nextCard
         .querySelector("img.insert-product-img")

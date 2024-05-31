@@ -77,10 +77,16 @@
   </ul>
   <div
     class="fixed inset-0 left-4 top-8 z-[900] aspect-square w-8 cursor-pointer self-end pr-8 md:relative md:left-0 md:top-[-34px]">
-    <span
-      id="basket-counter"
+    <div
       style="transform: translate(50%, -100%)"
-      class="absolute right-0 top-0 z-50 m-0 flex hidden aspect-square h-4 items-center justify-center rounded-sm bg-brand-primary-500-neutral p-0 text-sm text-bg-lighter"></span>
+      class="absolute right-0 top-0 z-50 aspect-square h-4 place-items-center">
+      <span
+        class="absolute inset-0 hidden aspect-square h-4 rounded-sm bg-brand-primary-500-neutral animate-once"
+        id="basket-counter-ping"></span>
+      <span
+        id="basket-counter"
+        class="absolute inset-0 m-0 flex hidden aspect-square h-4 items-center justify-center rounded-sm bg-brand-primary-500-neutral p-0 text-sm text-bg-lighter"></span>
+    </div>
     <svg
       id="nav-basket"
       style="top: -10px"

@@ -33,6 +33,9 @@ if (!$user_id || $user_role == "user") {
     require_once "../google/login_conf.php";
 
     // get the markup
+    $cart_sidebar_html = file_get_contents(
+      "../html_components/cart_sidebar.html"
+    );
     $nav_html = file_get_contents("../html_components/navigation.html");
     $mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
     $users_grid_html = file_get_contents(
@@ -48,6 +51,9 @@ if (!$user_id || $user_role == "user") {
     );
     $edit_dialog_html = file_get_contents(
       "../html_components/dialog_edit.html"
+    );
+    $breadcrumbs_html = file_get_contents(
+      "../html_components/breadcrumbs.html"
     );
 
     //get the logged in user avatar for the navigation miniature
@@ -104,10 +110,29 @@ if (!$user_id || $user_role == "user") {
       ['id="pagination" data-total-users=' . $total_users, "scale-90 mb-12"],
       $pagination_html
     );
+
+    $breadcrumbs_html = str_replace(
+      [
+        "my-4",
+        "CURRENT_PAGE",
+        'href="./products.php">
+      Shop',
+      ],
+      [
+        "mt-28 mb-4",
+        "Admin Panel",
+        'href="./profile.php">
+      Your Profile',
+      ],
+      $breadcrumbs_html
+    );
+
     // add content onto the page before shipping to client
     echo $del_dialog_html;
     echo $edit_dialog_html;
+    echo $cart_sidebar_html;
     echo $nav_html;
+    echo $breadcrumbs_html;
     echo $users_grid_html;
     echo $pagination_html;
     echo $footer_html;

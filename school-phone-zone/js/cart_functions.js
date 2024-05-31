@@ -175,7 +175,8 @@ export const initCart = async (
   shippingCost,
   user_id,
   cartSidebar,
-  basketCounter
+  basketCounter,
+  basketCounterPing
 ) => {
   const client_request = "init_cart";
 
@@ -252,6 +253,13 @@ export const initCart = async (
                   cartSidebar,
                   shippingCost
                 );
+                basketCounterPing.classList.remove("hidden");
+                basketCounterPing.classList.add("animate-ping");
+                setTimeout(() => {
+                  basketCounterPing.classList.add("hidden");
+                  basketCounterPing.classList.remove("animate-ping");
+                }, 300);
+
                 if (window.location.href.indexOf("profile.php") !== -1) {
                   const modiefiedProductId = e.target
                     .closest(".cart-card")
@@ -392,6 +400,7 @@ export const addProductFromPage = (
   product_id,
   shippingCost,
   basketCounter,
+  basketCounterPing,
   productsWrapper
 ) => {
   const client_request = "get_product_for_cart";
@@ -425,6 +434,13 @@ export const addProductFromPage = (
 
         basketCounter.innerText = getItemsCountTotal(currentCartState);
         productFound = true;
+
+        basketCounterPing.classList.remove("hidden");
+        basketCounterPing.classList.add("animate-ping");
+        setTimeout(() => {
+          basketCounterPing.classList.add("hidden");
+          basketCounterPing.classList.remove("animate-ping");
+        }, 300);
       }
     });
   }
@@ -465,6 +481,12 @@ export const addProductFromPage = (
     sessionStorage.setItem("cart_contents", JSON.stringify(currentCartState));
     basketCounter.classList.remove("hidden");
     basketCounter.innerText = getItemsCountTotal(currentCartState);
+    basketCounterPing.classList.remove("hidden");
+    basketCounterPing.classList.add("animate-ping");
+    setTimeout(() => {
+      basketCounterPing.classList.add("hidden");
+      basketCounterPing.classList.remove("animate-ping");
+    }, 300);
 
     cartCard.setAttribute("data-product-id", product.product_id);
     updatePriceBreakdown(
@@ -499,7 +521,21 @@ export const addProductFromPage = (
         );
         sessionStorage.setItem("cart_contents", JSON.stringify(newCartState));
         basketCounter.innerText = getItemsCountTotal(newCartState);
+
+        basketCounterPing.classList.remove("hidden");
+        basketCounterPing.classList.add("animate-ping");
+        setTimeout(() => {
+          basketCounterPing.classList.add("hidden");
+          basketCounterPing.classList.remove("animate-ping");
+        }, 300);
         cardToRemove.remove();
+
+        basketCounterPing.classList.remove("hidden");
+        basketCounterPing.classList.add("animate-ping");
+        setTimeout(() => {
+          basketCounterPing.classList.add("hidden");
+          basketCounterPing.classList.remove("animate-ping");
+        }, 300);
       });
 
     cartCard
@@ -511,8 +547,6 @@ export const addProductFromPage = (
         );
         const newAmount = parseInt(e.target.value);
         const currentID = parseInt(currentCard.getAttribute("data-product-id"));
-        console.log(currentID);
-        console.log(currentCartState);
         currentCartState.products.find(
           (product) => product.product_id === currentID
         ).product_amount = newAmount;
@@ -528,6 +562,13 @@ export const addProductFromPage = (
           cartSidebar,
           shippingCost
         );
+
+        basketCounterPing.classList.remove("hidden");
+        basketCounterPing.classList.add("animate-ping");
+        setTimeout(() => {
+          basketCounterPing.classList.add("hidden");
+          basketCounterPing.classList.remove("animate-ping");
+        }, 300);
       });
 
     if (productsWrapper.innerText === "Your cart is empty") {

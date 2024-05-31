@@ -48,7 +48,7 @@ await getId()
     if (responseText === "no_orders") {
       const emptyOrdersMsg = document.createElement("p");
       emptyOrdersMsg.classList.add("py-4", "text-bg-info");
-      emptyOrdersMsg.innerText = "You haven't made any purchases yet";
+      emptyOrdersMsg.innerText = "You haven't made any purchases yet.";
       ordersHistory.classList.remove("min-h-80", "grow");
       ordersHistory.appendChild(emptyOrdersMsg);
     } else {
@@ -71,7 +71,8 @@ await getId()
           "mb-4",
           "bg-bg-light",
           "dark:bg-bg-darker",
-          "px-4",
+          "pl-8",
+          "pr-4",
           "py-2",
           "rounded-sm"
         );

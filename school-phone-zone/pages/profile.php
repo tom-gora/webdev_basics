@@ -31,6 +31,7 @@ $logged_in_mf->user_lastname = $row["user_lastname"];
 $logged_in_mf->user_img = $row["user_img"] ?: "default.jpg";
 $logged_in_mf->user_type = $row["user_type"];
 $logged_in_mf->user_auth_method = $row["user_auth_method"];
+$breadcrumbs_html = file_get_contents("../html_components/breadcrumbs.html");
 
 //preformat the date for the page
 $formatted_date = $logged_in_mf->user_registration->format("d M y");
@@ -59,7 +60,7 @@ $formatted_date = $logged_in_mf->user_registration->format("d M y");
 <body class="min-h-screen flex flex-col items-center gap-4 md:pt-24">
 <?php
 // bring in the base markup for my html components
-$cart_sidebar = file_get_contents("../html_components/cart_sidebar.html");
+$cart_sidebar_html = file_get_contents("../html_components/cart_sidebar.html");
 $nav_html = file_get_contents("../html_components/navigation.html");
 $mobile_toggle = file_get_contents("../html_components/mobile_toggle.html");
 $profile_header_html = file_get_contents(
@@ -279,12 +280,50 @@ if ($cart_products_json == "[]" || $cart_products_json == "no_cart") {
     $profile_cart_html
   );
 }
+$footer_html = str_replace(
+  ["bg-bg-light", "bg-bg-darker"],
+  ["bg-bg-lighter", "bg-bg-dark"],
+  $footer_html
+);
+
+$breadcrumbs_html = str_replace(
+  [
+    "my-4",
+    '  <li class="inline-flex items-center">
+    <a
+      class="flex items-center text-sm transition duration-300 hover:text-bg-info focus:bg-bg-info focus:outline-none"
+      href="./products.php">
+      Shop
+      <svg
+        class="mx-2 size-4 flex-shrink-0 overflow-visible text-bg-info"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="--darkreader-inline-stroke: currentColor"
+        data-darkreader-inline-stroke="">
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+    </a>
+  </li>
+',
+    "CURRENT_PAGE",
+  ],
+  ["mt-4", "", "Your Profile"],
+  $breadcrumbs_html
+);
 
 // echo content to the page
-echo $cart_sidebar;
+echo $cart_sidebar_html;
 echo $edit_dialog_html;
 echo $del_dialog_html;
 echo $nav_html;
+echo $breadcrumbs_html;
 echo $profile_header_html;
 echo "<div id='profile-purchases-details' class='w-full px-[8.33%] bg-bg-light dark:bg-bg-darker pt-12 h-max grow md:min-h-80 items-center flex flex-col gap-4 justify-start'>";
 echo $profile_cart_html;

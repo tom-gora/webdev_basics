@@ -28,7 +28,7 @@
   $best_sellers_count_to_display = 4;
 
   //get my html components contents
-  $cart_sidebar = file_get_contents("./html_components/cart_sidebar.html");
+  $cart_sidebar_html = file_get_contents("./html_components/cart_sidebar.html");
   $nav_html = file_get_contents("./html_components/navigation.html");
   $mobile_toggle = file_get_contents("./html_components/mobile_toggle.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
@@ -138,7 +138,7 @@
   );
 
   // echo crap onto the page
-  echo $cart_sidebar;
+  echo $cart_sidebar_html;
   echo $login_dialog_html;
   echo $reg_dialog_html;
   echo $nav_html;
