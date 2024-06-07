@@ -23,24 +23,5 @@
   </button>
 </div>
 
-<script defer>
-  const mobileToggle = document.querySelector("#mobile-toggle");
-  const hamburgerIcon = document.querySelector(".hamburger-content");
-  const closeIcon = document.querySelector(".close-content");
-  const mobileLogoBox = document.querySelector("#mobile-store-logo");
-  const mobileLogo = document.querySelector("#mobile-store-logo img");
-  const mobileLogoBoxW = mobileLogoBox.offsetWidth;
-  const mobileLogoW = mobileLogo.offsetWidth;
-
-  mobileToggle.onclick = () => {
-    document.body.style.overflow =
-      document.body.style.overflow === "hidden" ? "scroll" : "hidden";
-    navigation.style.right = navigation.style.right === "0px" ? "-100%" : "0px";
-    mobileLogo.style.right =
-      mobileLogo.style.right === "0px"
-        ? `-${3 * mobileLogoBoxW - mobileLogoW - 48}px`
-        : "0px";
-    hamburgerIcon.classList.toggle("hidden");
-    closeIcon.classList.toggle("hidden");
-  };
-</script>
+<!-- <script defer> -->
+<!-- </script> -->

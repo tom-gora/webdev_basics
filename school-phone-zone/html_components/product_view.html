@@ -1,22 +1,22 @@
 <div
   id="product-view"
-  class="grid h-full w-full grow place-items-center bg-bg-light pt-16 dark:bg-bg-darker">
-  <div class="flex flex-col">
-    <h2 class="mb-2 px-40 text-3xl font-bold md:pb-16">PRODUCT_NAME</h2>
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+  class="grid h-full w-full grow place-items-center bg-bg-light py-16 md:w-screen dark:bg-bg-darker">
+  <div class="flex w-svw flex-col items-center">
+    <h2 class="mb-2 px-4 text-3xl font-bold md:pb-16">PRODUCT_NAME</h2>
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
       <div
-        class="phone-card -mx-4 flex flex-col md:flex-row"
+        class="phone-card mx-auto flex w-10/12 flex-col md:flex-row"
         data-product-id="PRODUCT_ID">
-        <div class="items-center px-4 md:flex-1">
+        <div class="mx-auto items-center md:flex-1">
           <div
-            class="mx-auto mb-4 flex w-10/12 justify-center rounded-lg md:max-h-[500px]">
+            class="mx-auto mb-4 flex max-w-[300px] justify-center rounded-lg md:max-h-[500px]">
             <img
-              class="w-full object-cover md:max-w-[300px]"
+              class="max-w-[300px] object-cover"
               src="../res/phones/PRODUCT_IMG"
               alt="PRODUCT_NAME" />
           </div>
           <div class="-mx-2 mb-4 flex justify-center">
-            <div class="flex justify-evenly gap-4 px-2 py-4">
+            <div class="flex flex-col justify-evenly gap-4 px-2 py-4">
               <button class="btn-add-to-cart btn-info w-36">
                 <span></span>
                 <span></span>
@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        <div class="px-4 md:flex-1">
+        <div class="w-10/12 px-4 md:flex-1">
           <div class="mb-4 flex">
             <div class="mr-4">
               <span class="font-bold">Price:</span>

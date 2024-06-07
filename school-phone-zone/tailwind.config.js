@@ -50,6 +50,7 @@ module.exports = {
   },
   content: ["./**/*.php", "./**/*.html", "./**/*.css", "./**/*.js"],
   safelist: [
+    "card-3d",
     "animate-ping",
     "bg-lighter",
     "bg-light",

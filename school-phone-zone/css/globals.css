@@ -1,4 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=Fjalla+One&display=swap");
+/* hosted fallback */
+@font-face {
+  font-family: "Cantarell";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../res/fonts/Cantarell/Cantarell-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Fjalla One";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../res/fonts/Fjalla_One/FjallaOne-Regular.ttf") format("truetype");
+}
+
 /* custom declarations for brand colors */
 :root {
   font-family: "Cantarell", sans-serif, system-ui;
@@ -191,3 +205,53 @@ input[type="number"]::-webkit-outer-spin-button {
 /*   appearance: none; */
 /*   margin: 0; */
 /* } */
+
+.card-3d {
+  transform: skewY(0.5deg);
+  padding: 2rem 1rem;
+  background-size: cover;
+  text-align: center;
+  position: absolute;
+  transform-style: preserve-3d;
+  transform: perspective-3d;
+  inset: 0;
+  z-index: 1;
+}
+
+.card-3d::after {
+  content: "";
+  position: absolute;
+  /* background: rgba(255, 255, 255, 0.5); */
+  z-index: 2;
+  inset: 0;
+  transform: translateZ(0.5rem);
+}
+
+.card-3d::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  transform: translateZ(-0.1px) translate(0.33rem, 0.33rem);
+  background: red;
+}
+
+.card-3d-wrapper:hover:first-child {
+  animation: half-turn 1s forwards;
+}
+
+@keyframes half-turn {
+  0% {
+    rotate: y 0deg;
+  }
+  100% {
+    rotate: y 90deg;
+  }
+}
+
+.card-3d > div {
+  border: 1px red solid;
+  transform: skewY(-0.5deg);
+  transform: perspective-3d;
+  transform: translateZ(2rem);
+}

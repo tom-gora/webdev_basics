@@ -28,6 +28,30 @@ class UserPassword
     $this->user_password = $new_password;
   }
 }
+// handle client requests
+$_POST = json_decode(file_get_contents("php://input"), true);
+//  FN: _______________________________________________________________________
+// return curretly logged in user's ID if client needs it
+if (isset($_POST["client_request"]) && $_POST["client_request"] == "get_id") {
+  session_start();
+  if (isset($_SESSION["user_id"])) {
+    echo $_SESSION["user_id"];
+  } else {
+    echo "no_id";
+  }
+}
+
+//  FN: _______________________________________________________________________
+// return curretly logged in user's role
+
+if (isset($_POST["client_request"]) && $_POST["client_request"] == "get_role") {
+  session_start();
+  if (isset($_SESSION["user_type"])) {
+    echo $_SESSION["user_type"];
+  } else {
+    echo "no_role";
+  }
+}
 
 //  FN: _______________________________________________________________________
 // function getting users as array

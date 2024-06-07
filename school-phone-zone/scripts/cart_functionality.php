@@ -60,6 +60,10 @@ switch ($client_request) {
     echo json_encode($row ?: ["order_contents" => "no_cart"]);
     break;
   case "save_cart_state":
+    if ($obj->user_id == "no_id") {
+      echo json_encode(["success" => "false", "err_message" => "no_user_id"]);
+      break;
+    }
     $user_id = $obj->user_id;
     $cart_state = json_encode($obj->cart_state);
     $query =

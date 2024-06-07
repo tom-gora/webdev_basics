@@ -9,7 +9,7 @@
   <title>PhoneZone</title>
   <link rel="icon" type="image/png" href="../phonezone/res/favicon.ico" />
   <link href="css/output/tailwind-styles.css" rel="stylesheet" />
-  <link rel="stylesheet" href="./css/globals.css">
+  <link rel="stylesheet" href="css/globals.css">
 </head>
 
 <body class="h-screen flex flex-col items-center gap-4 md:pt-24">
@@ -32,6 +32,7 @@
   $nav_html = file_get_contents("./html_components/navigation.html");
   $mobile_toggle = file_get_contents("./html_components/mobile_toggle.html");
   $cta_html = file_get_contents("./html_components/call_to_action.html");
+  $flip_html = file_get_contents("./html_components/flip_card_tailwind.html");
   $phone_card_html = file_get_contents("./html_components/phone_card.html");
   $about_html = file_get_contents("./html_components/about.html");
   $footer_html = file_get_contents("./html_components/footer.html");
@@ -142,7 +143,8 @@
   echo $login_dialog_html;
   echo $reg_dialog_html;
   echo $nav_html;
-  echo $cta_html;
+  //   echo $cta_html;
+  echo $flip_html;
   echo $top_products_html;
   echo $about_html;
   echo $footer_html;

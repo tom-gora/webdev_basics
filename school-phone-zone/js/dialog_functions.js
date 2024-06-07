@@ -92,19 +92,28 @@ export const setFormForAddition = (editForm) => {
 };
 
 export async function get_role() {
-  try {
-    const data = new FormData();
-    data.append("client_request", "get_role");
-    const response = await fetch("../scripts/utils.php", {
-      method: "POST",
-      body: data
+  const data = {
+    client_request: "get_role"
+  };
+  const requestOpts = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  };
+  const url = "../scripts/user_functionality.php";
+
+  return fetch(url, requestOpts)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.text();
+    })
+    .catch((error) => {
+      // Parentheses added here
+      console.error("Error:", error);
+      return null;
     });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.text();
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
 }

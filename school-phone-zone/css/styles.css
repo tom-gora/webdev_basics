@@ -187,7 +187,69 @@
 #overlay:has(+ #cart-sidebar:not(.hidden)) {
   display: block;
 }
+
 body:has(#cart-sidebar:not(.hidden)) {
   height: 100vh;
   overflow: hidden;
+}
+
+.hero-card {
+  transform-style: preserve-3d;
+}
+
+.hero-card::after {
+  transform: translateZ(0.5rem);
+}
+
+.hero-card::before {
+  transform: translateZ(-0.5rem);
+}
+
+.hero-card.custom-animated {
+  animation: card-animation var(--duration) forwards ease-in-out;
+}
+
+.hero-description.custom-animated {
+  animation: description-animation var(--duration) forwards;
+}
+
+@keyframes card-animation {
+  0% {
+    rotate: y 90deg;
+  }
+
+  20% {
+    rotate: y 0deg;
+  }
+  80% {
+    rotate: y 0deg;
+  }
+
+  100% {
+    rotate: y -90deg;
+  }
+}
+
+@keyframes description-animation {
+  0% {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+}
+
+.hero-card-front {
+  transform: translateZ(1rem);
 }

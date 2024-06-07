@@ -1,14 +1,20 @@
+<!-- inline style fallback as tailwind has a bad day -->
 <nav
   id="navigation"
-  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:!right-0 md:top-0 md:z-[300] md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:py-0 md:duration-0 dark:bg-bg-darker">
+  style="padding-inline: 1rem"
+  class="px-13 fixed right-[-100%] top-0 z-20 flex h-dvh w-screen flex-col items-end justify-center bg-bg-light py-40 font-brand-display transition-all duration-300 motion-reduce:transition-none md:!right-0 md:top-0 md:z-[300] md:h-auto md:w-screen md:flex-row md:items-center md:justify-end md:px-4 md:py-0 md:pl-4 md:duration-0 dark:bg-bg-darker">
   <div
     id="mobile-store-logo"
-    class="absolute left-[-200%] right-0 top-0 z-50 mx-auto h-20 w-full bg-bg-light pt-4 md:hidden dark:bg-bg-darker">
-    <a href="index.php">
+    class="absolute left-[-200%] right-0 top-0 z-50 mx-auto h-20 bg-bg-light pt-4 md:hidden dark:bg-bg-darker">
+    <a
+      href="index.php"
+      style="right: 0px"
+      class="absolute left-0 right-0 top-4 mx-auto h-14 transition-all duration-300 motion-reduce:transition-none">
       <img
+        width="188"
         src="res/pz_logo_1_dark.svg"
         style="left: 0px; right: 0px"
-        class="absolute top-4 mx-auto my-auto h-14 transition-all duration-300 motion-reduce:transition-none"
+        class="mx-auto my-auto h-14"
         alt="Store Logo" />
     </a>
   </div>
@@ -52,7 +58,7 @@
   </div>
 
   <ul
-    class="flex scale-[1.15] cursor-pointer flex-col items-end gap-8 pr-10 text-xl font-normal text-brand-secondary transition-all md:scale-100 md:flex-row md:items-baseline md:gap-8 dark:text-bg-lighter">
+    class="flex scale-[1.15] cursor-pointer flex-col items-end gap-8 pr-10 text-xl font-normal text-brand-secondary transition-all md:scale-100 md:flex-row md:items-baseline md:gap-8 md:text-lg dark:text-bg-lighter">
     <li class="nav-link">
       <a href="index.php">Home</a>
     </li>
@@ -76,7 +82,7 @@
     </li>
   </ul>
   <div
-    class="fixed inset-0 left-4 top-8 z-[900] aspect-square w-8 cursor-pointer self-end pr-8 md:relative md:left-0 md:top-[-34px]">
+    class="fixed left-4 top-8 z-[900] aspect-square w-8 cursor-pointer self-end pr-8 md:relative md:left-0 md:top-[-36px] md:scale-90">
     <div
       style="transform: translate(50%, -100%)"
       class="absolute right-0 top-0 z-50 aspect-square h-4 place-items-center">

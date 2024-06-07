@@ -11,7 +11,7 @@
 </head>
 
 
-<body class="min-h-screen h-full flex flex-col items-center gap-4 md:pt-24">
+<body class="min-h-screen h-full flex flex-col items-center w-screen gap-4 md:pt-24">
 <?php
 define("ALLOW_REQUIRED_SCRIPTS", true);
 session_start();

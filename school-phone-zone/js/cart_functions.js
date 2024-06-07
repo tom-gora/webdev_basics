@@ -1,11 +1,11 @@
 const getPathPrefix = () => {
   const location = window.location.pathname;
-  let pathSuffix;
+  let pathPrefix;
 
-  location === "/" || location.includes("index.php")
-    ? (pathSuffix = "./")
-    : (pathSuffix = "../");
-  return pathSuffix;
+  location === "/phonezone/" || location.includes("index.php")
+    ? (pathPrefix = "./")
+    : (pathPrefix = "../");
+  return pathPrefix;
 };
 export const getProductData = async (client_request, product_id) => {
   const data = {
@@ -83,6 +83,7 @@ export const saveCartState = async (client_request, user_id, cart_state) => {
       return response.json();
     })
     .catch((error) => {
+      // console.log(response.text());
       console.log(
         "There has been a problem with your fetch operation: " + error.message
       );
@@ -90,9 +91,6 @@ export const saveCartState = async (client_request, user_id, cart_state) => {
 };
 
 const getDataForCartInit = async (client_request, user_id) => {
-  const referer = document.referrer;
-  let pathSuffix = "";
-  !referer.includes("index.php") ? (pathSuffix = "../") : (pathSuffix = "./");
   const data = {
     client_request: client_request,
     user_id: user_id
@@ -120,12 +118,8 @@ const getDataForCartInit = async (client_request, user_id) => {
 };
 
 export const getCartProductHtml = async () => {
-  const location = window.location.href;
-  let pathSuffix = "";
-  location === "/" || location.includes("index.php")
-    ? (pathSuffix = "./")
-    : (pathSuffix = "../");
-  const cartCardUrl = `${pathSuffix}html_components/cart_product_card.html`;
+  const cartCardUrl = `${getPathPrefix()}html_components/cart_product_card.html`;
+  // const cartCardUrl = `./html_components/cart_product_card.html`;
   const response = await fetch(cartCardUrl);
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -182,6 +176,11 @@ export const initCart = async (
 
   const productsWrapper = cartSidebar.querySelector("#cart-products-wrapper");
   try {
+    const user_id = sessionStorage.getItem("user_id");
+    if (user_id === "no_id") {
+      sessionStorage.setItem("cart_contents", "no_cart");
+      return;
+    }
     const cardHtml = await getCartProductHtml();
     const cartData = await getDataForCartInit(client_request, user_id);
     const parser = new DOMParser();
@@ -241,6 +240,7 @@ export const initCart = async (
                 currentCartState.products.find(
                   (product) => product.product_id === productID
                 ).product_amount = newAmount;
+                console.log(sessionStorage.getItem("user_id"));
                 saveCartState("save_cart_state", user_id, currentCartState);
                 sessionStorage.setItem(
                   "cart_contents",
@@ -405,6 +405,16 @@ export const addProductFromPage = (
 ) => {
   const client_request = "get_product_for_cart";
   const user_id = sessionStorage.getItem("user_id");
+  if (user_id === "no_id") {
+    console.log("No user ID found");
+    const loginDialog = document.querySelector("#login-dialog");
+    const loginErrBox = loginDialog.querySelector("#err-msg");
+    loginErrBox.innerText = "Log in to use the cart";
+    console.log(loginErrBox);
+    loginErrBox.classList.remove("hidden");
+    loginDialog.showModal();
+    return;
+  }
 
   let productFound = false;
   let currentCartState = sessionStorage.getItem("cart_contents");
@@ -643,7 +653,7 @@ const getOrders = async (client_request, userId) => {
     },
     body: JSON.stringify(data)
   };
-  const url = "../scripts/cart_functionality.php";
+  const url = `${getPathPrefix()}/scripts/cart_functionality.php`;
   return fetch(url, requestOpts)
     .then((response) => {
       if (!response.ok) {
@@ -659,25 +669,31 @@ const getOrders = async (client_request, userId) => {
 };
 
 const getId = async () => {
-  try {
-    const data = new FormData();
-    data.append("client_request", "get_id");
-    let url;
-    window.location.pathname.includes("index.php")
-      ? (url = "./scripts/utils.php")
-      : (url = "../scripts/utils.php");
-    const response = await fetch(url, {
-      method: "POST",
-      body: data
+  const client_request = "get_id";
+  const data = {
+    client_request: client_request
+  };
+  const requestOpts = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json, charset=utf-8"
+    },
+    body: JSON.stringify(data)
+  };
+
+  const url = `${getPathPrefix()}scripts/user_functionality.php`;
+  return fetch(url, requestOpts)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.text();
+    })
+    .catch((error) => {
+      console.log(
+        "There has been a problem with your fetch operation: " + error.message
+      );
     });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.text();
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
 };
 
 export { getId, getOrders, getDataForCartInit };

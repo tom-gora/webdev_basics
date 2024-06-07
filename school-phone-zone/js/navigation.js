@@ -1,8 +1,9 @@
 import { getId } from "./cart_functions.js";
-getId().then((id) => {
+await getId().then((id) => {
   sessionStorage.setItem("user_id", id);
 });
 
+const navigation = document.querySelector("#navigation");
 const loginBtn = document.querySelector("#login-btn");
 const logoutBtn = document.querySelector("#logout-btn");
 const loginDialog = document.querySelector("#login-dialog");
@@ -24,6 +25,30 @@ const cartSidebar = document.querySelector("#cart-sidebar");
 
 //handle theme with data attribute on html and local storage to save preference
 const root = document.documentElement;
+
+const mobileToggle = document.querySelector("#mobile-toggle");
+const hamburgerIcon = document.querySelector(".hamburger-content");
+const closeIcon = document.querySelector(".close-content");
+const mobileLogo = document.querySelector("#mobile-store-logo a");
+const windowW = window.innerWidth;
+const mobileLogoW = document.querySelector(
+  "#mobile-store-logo img"
+).offsetWidth;
+
+mobileToggle.onclick = () => {
+  document.body.style.overflow =
+    document.body.style.overflow === "hidden" ? "scroll" : "hidden";
+  navigation.style.right = navigation.style.right === "0px" ? "-100%" : "0px";
+  console.log(mobileLogo.style.right);
+  console.log(mobileLogoW);
+  console.log(3 * windowW);
+  mobileLogo.style.right =
+    mobileLogo.style.right === "0px"
+      ? `-${3 * windowW - (mobileLogoW + 48)}px`
+      : "0px";
+  hamburgerIcon.classList.toggle("hidden");
+  closeIcon.classList.toggle("hidden");
+};
 
 basketNavBtn.addEventListener("click", () => {
   cartSidebar.classList.toggle("hidden");
